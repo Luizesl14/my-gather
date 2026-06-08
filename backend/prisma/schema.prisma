@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String       @id @default(uuid())
+  email        String       @unique
+  passwordHash String
+  displayName  String
+  avatarId     String       @default("character-01")
+  memberships  Membership[]
+  invitations  Invitation[] @relation("InvitationInviter")
+  assignedDesks Desk[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@map("users")
+}
+
+model Organization {
+  id          String       @id @default(uuid())
+  name        String
+  memberships Membership[]
+  invitations Invitation[]
+  workspaces  Workspace[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@map("organizations")
+}
+
+model Membership {
+  id             String       @id @default(uuid())
+  userId         String
+  organizationId String
+  role           MembershipRole
+  joinedAt       DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+  @@map("memberships")
+}
+
+model Invitation {
+  id             String       @id @default(uuid())
+  organizationId String
+  email          String
+  token          String       @unique
+  role           MembershipRole
+  invitedById    String
+  expiresAt      DateTime
+  acceptedAt     DateTime?
+  createdAt      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  invitedBy      User         @relation("InvitationInviter", fields: [invitedById], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([email])
+  @@map("invitations")
+}
+
+model Workspace {
+  id             String       @id @default(uuid())
+  organizationId String
+  name           String
+  floors         Floor[]
+  rooms          Room[]
+  desks          Desk[]
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId])
+  @@map("workspaces")
+}
+
+model Floor {
+  id          String    @id @default(uuid())
+  workspaceId String
+  name        String
+  level       Int
+  map         OfficeMap?
+  rooms       Room[]
+  desks       Desk[]
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([workspaceId])
+  @@unique([workspaceId, level])
+  @@map("floors")
+}
+
+model OfficeMap {
+  id               String   @id @default(uuid())
+  floorId          String   @unique
+  assetPackId      String
+  tileSize         Int
+  width            Int
+  height           Int
+  layers           Json
+  collision        Json
+  interactiveZones Json
+  publishedAt      DateTime @default(now())
+  floor            Floor    @relation(fields: [floorId], references: [id], onDelete: Cascade)
+
+  @@map("maps")
+}
+
+model Room {
+  id          String    @id @default(uuid())
+  workspaceId String
+  floorId     String
+  name        String
+  x           Int
+  y           Int
+  width       Int
+  height      Int
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  floor       Floor     @relation(fields: [floorId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([workspaceId])
+  @@index([floorId])
+  @@map("rooms")
+}
+
+model Desk {
+  id             String    @id @default(uuid())
+  workspaceId    String
+  floorId        String
+  assignedUserId String?
+  label          String
+  x              Int
+  y              Int
+  width          Int
+  height         Int
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  floor          Floor     @relation(fields: [floorId], references: [id], onDelete: Cascade)
+  assignedUser   User?     @relation(fields: [assignedUserId], references: [id], onDelete: SetNull)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([workspaceId])
+  @@index([floorId])
+  @@index([assignedUserId])
+  @@map("desks")
+}
+
+enum MembershipRole {
+  owner
+  admin
+  member
+}

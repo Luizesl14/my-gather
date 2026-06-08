@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "source": "images/ChatGPT Image 4 de jun. de 2026, 12_51_54.png",
+  "spriteSize": {
+    "w": 32,
+    "h": 32
+  },
+  "sprites": [
+    {
+      "id": "chat",
+      "type": "bubble",
+      "path": "sprites/bubbles/chat.png"
+    },
+    {
+      "id": "typing",
+      "type": "bubble",
+      "path": "sprites/bubbles/typing.png"
+    },
+    {
+      "id": "call",
+      "type": "bubble",
+      "path": "sprites/bubbles/call.png"
+    },
+    {
+      "id": "knock",
+      "type": "bubble",
+      "path": "sprites/bubbles/knock.png"
+    },
+    {
+      "id": "shout",
+      "type": "bubble",
+      "path": "sprites/bubbles/shout.png"
+    },
+    {
+      "id": "wave",
+      "type": "gesture",
+      "path": "sprites/gestures/wave.png"
+    },
+    {
+      "id": "coffee",
+      "type": "reaction",
+      "path": "sprites/reactions/coffee.png"
+    },
+    {
+      "id": "help",
+      "type": "reaction",
+      "path": "sprites/reactions/help.png"
+    }
+  ]
+}

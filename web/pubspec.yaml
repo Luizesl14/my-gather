@@ -1,0 +1,52 @@
+name: love_robot_web
+description: Love+Robot Flutter Web
+publish_to: "none"
+version: 0.0.0
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.6.1
+  go_router: ^14.2.7
+  dio: ^5.7.0
+  web_socket_channel: ^2.4.5
+  flame: ^1.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/atlases/
+    - assets/components/
+    - assets/furniture/
+    - assets/maps/
+    - assets/sprites/
+    - assets/sprites/bubbles/
+    - assets/sprites/characters/
+    - assets/sprites/characters/character-01/
+    - assets/sprites/characters/character-02/
+    - assets/sprites/characters/character-03/
+    - assets/sprites/characters/character-04/
+    - assets/sprites/characters/character-05/
+    - assets/sprites/characters/character-06/
+    - assets/sprites/characters/character-07/
+    - assets/sprites/characters/character-08/
+    - assets/sprites/characters/character-09/
+    - assets/sprites/characters/character-10/
+    - assets/sprites/customization/
+    - assets/sprites/customization/accent-colors/
+    - assets/sprites/customization/clothing-colors/
+    - assets/sprites/customization/hair-colors/
+    - assets/sprites/customization/skin-tones/
+    - assets/sprites/gestures/
+    - assets/sprites/reactions/
+    - assets/tilesets/
+    - assets/tilesets/scenary/

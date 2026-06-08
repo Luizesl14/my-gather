@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "tileSize": 32,
+  "tiles": [
+    {
+      "id": "floor-office-light",
+      "path": "floor-office-light.png",
+      "collision": false,
+      "base": "#E8EDF2",
+      "line": "#CAD3DD",
+      "pattern": "grid"
+    },
+    {
+      "id": "floor-wood-light",
+      "path": "floor-wood-light.png",
+      "collision": false,
+      "base": "#C88946",
+      "line": "#8F5D2D",
+      "pattern": "wood"
+    },
+    {
+      "id": "carpet-blue",
+      "path": "carpet-blue.png",
+      "collision": false,
+      "base": "#2F5F8F",
+      "line": "#D8E8FF44",
+      "pattern": "carpet"
+    },
+    {
+      "id": "carpet-green",
+      "path": "carpet-green.png",
+      "collision": false,
+      "base": "#63794A",
+      "line": "#E5F0D244",
+      "pattern": "carpet"
+    },
+    {
+      "id": "wall-office",
+      "path": "wall-office.png",
+      "collision": true,
+      "base": "#F2E8D6",
+      "line": "#2F3540",
+      "pattern": "grid"
+    },
+    {
+      "id": "glass-wall",
+      "path": "glass-wall.png",
+      "collision": true,
+      "base": "#A9DDF2",
+      "line": "#4E7890",
+      "pattern": "grid"
+    },
+    {
+      "id": "interactive-zone-blue",
+      "path": "interactive-zone-blue.png",
+      "collision": false,
+      "base": "#00000000",
+      "line": "#4267D6",
+      "pattern": "zone"
+    }
+  ]
+}

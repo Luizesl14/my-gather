@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "components": [
+    {
+      "id": "office-canvas",
+      "type": "renderer",
+      "requiredAssets": [
+        "tilesets",
+        "furniture",
+        "characters"
+      ]
+    },
+    {
+      "id": "avatar-sprite",
+      "type": "character",
+      "metadata": "sprites/characters/characters.json"
+    },
+    {
+      "id": "desk-component",
+      "type": "map-object",
+      "requiredStates": [
+        "default",
+        "occupied",
+        "callPending",
+        "hasUnreadNotes"
+      ]
+    },
+    {
+      "id": "room-component",
+      "type": "map-zone",
+      "requiredStates": [
+        "empty",
+        "occupied",
+        "meetingActive",
+        "locked"
+      ]
+    },
+    {
+      "id": "interaction-bubble",
+      "type": "overlay",
+      "requiredSprites": [
+        "typing",
+        "call",
+        "knock",
+        "coffee",
+        "help",
+        "shout"
+      ]
+    },
+    {
+      "id": "bottom-action-toolbar",
+      "type": "ui",
+      "requiredSprites": [
+        "chat",
+        "wave",
+        "call",
+        "coffee",
+        "help",
+        "shout"
+      ]
+    }
+  ]
+}

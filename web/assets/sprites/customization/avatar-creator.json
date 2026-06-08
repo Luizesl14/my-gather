@@ -1,0 +1,289 @@
+{
+  "version": 1,
+  "mode": "preset-plus-granular-options",
+  "runtimeStatus": {
+    "presetsReady": true,
+    "granularOptionsReady": true,
+    "swatchesReady": true,
+    "modularLayersReady": false,
+    "notes": "MVP permite criar personagem escolhendo um preset base e configurando pele, cabelo, roupas, sapatos, acessorios e cores como perfil. Camadas visuais modulares reais entram na proxima fase de sprites."
+  },
+  "defaultCharacterId": "character-01",
+  "presetCharacters": [
+    {
+      "id": "character-01",
+      "label": "Social azul",
+      "description": "Homem cabelo castanho, roupa social azul.",
+      "thumbnail": "../characters/character-01/idle-front.png",
+      "characterMetadata": "../characters/characters.json"
+    },
+    {
+      "id": "character-02",
+      "label": "Cardigan verde",
+      "description": "Mulher cabelo preso, oculos, cardigan verde.",
+      "thumbnail": "../characters/character-02/idle-front.png",
+      "characterMetadata": "../characters/characters.json"
+    },
+    {
+      "id": "character-03",
+      "label": "Camisa azul",
+      "description": "Homem pele escura, barba, camisa azul.",
+      "thumbnail": "../characters/character-03/idle-front.png",
+      "characterMetadata": "../characters/characters.json"
+    },
+    {
+      "id": "character-04",
+      "label": "Blazer claro",
+      "description": "Mulher loira, blazer cinza/bege.",
+      "thumbnail": "../characters/character-04/idle-front.png",
+      "characterMetadata": "../characters/characters.json"
+    },
+    {
+      "id": "character-05",
+      "label": "Camisa branca",
+      "description": "Pessoa cabelo preto, oculos, camisa branca.",
+      "thumbnail": "../characters/character-05/idle-front.png",
+      "characterMetadata": "../characters/characters.json"
+    },
+    {
+      "id": "character-06",
+      "label": "Look lilas",
+      "description": "Mulher pele media/escura, cabelo longo, roupa lilas.",
+      "thumbnail": "../characters/character-06/idle-front.png",
+      "characterMetadata": "../characters/characters.json"
+    },
+    {
+      "id": "character-07",
+      "label": "Sweater verde",
+      "description": "Homem ruivo/barba, sweater verde.",
+      "thumbnail": "../characters/character-07/idle-front.png",
+      "characterMetadata": "../characters/characters.json"
+    },
+    {
+      "id": "character-08",
+      "label": "Jaqueta escura",
+      "description": "Mulher cabelo preto preso, jaqueta escura.",
+      "thumbnail": "../characters/character-08/idle-front.png",
+      "characterMetadata": "../characters/characters.json"
+    },
+    {
+      "id": "character-09",
+      "label": "Cabelo grisalho",
+      "description": "Pessoa mais velha, cabelo grisalho, camisa clara e suspensorios.",
+      "thumbnail": "../characters/character-09/idle-front.png",
+      "characterMetadata": "../characters/characters.json"
+    },
+    {
+      "id": "character-10",
+      "label": "Casaco bege",
+      "description": "Mulher pele escura, casaco bege e acessorios dourados.",
+      "thumbnail": "../characters/character-10/idle-front.png",
+      "characterMetadata": "../characters/characters.json"
+    }
+  ],
+  "creationFlow": [
+    {
+      "step": "choosePreset",
+      "label": "Escolher base",
+      "required": true,
+      "source": "presetCharacters"
+    },
+    {
+      "step": "setDisplayName",
+      "label": "Nome de exibicao",
+      "required": true,
+      "maxLength": 32
+    },
+    {
+      "step": "chooseSkinTone",
+      "label": "Pele",
+      "required": true,
+      "source": "skinTones"
+    },
+    {
+      "step": "chooseHairStyle",
+      "label": "Cabelo",
+      "required": true,
+      "source": "hairStyles"
+    },
+    {
+      "step": "chooseHairColor",
+      "label": "Cor do cabelo",
+      "required": true,
+      "source": "hairColors"
+    },
+    {
+      "step": "chooseFace",
+      "label": "Rosto",
+      "required": true,
+      "source": "faceStyles"
+    },
+    {
+      "step": "chooseTop",
+      "label": "Roupa superior",
+      "required": true,
+      "source": "tops"
+    },
+    {
+      "step": "chooseTopColor",
+      "label": "Cor da roupa superior",
+      "required": true,
+      "source": "clothingColors"
+    },
+    {
+      "step": "chooseBottom",
+      "label": "Roupa inferior",
+      "required": true,
+      "source": "bottoms"
+    },
+    {
+      "step": "chooseBottomColor",
+      "label": "Cor da roupa inferior",
+      "required": true,
+      "source": "clothingColors"
+    },
+    {
+      "step": "chooseShoes",
+      "label": "Sapato",
+      "required": true,
+      "source": "shoes"
+    },
+    {
+      "step": "chooseAccessories",
+      "label": "Acessorios",
+      "required": false,
+      "source": "accessories",
+      "multiSelect": true,
+      "maxSelected": 3
+    },
+    {
+      "step": "chooseAccentColor",
+      "label": "Cor de destaque",
+      "required": true,
+      "source": "accentColors"
+    },
+    {
+      "step": "confirmAvatar",
+      "label": "Confirmar personagem",
+      "required": true
+    }
+  ],
+  "accentColors": [
+    { "id": "accent-blue", "label": "Azul", "hex": "#4267D6", "swatch": "accent-colors/accent-blue.png" },
+    { "id": "accent-green", "label": "Verde", "hex": "#35A85A", "swatch": "accent-colors/accent-green.png" },
+    { "id": "accent-yellow", "label": "Amarelo", "hex": "#F2C94C", "swatch": "accent-colors/accent-yellow.png" },
+    { "id": "accent-orange", "label": "Laranja", "hex": "#F2994A", "swatch": "accent-colors/accent-orange.png" },
+    { "id": "accent-red", "label": "Vermelho", "hex": "#E5484D", "swatch": "accent-colors/accent-red.png" },
+    { "id": "accent-purple", "label": "Roxo", "hex": "#8B5CF6", "swatch": "accent-colors/accent-purple.png" }
+  ],
+  "skinTones": [
+    { "id": "skin-01", "label": "Clara quente", "hex": "#F6D8B5", "swatch": "skin-tones/skin-01.png" },
+    { "id": "skin-02", "label": "Media clara", "hex": "#E7B678", "swatch": "skin-tones/skin-02.png" },
+    { "id": "skin-03", "label": "Media", "hex": "#C47A3A", "swatch": "skin-tones/skin-03.png" },
+    { "id": "skin-04", "label": "Escura quente", "hex": "#8A4B2A", "swatch": "skin-tones/skin-04.png" },
+    { "id": "skin-05", "label": "Escura", "hex": "#5A2E1B", "swatch": "skin-tones/skin-05.png" },
+    { "id": "skin-06", "label": "Escura profunda", "hex": "#2D1810", "swatch": "skin-tones/skin-06.png" }
+  ],
+  "hairStyles": [
+    { "id": "hair-short", "label": "Curto" },
+    { "id": "hair-medium", "label": "Medio" },
+    { "id": "hair-long", "label": "Longo" },
+    { "id": "hair-ponytail", "label": "Rabo de cavalo" },
+    { "id": "hair-bun", "label": "Coque" },
+    { "id": "hair-curly", "label": "Cacheado" },
+    { "id": "hair-afro", "label": "Afro" },
+    { "id": "hair-bald", "label": "Careca" }
+  ],
+  "hairColors": [
+    { "id": "hair-black", "label": "Preto", "hex": "#1E1E1E", "swatch": "hair-colors/hair-black.png" },
+    { "id": "hair-dark-brown", "label": "Castanho escuro", "hex": "#3A2118", "swatch": "hair-colors/hair-dark-brown.png" },
+    { "id": "hair-brown", "label": "Castanho", "hex": "#5A3422", "swatch": "hair-colors/hair-brown.png" },
+    { "id": "hair-light-brown", "label": "Castanho claro", "hex": "#8A542B", "swatch": "hair-colors/hair-light-brown.png" },
+    { "id": "hair-blonde", "label": "Loiro", "hex": "#D9A441", "swatch": "hair-colors/hair-blonde.png" },
+    { "id": "hair-red", "label": "Ruivo", "hex": "#B85A24", "swatch": "hair-colors/hair-red.png" },
+    { "id": "hair-gray", "label": "Grisalho", "hex": "#A7A7A7", "swatch": "hair-colors/hair-gray.png" },
+    { "id": "hair-white", "label": "Branco", "hex": "#E8E8E8", "swatch": "hair-colors/hair-white.png" }
+  ],
+  "faceStyles": [
+    { "id": "face-neutral", "label": "Neutro" },
+    { "id": "face-smile", "label": "Sorriso leve" },
+    { "id": "face-focused", "label": "Focado" },
+    { "id": "face-friendly", "label": "Amigavel" }
+  ],
+  "facialHair": [
+    { "id": "beard-none", "label": "Sem barba" },
+    { "id": "beard-short", "label": "Barba curta" },
+    { "id": "beard-full", "label": "Barba cheia" },
+    { "id": "mustache", "label": "Bigode" }
+  ],
+  "glasses": [
+    { "id": "glasses-none", "label": "Sem oculos" },
+    { "id": "glasses-round", "label": "Redondo" },
+    { "id": "glasses-square", "label": "Quadrado" },
+    { "id": "glasses-dark", "label": "Escuro" }
+  ],
+  "tops": [
+    { "id": "top-shirt", "label": "Camisa" },
+    { "id": "top-polo", "label": "Polo" },
+    { "id": "top-cardigan", "label": "Cardigan" },
+    { "id": "top-blazer", "label": "Blazer" },
+    { "id": "top-sweater", "label": "Sueter" },
+    { "id": "top-hoodie", "label": "Moletom" },
+    { "id": "top-jacket", "label": "Jaqueta" },
+    { "id": "top-dress", "label": "Vestido" }
+  ],
+  "clothingColors": [
+    { "id": "cloth-white", "label": "Branco", "hex": "#F8FAFC", "swatch": "clothing-colors/cloth-white.png" },
+    { "id": "cloth-black", "label": "Preto", "hex": "#1F2937", "swatch": "clothing-colors/cloth-black.png" },
+    { "id": "cloth-blue", "label": "Azul", "hex": "#4267D6", "swatch": "clothing-colors/cloth-blue.png" },
+    { "id": "cloth-green", "label": "Verde", "hex": "#35A85A", "swatch": "clothing-colors/cloth-green.png" },
+    { "id": "cloth-yellow", "label": "Amarelo", "hex": "#F2C94C", "swatch": "clothing-colors/cloth-yellow.png" },
+    { "id": "cloth-orange", "label": "Laranja", "hex": "#F2994A", "swatch": "clothing-colors/cloth-orange.png" },
+    { "id": "cloth-red", "label": "Vermelho", "hex": "#E5484D", "swatch": "clothing-colors/cloth-red.png" },
+    { "id": "cloth-purple", "label": "Roxo", "hex": "#8B5CF6", "swatch": "clothing-colors/cloth-purple.png" },
+    { "id": "cloth-lilac", "label": "Lilas", "hex": "#B79AF2", "swatch": "clothing-colors/cloth-lilac.png" },
+    { "id": "cloth-beige", "label": "Bege", "hex": "#D8B98F", "swatch": "clothing-colors/cloth-beige.png" }
+  ],
+  "bottoms": [
+    { "id": "bottom-pants", "label": "Calca" },
+    { "id": "bottom-jeans", "label": "Jeans" },
+    { "id": "bottom-chino", "label": "Chino" },
+    { "id": "bottom-skirt", "label": "Saia" },
+    { "id": "bottom-shorts", "label": "Bermuda" }
+  ],
+  "shoes": [
+    { "id": "shoes-black", "label": "Sapato preto" },
+    { "id": "shoes-brown", "label": "Sapato marrom" },
+    { "id": "shoes-white", "label": "Tenis branco" },
+    { "id": "shoes-blue", "label": "Tenis azul" },
+    { "id": "shoes-boots", "label": "Bota" }
+  ],
+  "accessories": [
+    { "id": "accessory-none", "label": "Nenhum" },
+    { "id": "accessory-glasses", "label": "Oculos" },
+    { "id": "accessory-earrings", "label": "Brincos" },
+    { "id": "accessory-badge", "label": "Cracha" },
+    { "id": "accessory-watch", "label": "Relogio" },
+    { "id": "accessory-tie", "label": "Gravata" },
+    { "id": "accessory-bowtie", "label": "Gravata borboleta" }
+  ],
+  "outputProfileShape": {
+    "id": "uuid",
+    "displayName": "Nome",
+    "characterId": "character-01",
+    "skinToneId": "skin-01",
+    "hairStyleId": "hair-short",
+    "hairColorId": "hair-brown",
+    "faceStyleId": "face-neutral",
+    "facialHairId": "beard-none",
+    "glassesId": "glasses-none",
+    "topId": "top-shirt",
+    "topColorId": "cloth-blue",
+    "bottomId": "bottom-pants",
+    "bottomColorId": "cloth-black",
+    "shoesId": "shoes-black",
+    "accessoryIds": [],
+    "accentColorId": "accent-blue",
+    "createdAt": "iso-date"
+  }
+}

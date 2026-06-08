@@ -1,0 +1,248 @@
+{
+  "version": 1,
+  "tileSize": 32,
+  "spriteSize": {
+    "w": 32,
+    "h": 48
+  },
+  "animations": {
+    "idle": {
+      "fps": 1,
+      "loop": false
+    },
+    "walk": {
+      "fps": 8,
+      "loop": true
+    }
+  },
+  "characters": [
+    {
+      "id": "character-01",
+      "displayName": "Carla",
+      "description": "Carla",
+      "default": true,
+      "frames": {
+        "idleFront": "character-01/idle-front.png",
+        "idleBack": "character-01/idle-back.png",
+        "idleLeft": "character-01/idle-left.png",
+        "idleRight": "character-01/idle-right.png",
+        "walkDown": [
+          "character-01/walk-down-01.png",
+          "character-01/walk-down-02.png",
+          "character-01/walk-down-03.png"
+        ],
+        "walkLeft": [
+          "character-01/walk-left-01.png",
+          "character-01/walk-left-02.png",
+          "character-01/walk-left-03.png"
+        ],
+        "walkRight": [
+          "character-01/walk-right-01.png",
+          "character-01/walk-right-02.png",
+          "character-01/walk-right-03.png"
+        ],
+        "walkUp": [
+          "character-01/walk-up-01.png",
+          "character-01/walk-up-02.png",
+          "character-01/walk-up-03.png"
+        ]
+      },
+      "hitbox": {
+        "x": 6,
+        "y": 22,
+        "w": 20,
+        "h": 24
+      }
+    },
+    {
+      "id": "character-02",
+      "displayName": "Matt",
+      "description": "Matt",
+      "default": false,
+      "frames": {
+        "idleFront": "character-02/idle-front.png",
+        "idleBack": "character-02/idle-back.png",
+        "idleLeft": "character-02/idle-left.png",
+        "idleRight": "character-02/idle-right.png",
+        "walkDown": [
+          "character-02/walk-down-01.png",
+          "character-02/walk-down-02.png",
+          "character-02/walk-down-03.png"
+        ],
+        "walkLeft": [
+          "character-02/walk-left-01.png",
+          "character-02/walk-left-02.png",
+          "character-02/walk-left-03.png"
+        ],
+        "walkRight": [
+          "character-02/walk-right-01.png",
+          "character-02/walk-right-02.png",
+          "character-02/walk-right-03.png"
+        ],
+        "walkUp": [
+          "character-02/walk-up-01.png",
+          "character-02/walk-up-02.png",
+          "character-02/walk-up-03.png"
+        ]
+      },
+      "hitbox": {
+        "x": 6,
+        "y": 22,
+        "w": 20,
+        "h": 24
+      }
+    },
+    {
+      "id": "character-03",
+      "displayName": "Morena",
+      "description": "Morena",
+      "default": false,
+      "frames": {
+        "idleFront": "character-03/idle-front.png",
+        "idleBack": "character-03/idle-back.png",
+        "idleLeft": "character-03/idle-left.png",
+        "idleRight": "character-03/idle-right.png",
+        "walkDown": [
+          "character-03/walk-down-01.png",
+          "character-03/walk-down-02.png",
+          "character-03/walk-down-03.png"
+        ],
+        "walkLeft": [
+          "character-03/walk-left-01.png",
+          "character-03/walk-left-02.png",
+          "character-03/walk-left-03.png"
+        ],
+        "walkRight": [
+          "character-03/walk-right-01.png",
+          "character-03/walk-right-02.png",
+          "character-03/walk-right-03.png"
+        ],
+        "walkUp": [
+          "character-03/walk-up-01.png",
+          "character-03/walk-up-02.png",
+          "character-03/walk-up-03.png"
+        ]
+      },
+      "hitbox": {
+        "x": 6,
+        "y": 22,
+        "w": 20,
+        "h": 24
+      }
+    },
+    {
+      "id": "character-04",
+      "displayName": "Nakma",
+      "description": "Nakma",
+      "default": false,
+      "frames": {
+        "idleFront": "character-04/idle-front.png",
+        "idleBack": "character-04/idle-back.png",
+        "idleLeft": "character-04/idle-left.png",
+        "idleRight": "character-04/idle-right.png",
+        "walkDown": [
+          "character-04/walk-down-01.png",
+          "character-04/walk-down-02.png",
+          "character-04/walk-down-03.png"
+        ],
+        "walkLeft": [
+          "character-04/walk-left-01.png",
+          "character-04/walk-left-02.png",
+          "character-04/walk-left-03.png"
+        ],
+        "walkRight": [
+          "character-04/walk-right-01.png",
+          "character-04/walk-right-02.png",
+          "character-04/walk-right-03.png"
+        ],
+        "walkUp": [
+          "character-04/walk-up-01.png",
+          "character-04/walk-up-02.png",
+          "character-04/walk-up-03.png"
+        ]
+      },
+      "hitbox": {
+        "x": 6,
+        "y": 22,
+        "w": 20,
+        "h": 24
+      }
+    },
+    {
+      "id": "character-05",
+      "displayName": "Robbit",
+      "description": "Robbit",
+      "default": false,
+      "frames": {
+        "idleFront": "character-05/idle-front.png",
+        "idleBack": "character-05/idle-back.png",
+        "idleLeft": "character-05/idle-left.png",
+        "idleRight": "character-05/idle-right.png",
+        "walkDown": [
+          "character-05/walk-down-01.png",
+          "character-05/walk-down-02.png",
+          "character-05/walk-down-03.png"
+        ],
+        "walkLeft": [
+          "character-05/walk-left-01.png",
+          "character-05/walk-left-02.png",
+          "character-05/walk-left-03.png"
+        ],
+        "walkRight": [
+          "character-05/walk-right-01.png",
+          "character-05/walk-right-02.png",
+          "character-05/walk-right-03.png"
+        ],
+        "walkUp": [
+          "character-05/walk-up-01.png",
+          "character-05/walk-up-02.png",
+          "character-05/walk-up-03.png"
+        ]
+      },
+      "hitbox": {
+        "x": 6,
+        "y": 22,
+        "w": 20,
+        "h": 24
+      }
+    },
+    {
+      "id": "character-06",
+      "displayName": "Young",
+      "description": "Young",
+      "default": false,
+      "frames": {
+        "idleFront": "character-06/idle-front.png",
+        "idleBack": "character-06/idle-back.png",
+        "idleLeft": "character-06/idle-left.png",
+        "idleRight": "character-06/idle-right.png",
+        "walkDown": [
+          "character-06/walk-down-01.png",
+          "character-06/walk-down-02.png",
+          "character-06/walk-down-03.png"
+        ],
+        "walkLeft": [
+          "character-06/walk-left-01.png",
+          "character-06/walk-left-02.png",
+          "character-06/walk-left-03.png"
+        ],
+        "walkRight": [
+          "character-06/walk-right-01.png",
+          "character-06/walk-right-02.png",
+          "character-06/walk-right-03.png"
+        ],
+        "walkUp": [
+          "character-06/walk-up-01.png",
+          "character-06/walk-up-02.png",
+          "character-06/walk-up-03.png"
+        ]
+      },
+      "hitbox": {
+        "x": 6,
+        "y": 22,
+        "w": 20,
+        "h": 24
+      }
+    }
+  ]
+}

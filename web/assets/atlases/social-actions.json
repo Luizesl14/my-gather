@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "image": "social-actions.png",
+  "frames": {
+    "bubble-chat": {
+      "x": 0,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "bubble-typing": {
+      "x": 32,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "bubble-call": {
+      "x": 64,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "bubble-knock": {
+      "x": 96,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "bubble-shout": {
+      "x": 128,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "gesture-wave": {
+      "x": 160,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "reaction-coffee": {
+      "x": 192,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "reaction-help": {
+      "x": 224,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    }
+  }
+}

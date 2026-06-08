@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "tileSize": 32,
+  "categories": ["floor", "mat", "wall", "door", "window", "furniture"],
+  "tiles": [
+    { "id": "granite-flor-with",   "path": "scenary/granite-flor-with.png",   "category": "floor",     "label": "Granito Branco",   "collision": false },
+    { "id": "grayish-floor",       "path": "scenary/grayish-floor.png",       "category": "floor",     "label": "Piso Cinza",       "collision": false },
+    { "id": "iron-floor",          "path": "scenary/iron-floor.png",          "category": "floor",     "label": "Piso Ferro",       "collision": false },
+    { "id": "yellowed-floor",      "path": "scenary/yellowed-floor.png",      "category": "floor",     "label": "Piso Amarelado",   "collision": false },
+    { "id": "scenario",            "path": "scenary/scenario.png",            "category": "floor",     "label": "Piso Cenário",     "collision": false },
+
+    { "id": "gray-mat",            "path": "scenary/gray-mat.png",            "category": "mat",       "label": "Tapete Cinza",     "collision": false },
+    { "id": "yellowed-mat",        "path": "scenary/yellowed-mat.png",        "category": "mat",       "label": "Tapete Amarelado", "collision": false },
+
+    { "id": "half-wall",           "path": "scenary/half-wall.png",           "category": "wall",      "label": "Meia Parede",      "collision": true,  "acceptsOverlay": true },
+    { "id": "mini-wall",           "path": "scenary/mini-wall.png",           "category": "wall",      "label": "Mini Parede",      "collision": true,  "acceptsOverlay": true },
+    { "id": "small-wall",          "path": "scenary/small-wall.png",          "category": "wall",      "label": "Parede Pequena",   "collision": true,  "acceptsOverlay": true },
+    { "id": "long-wall",           "path": "scenary/long-wall.png",           "category": "wall",      "label": "Parede Longa",     "collision": true,  "acceptsOverlay": true, "size": { "w": 3, "h": 1 } },
+    { "id": "iron-wall",           "path": "scenary/iron-wall.png",           "category": "wall",      "label": "Parede Ferro",     "collision": true,  "acceptsOverlay": true },
+    { "id": "iron-wall-left",      "path": "scenary/iron-wall-left.png",      "category": "wall",      "label": "Parede Ferro E",   "collision": true,  "acceptsOverlay": true },
+    { "id": "iron-wall-rigth",     "path": "scenary/iron-wall-rigth.png",     "category": "wall",      "label": "Parede Ferro D",   "collision": true,  "acceptsOverlay": true },
+    { "id": "iron-medium-wall",    "path": "scenary/iron-medium-wall.png",    "category": "wall",      "label": "Parede Ferro M",   "collision": true,  "acceptsOverlay": true, "size": { "w": 2, "h": 1 } },
+    { "id": "iron-medium-small",   "path": "scenary/iron-medium-small.png",   "category": "wall",      "label": "Parede Ferro P",   "collision": true,  "acceptsOverlay": true },
+    { "id": "wooden-wall",         "path": "scenary/wooden-wall.png",         "category": "wall",      "label": "Parede Madeira",   "collision": true,  "acceptsOverlay": true },
+    { "id": "wooden-wall-left",    "path": "scenary/wooden-wall-left.png",    "category": "wall",      "label": "Parede Madeira E", "collision": true,  "acceptsOverlay": true },
+    { "id": "wooden-wall-rigth",   "path": "scenary/wooden-wall-rigth.png",   "category": "wall",      "label": "Parede Madeira D", "collision": true,  "acceptsOverlay": true },
+    { "id": "wooden-medium-wall",  "path": "scenary/wooden-medium-wall.png",  "category": "wall",      "label": "Parede Madeira M", "collision": true,  "acceptsOverlay": true, "size": { "w": 2, "h": 1 } },
+    { "id": "wooden-medium-small", "path": "scenary/wooden-medium-small.png", "category": "wall",      "label": "Parede Madeira P", "collision": true,  "acceptsOverlay": true },
+
+    { "id": "iron-dor",            "path": "scenary/iron-dor.png",            "category": "door",      "label": "Porta Ferro",      "collision": false, "isOverlay": true },
+    { "id": "iron-portal",         "path": "scenary/iron-portal.png",         "category": "door",      "label": "Portal Ferro",     "collision": false, "isOverlay": true },
+    { "id": "wooden-door",         "path": "scenary/wooden-door.png",         "category": "door",      "label": "Porta Madeira",    "collision": false, "isOverlay": true },
+    { "id": "wooden-portal",       "path": "scenary/wooden-portal.png",       "category": "door",      "label": "Portal Madeira",   "collision": false, "isOverlay": true },
+
+    { "id": "blindex",             "path": "scenary/blindex.png",             "category": "window",    "label": "Blindex",          "collision": true,  "isOverlay": true },
+    { "id": "window-one",          "path": "scenary/window-one.png",          "category": "window",    "label": "Janela",           "collision": false, "isOverlay": true },
+    { "id": "window-one-block",    "path": "scenary/window-one-block.png",    "category": "window",    "label": "Janela Bloco",     "collision": true,  "isOverlay": true },
+    { "id": "window-tree-block",   "path": "scenary/window-tree-block.png",   "category": "window",    "label": "Janela 3 Blocos",  "collision": true,  "isOverlay": true },
+
+    { "id": "chair-black",         "path": "scenary/chair-black.png",         "category": "furniture", "label": "Cadeira Preta",    "collision": true,  "size": { "w": 1, "h": 1 }, "frames": { "cols": 3, "rows": 1 } },
+    { "id": "chair-blue",          "path": "scenary/chair-blue.png",          "category": "furniture", "label": "Cadeira Azul",     "collision": true,  "size": { "w": 1, "h": 1 }, "frames": { "cols": 3, "rows": 1 } },
+    { "id": "chair-green",         "path": "scenary/chair-green.png",         "category": "furniture", "label": "Cadeira Verde",    "collision": true,  "size": { "w": 1, "h": 1 }, "frames": { "cols": 3, "rows": 1 } },
+    { "id": "meeting-table",       "path": "scenary/meeting-table.png",       "category": "furniture", "label": "Mesa Reunião",     "collision": true,  "size": { "w": 4, "h": 3 }, "frames": { "cols": 2, "rows": 1 } },
+    { "id": "work-table",          "path": "scenary/work-table.png",          "category": "furniture", "label": "Mesa Trabalho",    "collision": true,  "size": { "w": 2, "h": 2 }, "frames": { "cols": 3, "rows": 1 } },
+    { "id": "materiais",           "path": "scenary/materiais.png",           "category": "furniture", "label": "Materiais",        "collision": true,  "size": { "w": 1, "h": 1 } }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "_comment": "Grid: 4 cols x 4 rows. Rows: 0=down, 1=left, 2=right, 3=up. Cols: 0=idle, 1-3=walk frames.",
+  "game_size": [32, 48],
+  "preview_size": [128, 192],
+  "alpha_threshold": 30,
+  "characters": [
+    { "source": "images/person/carla.png",  "id": "character-01", "displayName": "Carla",  "default": true  },
+    { "source": "images/person/matt.png",   "id": "character-02", "displayName": "Matt",   "default": false },
+    { "source": "images/person/morena.png", "id": "character-03", "displayName": "Morena", "default": false },
+    { "source": "images/person/nakma.png",  "id": "character-04", "displayName": "Nakma",  "default": false },
+    { "source": "images/person/robbit.png", "id": "character-05", "displayName": "Robbit", "default": false },
+    { "source": "images/person/young.png",  "id": "character-06", "displayName": "Young",  "default": false }
+  ],
+  "frame_grid": {
+    "idle-front":    [0, 0],
+    "walk-down-01":  [0, 1],
+    "walk-down-02":  [0, 2],
+    "walk-down-03":  [0, 3],
+    "idle-left":     [1, 0],
+    "walk-left-01":  [1, 1],
+    "walk-left-02":  [1, 2],
+    "walk-left-03":  [1, 3],
+    "idle-right":    [2, 0],
+    "walk-right-01": [2, 1],
+    "walk-right-02": [2, 2],
+    "walk-right-03": [2, 3],
+    "idle-back":     [3, 0],
+    "walk-up-01":    [3, 1],
+    "walk-up-02":    [3, 2],
+    "walk-up-03":    [3, 3]
+  }
+}

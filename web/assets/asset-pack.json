@@ -1,0 +1,14 @@
+{
+  "id": "office-default-v1",
+  "version": 1,
+  "tileSize": 32,
+  "paths": {
+    "characters": "sprites/characters/characters.json",
+    "socialSprites": "sprites/social-sprites.json",
+    "tilesets": "tilesets/tilesets.json",
+    "furniture": "furniture/furniture.json",
+    "socialAtlas": "atlases/social-actions.json",
+    "defaultMap": "maps/office-default.json",
+    "components": "components/components.json"
+  }
+}

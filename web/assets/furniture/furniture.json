@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "furniture": [
+    {
+      "id": "desk-wood",
+      "path": "desk-wood.png",
+      "size": {
+        "w": 64,
+        "h": 48
+      },
+      "collision": {
+        "x": 4,
+        "y": 14,
+        "w": 58,
+        "h": 28
+      }
+    },
+    {
+      "id": "chair-blue",
+      "path": "chair-blue.png",
+      "size": {
+        "w": 32,
+        "h": 32
+      },
+      "collision": {
+        "x": 6,
+        "y": 18,
+        "w": 20,
+        "h": 12
+      }
+    },
+    {
+      "id": "meeting-table-wood",
+      "path": "meeting-table-wood.png",
+      "size": {
+        "w": 96,
+        "h": 56
+      },
+      "collision": {
+        "x": 5,
+        "y": 12,
+        "w": 86,
+        "h": 34
+      }
+    },
+    {
+      "id": "plant-pot",
+      "path": "plant-pot.png",
+      "size": {
+        "w": 32,
+        "h": 32
+      },
+      "collision": {
+        "x": 9,
+        "y": 22,
+        "w": 17,
+        "h": 10
+      }
+    },
+    {
+      "id": "sofa-blue",
+      "path": "sofa-blue.png",
+      "size": {
+        "w": 64,
+        "h": 48
+      },
+      "collision": {
+        "x": 4,
+        "y": 14,
+        "w": 58,
+        "h": 28
+      }
+    },
+    {
+      "id": "cabinet-gray",
+      "path": "cabinet-gray.png",
+      "size": {
+        "w": 32,
+        "h": 32
+      },
+      "collision": {
+        "x": 6,
+        "y": 2,
+        "w": 20,
+        "h": 28
+      }
+    },
+    {
+      "id": "door-wood",
+      "path": "door-wood.png",
+      "size": {
+        "w": 32,
+        "h": 32
+      },
+      "collision": {
+        "x": 5,
+        "y": 2,
+        "w": 22,
+        "h": 29
+      }
+    },
+    {
+      "id": "window-glass",
+      "path": "window-glass.png",
+      "size": {
+        "w": 64,
+        "h": 32
+      },
+      "collision": null
+    }
+  ]
+}
