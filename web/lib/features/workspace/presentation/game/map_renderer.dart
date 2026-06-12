@@ -92,10 +92,21 @@ class MapRenderer extends CustomPainter {
       final layer = map.layers.where((l) => l.name == layerName).firstOrNull;
       if (layer == null) continue;
 
-      // Tiles (placed by the map editor) — Y-sorted for depth (higher Y = in front)
-      final tiles = layerName == "floor"
-          ? layer.tiles
-          : (List<MapTile>.from(layer.tiles)..sort((a, b) => a.y.compareTo(b.y)));
+      // Floor/walls: keep saved (placement) order so doors/windows placed on
+      // top of walls render above them — same as the editor canvas.
+      // Objects: stable Y-sort for depth (higher Y = in front), placement
+      // order as tiebreaker.
+      final List<MapTile> tiles;
+      if (layerName == "objects") {
+        final indexed = layer.tiles.asMap().entries.toList()
+          ..sort((a, b) {
+            final byY = a.value.y.compareTo(b.value.y);
+            return byY != 0 ? byY : a.key.compareTo(b.key);
+          });
+        tiles = [for (final e in indexed) e.value];
+      } else {
+        tiles = layer.tiles;
+      }
       for (final tile in tiles) {
         _drawTile(canvas, tile, layerName, imageCache.tiles, imgPaint);
       }

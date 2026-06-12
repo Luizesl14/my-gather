@@ -26,6 +26,7 @@ flutter:
     - assets/
     - assets/atlases/
     - assets/components/
+    - assets/config/
     - assets/furniture/
     - assets/maps/
     - assets/sprites/

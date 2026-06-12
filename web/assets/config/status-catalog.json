@@ -1,0 +1,10 @@
+{
+  "presences": [
+    { "id": "available", "label": "Disponível", "color": "presenceAvailable" },
+    { "id": "away", "label": "Ausente", "color": "presenceAway" },
+    { "id": "busy", "label": "Ocupado", "color": "presenceBusy" },
+    { "id": "meeting", "label": "Em reunião", "color": "presenceMeeting" },
+    { "id": "focus", "label": "Focado", "color": "presenceFocus" }
+  ],
+  "quickEmojis": ["💬", "☕", "🍽️", "🎧", "📞", "🏠", "⏰", "🚀"]
+}

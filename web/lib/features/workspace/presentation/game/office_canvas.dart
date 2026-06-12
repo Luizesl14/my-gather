@@ -39,6 +39,8 @@ class OfficeCanvas extends StatefulWidget {
     required this.workspaceId,
     required this.token,
     this.canToggleCollision = false,
+    this.presenceDotColor,
+    this.statusEmoji,
     super.key,
   });
 
@@ -48,6 +50,9 @@ class OfficeCanvas extends StatefulWidget {
   final String token;
   // Map owners/admins can toggle the collision overlay; guests never see it.
   final bool canToggleCollision;
+  // Resolved presence color and optional status emoji shown in the name bubble.
+  final Color? presenceDotColor;
+  final String? statusEmoji;
 
   @override
   State<OfficeCanvas> createState() => _OfficeCanvasState();
@@ -274,6 +279,8 @@ class _OfficeCanvasState extends State<OfficeCanvas>
                   frameImages: scene.avatarScene.frameImages,
                   avatarController: scene.avatarScene.avatarController,
                   avatar: movementController.avatar,
+                  presenceDotColor: widget.presenceDotColor,
+                  statusEmoji: widget.statusEmoji,
                 ),
                 child: const SizedBox.expand(),
               ),

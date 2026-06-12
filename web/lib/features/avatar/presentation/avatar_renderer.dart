@@ -15,6 +15,8 @@ class AvatarRenderer extends CustomPainter {
     required this.frameImages,
     required this.avatarController,
     required this.avatar,
+    this.presenceDotColor,
+    this.statusEmoji,
   });
 
   final OfficeMap map;
@@ -22,6 +24,9 @@ class AvatarRenderer extends CustomPainter {
   final Map<String, ui.Image> frameImages;
   final AvatarAnimationController avatarController;
   final AvatarViewModel avatar;
+  // Presence dot color resolved from the status catalog; falls back to available.
+  final Color? presenceDotColor;
+  final String? statusEmoji;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -64,9 +69,12 @@ class AvatarRenderer extends CustomPainter {
       );
     }
 
+    final bubbleText = statusEmoji != null
+        ? "$statusEmoji ${avatar.displayName}"
+        : avatar.displayName;
     final label = TextPainter(
       text: TextSpan(
-        text: avatar.displayName,
+        text: bubbleText,
         style: TextStyle(
           color: colors.textPrimary,
           fontSize: 12,
@@ -78,7 +86,9 @@ class AvatarRenderer extends CustomPainter {
       ellipsis: "…",
     )..layout(maxWidth: 140);
 
-    final bubbleWidth = label.width + 16;
+    // Layout: [10px pad][dot Ø7][6px gap][name][10px pad]
+    const dotRadius = 3.5;
+    final bubbleWidth = label.width + 10 + dotRadius * 2 + 6 + 10;
     final bubbleHeight = label.height + 10;
     final bubbleRect = RRect.fromRectAndRadius(
       Rect.fromCenter(
@@ -104,19 +114,20 @@ class AvatarRenderer extends CustomPainter {
         ..strokeWidth = 1,
     );
 
+    final statusDot = Paint()
+      ..color = presenceDotColor ?? colors.presenceAvailable;
+    canvas.drawCircle(
+      Offset(bubbleRect.left + 10 + dotRadius, bubbleRect.center.dy),
+      dotRadius,
+      statusDot,
+    );
+
     label.paint(
       canvas,
       Offset(
-        bubbleRect.left + 8,
-        bubbleRect.top + 4,
+        bubbleRect.left + 10 + dotRadius * 2 + 6,
+        bubbleRect.top + 5,
       ),
-    );
-
-    final statusDot = Paint()..color = colors.presenceAvailable;
-    canvas.drawCircle(
-      Offset(bubbleRect.left + 10, bubbleRect.center.dy),
-      4,
-      statusDot,
     );
   }
 
@@ -130,7 +141,9 @@ class AvatarRenderer extends CustomPainter {
         oldDelegate.avatarController.motionState !=
             avatarController.motionState ||
         oldDelegate.map != map ||
-        oldDelegate.colors != colors;
+        oldDelegate.colors != colors ||
+        oldDelegate.presenceDotColor != presenceDotColor ||
+        oldDelegate.statusEmoji != statusEmoji;
   }
 
 }
