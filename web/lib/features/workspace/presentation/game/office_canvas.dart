@@ -6,6 +6,7 @@ import "package:flutter/services.dart";
 import "package:flutter/scheduler.dart";
 
 import "../../../../core/theme/app_colors.dart";
+import "../../../../core/theme/app_spacing.dart";
 import "../../../avatar/data/avatar_scene_loader.dart";
 import "../../../avatar/domain/avatar_direction.dart";
 import "../../../avatar/domain/avatar_position.dart";
@@ -37,6 +38,7 @@ class OfficeCanvas extends StatefulWidget {
     required this.displayName,
     required this.workspaceId,
     required this.token,
+    this.canToggleCollision = false,
     super.key,
   });
 
@@ -44,6 +46,8 @@ class OfficeCanvas extends StatefulWidget {
   final String displayName;
   final String workspaceId;
   final String token;
+  // Map owners/admins can toggle the collision overlay; guests never see it.
+  final bool canToggleCollision;
 
   @override
   State<OfficeCanvas> createState() => _OfficeCanvasState();
@@ -61,6 +65,9 @@ class _OfficeCanvasState extends State<OfficeCanvas>
 
   // game loop
   Ticker? _ticker;
+
+  // Collision overlay (owner/admin only).
+  bool _showCollision = false;
 
   // key hold tracking
   final _heldKeys = <LogicalKeyboardKey>{};
@@ -129,6 +136,8 @@ class _OfficeCanvasState extends State<OfficeCanvas>
     }
     try {
       final data = await WorkspaceService(widget.token).fetchMap(widget.workspaceId);
+      // Editor-authored maps: collision comes ONLY from colRects drawn in the
+      // map editor. Catalog defaults (collision:true tiles) do not block here.
       return OfficeMap.fromApiJson(
         {
           "id": data.id,
@@ -139,8 +148,8 @@ class _OfficeCanvasState extends State<OfficeCanvas>
           "layers": data.layers,
           "interactiveZones": data.interactiveZones,
         },
-        collidingIds,
-        passthroughTileIds: passthroughIds,
+        const <String>{},
+        passthroughTileIds: const <String>{},
       );
     } catch (_) {
       return OfficeMap.loadDefault(collidingIds, passthroughTileIds: passthroughIds);
@@ -246,26 +255,40 @@ class _OfficeCanvasState extends State<OfficeCanvas>
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => _focusNode.requestFocus(),
-        child: RepaintBoundary(
-          child: CustomPaint(
-            painter: MapRenderer(
-              map: scene.map,
-              colors: colors,
-              imageCache: scene.imageCache,
-              playerX: movementController.avatar.position.x,
-              playerY: movementController.avatar.position.y,
-              tileById: scene.tileById,
-              showCollisionDebug: true,
+        child: Stack(
+          children: [
+            RepaintBoundary(
+              child: CustomPaint(
+                painter: MapRenderer(
+                  map: scene.map,
+                  colors: colors,
+                  imageCache: scene.imageCache,
+                  playerX: movementController.avatar.position.x,
+                  playerY: movementController.avatar.position.y,
+                  tileById: scene.tileById,
+                  showCollisionDebug: _showCollision,
+                ),
+                foregroundPainter: AvatarRenderer(
+                  map: scene.map,
+                  colors: colors,
+                  frameImages: scene.avatarScene.frameImages,
+                  avatarController: scene.avatarScene.avatarController,
+                  avatar: movementController.avatar,
+                ),
+                child: const SizedBox.expand(),
+              ),
             ),
-            foregroundPainter: AvatarRenderer(
-              map: scene.map,
-              colors: colors,
-              frameImages: scene.avatarScene.frameImages,
-              avatarController: scene.avatarScene.avatarController,
-              avatar: movementController.avatar,
-            ),
-            child: const SizedBox.expand(),
-          ),
+            if (widget.canToggleCollision)
+              Positioned(
+                top: AppSpacing.xl,
+                right: AppSpacing.xl,
+                child: _CollisionToggle(
+                  active: _showCollision,
+                  colors: colors,
+                  onTap: () => setState(() => _showCollision = !_showCollision),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -284,5 +307,67 @@ class _OfficeCanvasState extends State<OfficeCanvas>
       _heldKeys.remove(event.logicalKey);
     }
     return KeyEventResult.handled;
+  }
+}
+
+// Pill toggle for the collision overlay — visible to map owners/admins only.
+class _CollisionToggle extends StatelessWidget {
+  const _CollisionToggle({
+    required this.active,
+    required this.colors,
+    required this.onTap,
+  });
+
+  final bool active;
+  final AppColors colors;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: active ? "Ocultar áreas de colisão" : "Mostrar áreas de colisão",
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: active
+                  ? colors.brandPrimary
+                  : colors.panel.withValues(alpha: 0.92),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: active ? colors.brandPrimary : colors.border,
+              ),
+              boxShadow: const [
+                BoxShadow(color: Color(0x33000000), blurRadius: 8),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  active ? Icons.grid_on : Icons.grid_off,
+                  size: 15,
+                  color: active ? Colors.white : colors.textSecondary,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  "Colisão",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: active ? Colors.white : colors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

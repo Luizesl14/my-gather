@@ -19,11 +19,18 @@ String extractApiError(Object e) {
 }
 
 class Organization {
-  const Organization({required this.id, required this.name});
-  factory Organization.fromJson(Map<String, dynamic> j) =>
-      Organization(id: j["id"] as String, name: j["name"] as String);
+  const Organization({required this.id, required this.name, this.role = "member"});
+  factory Organization.fromJson(Map<String, dynamic> j) => Organization(
+        id: j["id"] as String,
+        name: j["name"] as String,
+        role: j["role"] as String? ?? "member",
+      );
   final String id;
   final String name;
+  // Current user's membership role in this org: owner | admin | member.
+  final String role;
+
+  bool get canEditMap => role == "owner" || role == "admin";
 }
 
 class Workspace {

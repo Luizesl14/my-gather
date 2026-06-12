@@ -9,6 +9,7 @@ import "../../../shared/design_system/design_system.dart";
 import "../../auth/presentation/auth_provider.dart";
 import "../../avatar/presentation/character_provider.dart";
 import "game/office_canvas.dart";
+import "workspace_provider.dart";
 
 class OfficePage extends ConsumerWidget {
   const OfficePage({required this.workspaceId, super.key});
@@ -21,6 +22,8 @@ class OfficePage extends ConsumerWidget {
     final user = ref.watch(authProvider).user;
     final characterId = ref.watch(characterProvider);
     final displayName = user?.displayName ?? "Você";
+    final role = ref.watch(orgRoleProvider);
+    final canEditMap = role == "owner" || role == "admin";
 
     return Scaffold(
       backgroundColor: colors.app,
@@ -32,6 +35,7 @@ class OfficePage extends ConsumerWidget {
               displayName: displayName,
               workspaceId: workspaceId,
               token: ref.watch(authProvider).token ?? "",
+              canToggleCollision: canEditMap,
             ),
           ),
           Positioned(

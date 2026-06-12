@@ -1317,25 +1317,54 @@ class _EditorCanvasState extends State<_EditorCanvas> {
                   ),
                   // Collision overlay toggle
                   Positioned(
-                    top: 8,
-                    right: 8,
-                    child: GestureDetector(
-                      onTap: () => setState(() => _showCollision = !_showCollision),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: _showCollision
-                              ? const Color(0xEEFF3333)
-                              : const Color(0xBB000000),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: const Color(0xFFFFFFFF), width: 1),
-                        ),
-                        child: Text(
-                          _showCollision ? "COLLISION ON" : "COLLISION",
-                          style: const TextStyle(
-                            color: Color(0xFFFFFFFF),
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                    top: 10,
+                    right: 10,
+                    child: Tooltip(
+                      message: _showCollision
+                          ? "Ocultar áreas de colisão"
+                          : "Mostrar áreas de colisão",
+                      child: GestureDetector(
+                        onTap: () => setState(() => _showCollision = !_showCollision),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 150),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: _showCollision
+                                ? const Color(0xFFFF9800)
+                                : const Color(0xCC1E2533),
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                              color: _showCollision
+                                  ? const Color(0xFFFF9800)
+                                  : const Color(0xFF3D5068),
+                            ),
+                            boxShadow: const [
+                              BoxShadow(color: Color(0x33000000), blurRadius: 8),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _showCollision ? Icons.grid_on : Icons.grid_off,
+                                size: 14,
+                                color: _showCollision
+                                    ? Colors.white
+                                    : const Color(0xFF90A4AE),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                "Colisão",
+                                style: TextStyle(
+                                  color: _showCollision
+                                      ? Colors.white
+                                      : const Color(0xFF90A4AE),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

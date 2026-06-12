@@ -156,7 +156,13 @@ export async function registerIdentityRoutes(
     const user = await authenticate(request, reply);
     if (!user) return reply;
     const organizations = await repositories.listOrganizations();
-    return { organizations: organizations.map((o) => ({ id: o.id, name: o.name.value })) };
+    const withRole = await Promise.all(
+      organizations.map(async (o) => {
+        const membership = await repositories.findByUserAndOrganization(user.id, o.id);
+        return { id: o.id, name: o.name.value, role: membership?.role.value ?? "member" };
+      }),
+    );
+    return { organizations: withRole };
   });
 
   app.get("/organizations/:id", async (request, reply) => {

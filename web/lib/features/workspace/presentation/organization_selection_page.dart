@@ -43,12 +43,14 @@ class _OrganizationSelectionPageState
         final result = await service.createOrganization(orgName);
         if (!mounted) return;
         ref.read(orgIdProvider.notifier).state = result.organization.id;
+        ref.read(orgRoleProvider.notifier).state = "owner";
         ref.read(workspaceIdProvider.notifier).state = result.workspace.id;
         context.goNamed(AppRouteNames.characterSelection);
         return;
       }
 
       ref.read(orgIdProvider.notifier).state = orgs.first.id;
+      ref.read(orgRoleProvider.notifier).state = orgs.first.role;
 
       // Busca workspace da primeira org
       final workspaces = await service.listWorkspaces(orgs.first.id);
@@ -80,6 +82,7 @@ class _OrganizationSelectionPageState
     final token = ref.read(authProvider).token ?? "";
     final service = WorkspaceService(token);
     ref.read(orgIdProvider.notifier).state = org.id;
+    ref.read(orgRoleProvider.notifier).state = org.role;
     try {
       final workspaces = await service.listWorkspaces(org.id);
       if (!mounted) return;
