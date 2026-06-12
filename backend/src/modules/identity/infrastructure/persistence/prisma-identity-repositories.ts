@@ -105,6 +105,22 @@ export class PrismaIdentityRepositories
     return row ? this._toMembership(row) : null;
   }
 
+  async listOrganizationMembers(
+    organizationId: string,
+  ): Promise<Array<{ userId: string; displayName: string; role: string; avatarId: string }>> {
+    const rows = await prisma.membership.findMany({
+      where: { organizationId },
+      include: { user: { select: { displayName: true, avatarId: true } } },
+      orderBy: { joinedAt: "asc" },
+    });
+    return rows.map((r) => ({
+      userId: r.userId,
+      displayName: r.user.displayName,
+      role: r.role,
+      avatarId: r.user.avatarId,
+    }));
+  }
+
   async findByToken(token: InvitationToken): Promise<Invitation | null> {
     const row = await prisma.invitation.findUnique({ where: { token: token.value } });
     return row ? this._toInvitation(row) : null;

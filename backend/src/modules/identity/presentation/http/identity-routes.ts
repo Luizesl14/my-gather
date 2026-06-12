@@ -175,6 +175,24 @@ export async function registerIdentityRoutes(
     return { organization: { id: organization.id, name: organization.name.value } };
   });
 
+  app.get("/organizations/:id/members", async (request, reply) => {
+    const user = await authenticate(request, reply);
+    if (!user) return reply;
+    const params = parseParams(organizationParamsSchema, request, reply);
+    if (!params) return reply;
+    const membership = await repositories.findByUserAndOrganization(user.id, params.id);
+    if (!membership) return sendError(reply, 403, "identity.membership.not_a_member");
+    const members = await repositories.listOrganizationMembers(params.id);
+    return {
+      members: members.map((m) => ({
+        id: m.userId,
+        displayName: m.displayName,
+        role: m.role,
+        avatarId: m.avatarId,
+      })),
+    };
+  });
+
   app.post("/organizations/:id/invitations", async (request, reply) => {
     const user = await authenticate(request, reply);
     if (!user) return reply;

@@ -41,6 +41,8 @@ class OfficeCanvas extends StatefulWidget {
     this.canToggleCollision = false,
     this.presenceDotColor,
     this.statusEmoji,
+    this.reactionSprite,
+    this.reactionTargetName,
     super.key,
   });
 
@@ -53,6 +55,10 @@ class OfficeCanvas extends StatefulWidget {
   // Resolved presence color and optional status emoji shown in the name bubble.
   final Color? presenceDotColor;
   final String? statusEmoji;
+  // Transient reaction bubble sprite (asset path relative to assets/) and the
+  // optional name of who the gesture is aimed at ("wave at Maria").
+  final String? reactionSprite;
+  final String? reactionTargetName;
 
   @override
   State<OfficeCanvas> createState() => _OfficeCanvasState();
@@ -260,42 +266,58 @@ class _OfficeCanvasState extends State<OfficeCanvas>
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => _focusNode.requestFocus(),
-        child: Stack(
-          children: [
-            RepaintBoundary(
-              child: CustomPaint(
-                painter: MapRenderer(
-                  map: scene.map,
-                  colors: colors,
-                  imageCache: scene.imageCache,
-                  playerX: movementController.avatar.position.x,
-                  playerY: movementController.avatar.position.y,
-                  tileById: scene.tileById,
-                  showCollisionDebug: _showCollision,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final viewport = Size(constraints.maxWidth, constraints.maxHeight);
+            final pos = movementController.avatar.position;
+            return Stack(
+              children: [
+                RepaintBoundary(
+                  child: CustomPaint(
+                    painter: MapRenderer(
+                      map: scene.map,
+                      colors: colors,
+                      imageCache: scene.imageCache,
+                      playerX: pos.x,
+                      playerY: pos.y,
+                      tileById: scene.tileById,
+                      showCollisionDebug: _showCollision,
+                    ),
+                    foregroundPainter: AvatarRenderer(
+                      map: scene.map,
+                      colors: colors,
+                      frameImages: scene.avatarScene.frameImages,
+                      avatarController: scene.avatarScene.avatarController,
+                      avatar: movementController.avatar,
+                      presenceDotColor: widget.presenceDotColor,
+                      statusEmoji: widget.statusEmoji,
+                    ),
+                    child: const SizedBox.expand(),
+                  ),
                 ),
-                foregroundPainter: AvatarRenderer(
-                  map: scene.map,
-                  colors: colors,
-                  frameImages: scene.avatarScene.frameImages,
-                  avatarController: scene.avatarScene.avatarController,
-                  avatar: movementController.avatar,
-                  presenceDotColor: widget.presenceDotColor,
-                  statusEmoji: widget.statusEmoji,
-                ),
-                child: const SizedBox.expand(),
-              ),
-            ),
-            if (widget.canToggleCollision)
-              Positioned(
-                top: AppSpacing.xl,
-                right: AppSpacing.xl,
-                child: _CollisionToggle(
-                  active: _showCollision,
-                  colors: colors,
-                  onTap: () => setState(() => _showCollision = !_showCollision),
-                ),
-              ),
-          ],
+                if (widget.reactionSprite != null)
+                  _ReactionBubble(
+                    sprite: widget.reactionSprite!,
+                    targetName: widget.reactionTargetName,
+                    map: scene.map,
+                    viewport: viewport,
+                    tileX: pos.x,
+                    tileY: pos.y,
+                  ),
+                if (widget.canToggleCollision)
+                  Positioned(
+                    top: AppSpacing.xl,
+                    right: AppSpacing.xl,
+                    child: _CollisionToggle(
+                      active: _showCollision,
+                      colors: colors,
+                      onTap: () =>
+                          setState(() => _showCollision = !_showCollision),
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -372,6 +394,99 @@ class _CollisionToggle extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Transient reaction bubble above the player's avatar, Gather-style.
+// Positioned with the same camera math used by MapRenderer/AvatarRenderer.
+class _ReactionBubble extends StatelessWidget {
+  const _ReactionBubble({
+    required this.sprite,
+    required this.map,
+    required this.viewport,
+    required this.tileX,
+    required this.tileY,
+    this.targetName,
+  });
+
+  final String sprite;
+  final String? targetName;
+  final OfficeMap map;
+  final Size viewport;
+  final double tileX;
+  final double tileY;
+
+  @override
+  Widget build(BuildContext context) {
+    const zoom = MapRenderer.kDisplayZoom;
+    final ts = map.tileSize * zoom;
+    final offset = MapRenderer.cameraOffset(viewport, map, tileX, tileY);
+    // Sprites are 32px pixel art: render at native size to keep them crisp.
+    const bubbleSize = 44.0;
+    const colWidth = 140.0;
+    final chipHeight = targetName == null ? 0.0 : 20.0;
+    // Above the sprite (48px tall) and the name bubble (~30px).
+    final left = tileX * ts + offset.dx + ts / 2 - colWidth / 2;
+    final top =
+        tileY * ts + offset.dy + ts - 48 - 30 - bubbleSize - chipHeight - 6;
+
+    return Positioned(
+      left: left,
+      top: top,
+      child: SizedBox(
+        width: colWidth,
+        child: TweenAnimationBuilder<double>(
+          key: ValueKey("$sprite-$targetName"),
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: const Duration(milliseconds: 450),
+          curve: Curves.elasticOut,
+          builder: (_, scale, child) =>
+              Transform.scale(scale: scale, child: child),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: bubbleSize,
+                height: bubbleSize,
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  color: Color(0xF2FFFFFF),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(color: Color(0x55000000), blurRadius: 8),
+                  ],
+                ),
+                child: Image.asset(
+                  "assets/$sprite",
+                  filterQuality: FilterQuality.none,
+                ),
+              ),
+              if (targetName != null) ...[
+                const SizedBox(height: 2),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xD9172033),
+                    borderRadius: BorderRadius.circular(9),
+                  ),
+                  child: Text(
+                    "→ $targetName",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
       ),

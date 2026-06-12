@@ -33,6 +33,25 @@ class Organization {
   bool get canEditMap => role == "owner" || role == "admin";
 }
 
+class OrgMember {
+  const OrgMember({
+    required this.id,
+    required this.displayName,
+    this.role = "member",
+    this.avatarId = "character-01",
+  });
+  factory OrgMember.fromJson(Map<String, dynamic> j) => OrgMember(
+        id: j["id"] as String,
+        displayName: j["displayName"] as String,
+        role: j["role"] as String? ?? "member",
+        avatarId: j["avatarId"] as String? ?? "character-01",
+      );
+  final String id;
+  final String displayName;
+  final String role;
+  final String avatarId;
+}
+
 class Workspace {
   const Workspace({required this.id, required this.name});
   factory Workspace.fromJson(Map<String, dynamic> j) =>
@@ -111,6 +130,15 @@ class WorkspaceService {
     final res = await _dio.get<Map<String, dynamic>>("/organizations");
     final list = res.data!["organizations"] as List;
     return list.map((e) => Organization.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<List<OrgMember>> listMembers(String organizationId) async {
+    final res = await _dio
+        .get<Map<String, dynamic>>("/organizations/$organizationId/members");
+    final list = res.data!["members"] as List;
+    return list
+        .map((e) => OrgMember.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Future<OrgWithWorkspace> createOrganization(String name) async {

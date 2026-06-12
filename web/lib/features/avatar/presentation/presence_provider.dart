@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:convert";
 
 import "package:flutter/services.dart";
@@ -26,11 +27,31 @@ class PresenceOption {
       );
 }
 
+// Office reactions (wave, knock, coffee...) backed by game sprites.
+class ReactionOption {
+  const ReactionOption({
+    required this.id,
+    required this.label,
+    required this.sprite,
+  });
+
+  final String id;
+  final String label;
+  // Asset path relative to assets/ (e.g. "sprites/gestures/wave.png").
+  final String sprite;
+
+  factory ReactionOption.fromJson(Map<String, dynamic> j) => ReactionOption(
+        id: j["id"] as String,
+        label: j["label"] as String,
+        sprite: j["sprite"] as String,
+      );
+}
+
 class StatusCatalog {
-  const StatusCatalog({required this.presences, required this.quickEmojis});
+  const StatusCatalog({required this.presences, required this.reactions});
 
   final List<PresenceOption> presences;
-  final List<String> quickEmojis;
+  final List<ReactionOption> reactions;
 
   PresenceOption? presenceById(String id) {
     for (final p in presences) {
@@ -49,10 +70,44 @@ final statusCatalogProvider = FutureProvider<StatusCatalog>((ref) async {
         .cast<Map<String, dynamic>>()
         .map(PresenceOption.fromJson)
         .toList(growable: false),
-    quickEmojis:
-        (json["quickEmojis"] as List<dynamic>).cast<String>(),
+    reactions: (json["reactions"] as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .map(ReactionOption.fromJson)
+        .toList(growable: false),
   );
 });
+
+// Transient reaction bubble shown above the player's avatar, optionally
+// directed at someone in the room ("wave at Maria").
+class ActiveReaction {
+  const ActiveReaction({required this.sprite, this.targetName});
+
+  // Asset path relative to assets/ (e.g. "sprites/gestures/wave.png").
+  final String sprite;
+  // Display name of the person the gesture is aimed at; null = everyone.
+  final String? targetName;
+}
+
+// Cleared automatically a few seconds after being triggered.
+class ActiveReactionNotifier extends Notifier<ActiveReaction?> {
+  Timer? _timer;
+
+  @override
+  ActiveReaction? build() {
+    ref.onDispose(() => _timer?.cancel());
+    return null;
+  }
+
+  void trigger(String sprite, {String? targetName}) {
+    _timer?.cancel();
+    state = ActiveReaction(sprite: sprite, targetName: targetName);
+    _timer = Timer(const Duration(seconds: 3), () => state = null);
+  }
+}
+
+final activeReactionProvider =
+    NotifierProvider<ActiveReactionNotifier, ActiveReaction?>(
+        ActiveReactionNotifier.new);
 
 // ─── User status state ────────────────────────────────────────────────────────
 

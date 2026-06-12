@@ -6,5 +6,11 @@
     { "id": "meeting", "label": "Em reunião", "color": "presenceMeeting" },
     { "id": "focus", "label": "Focado", "color": "presenceFocus" }
   ],
-  "quickEmojis": ["💬", "☕", "🍽️", "🎧", "📞", "🏠", "⏰", "🚀"]
+  "reactions": [
+    { "id": "wave", "label": "Acenar", "sprite": "sprites/gestures/wave.png" },
+    { "id": "coffee", "label": "Café?", "sprite": "sprites/reactions/coffee.png" },
+    { "id": "help", "label": "Preciso de ajuda", "sprite": "sprites/reactions/help.png" },
+    { "id": "shout", "label": "Atenção!", "sprite": "sprites/bubbles/shout.png" },
+    { "id": "knock", "label": "Toc toc", "sprite": "sprites/bubbles/knock.png" }
+  ]
 }
