@@ -1,4 +1,4 @@
-import "dart:math" show max, pi;
+import "dart:math" show pi;
 import "dart:ui" as ui;
 
 import "package:flutter/material.dart";
@@ -110,65 +110,80 @@ class MapRenderer extends CustomPainter {
 
     InteractionRenderer(colors).paint(canvas, map.interactiveZones, _cell);
 
-    if (showCollisionDebug) _drawCollisionDebug(canvas);
-
     canvas.restore();
+
+    // Debug overlay drawn in screen space (after restore, no clip/transform issues).
+    if (showCollisionDebug) _drawCollisionDebug(canvas, size, offset);
   }
 
-  void _drawCollisionDebug(Canvas canvas) {
-    final blockPaint = Paint()..color = const Color(0x88FF3333);
-    final passPaint  = Paint()..color = const Color(0x6633FF88);
+  void _drawCollisionDebug(Canvas canvas, Size size, Offset camOffset) {
+    const s = kDisplayZoom;
+    final blockPaint = Paint()..color = const Color(0xAAFF2222);
+    final passPaint  = Paint()..color = const Color(0xAA22FF88);
     final border     = Paint()
-      ..color = const Color(0xCCFFFFFF)
+      ..color = const Color(0xFFFFFFFF)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.5;
+      ..strokeWidth = 1.5;
+
+    // Converts tile-grid coords → screen coords.
+    Rect tileRect(double tx, double ty, double tw, double th) => Rect.fromLTWH(
+          camOffset.dx + tx * _cell * s,
+          camOffset.dy + ty * _cell * s,
+          tw * _cell * s,
+          th * _cell * s,
+        );
 
     for (final layer in map.layers) {
       final isFloor = layer.name == "floor";
       for (final tile in layer.tiles) {
-        final isColliding    = map.collidingTileIds.contains(tile.tile);
-        final isPassthrough  = map.passthroughTileIds.contains(tile.tile);
-        if (!isColliding && !isPassthrough) continue;
+        final isColliding   = map.collidingTileIds.contains(tile.tile);
+        final isPassthrough = map.passthroughTileIds.contains(tile.tile);
+        final hasColRect    = tile.colRect != null;
+        if (!isColliding && !isPassthrough && !hasColRect) continue;
 
         final Rect rect;
-        if (isFloor) {
-          rect = Rect.fromLTWH(tile.x * _cell, tile.y * _cell, tile.w * _cell, tile.h * _cell);
+        if (tile.colRect != null) {
+          // Exact drawn rect — matches the pixel-precise canOccupy test.
+          final cr = tile.colRect!;
+          rect = tileRect(cr.x / map.tileSize, cr.y / map.tileSize,
+              cr.w / map.tileSize, cr.h / map.tileSize);
+        } else if (isFloor) {
+          rect = tileRect(tile.x.toDouble(), tile.y.toDouble(),
+              tile.w.toDouble(), tile.h.toDouble());
         } else {
-          final gx = tile.x ~/ map.tileSize;
-          final gy = tile.y ~/ map.tileSize;
-          final gw = max(1, tile.w ~/ map.tileSize);
-          final gh = max(1, tile.h ~/ map.tileSize);
-          rect = Rect.fromLTWH(gx * _cell, gy * _cell, gw * _cell, gh * _cell);
+          // Exact pixel bounds — matches the pixel-precise canOccupy test.
+          rect = tileRect(tile.x / map.tileSize, tile.y / map.tileSize,
+              tile.w / map.tileSize, tile.h / map.tileSize);
         }
         canvas.drawRect(rect, isPassthrough ? passPaint : blockPaint);
         canvas.drawRect(rect, border);
       }
 
-      // Legacy objects
       for (final obj in layer.objects) {
-        final isBlock = OfficeMap.blockingAssetIds.contains(obj.asset);
-        if (!isBlock) continue;
-        final bounds = map.objectBoundsPublic(obj);
-        final rect = Rect.fromLTWH(
-          bounds.left * _cell,
-          bounds.top * _cell,
-          (bounds.right - bounds.left) * _cell,
-          (bounds.bottom - bounds.top) * _cell,
-        );
+        if (!OfficeMap.blockingAssetIds.contains(obj.asset)) continue;
+        final tr = map.objectTileRect(obj);
+        final rect = tileRect(tr.left, tr.top, tr.width, tr.height);
         canvas.drawRect(rect, blockPaint);
         canvas.drawRect(rect, border);
       }
     }
 
-    // Label
-    final tp = TextPainter(
-      text: const TextSpan(
-        text: "F1 — colisão debug",
-        style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 8, fontWeight: FontWeight.bold),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    tp.paint(canvas, const Offset(2, 2));
+    // Player feet hitbox (blue) — collision happens when this touches red.
+    // Must mirror OfficeMap.canOccupy: central 10px wide, bottom 10px of tile.
+    final feetBox = Rect.fromLTWH(
+      camOffset.dx + (playerX * _cell + 11) * s,
+      camOffset.dy + (playerY * _cell + 22) * s,
+      10 * s,
+      10 * s,
+    );
+    canvas.drawRect(feetBox, Paint()..color = const Color(0xAA2196F3));
+    canvas.drawRect(feetBox, border);
+
+    // Indicator square — always visible in top-left corner to confirm debug is ON.
+    canvas.drawRect(
+      const Rect.fromLTWH(4, 4, 16, 16),
+      Paint()..color = const Color(0xFFFF0000),
+    );
   }
 
   // Identical to _CanvasPainter._drawPlaced from map_editor_page.dart.
@@ -273,6 +288,7 @@ class MapRenderer extends CustomPainter {
         oldDelegate.imageCache != imageCache ||
         oldDelegate.tileById != tileById ||
         oldDelegate.playerX != playerX ||
-        oldDelegate.playerY != playerY;
+        oldDelegate.playerY != playerY ||
+        oldDelegate.showCollisionDebug != showCollisionDebug;
   }
 }

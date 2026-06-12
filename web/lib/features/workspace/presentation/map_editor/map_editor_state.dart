@@ -52,6 +52,21 @@ class ScenaryTile {
 
 // ─── Placed tile ──────────────────────────────────────────────────────────────
 
+class ColRect {
+  const ColRect({required this.x, required this.y, required this.w, required this.h});
+  final int x; // absolute pixel x (same space as PlacedTile.x)
+  final int y;
+  final int w;
+  final int h;
+
+  factory ColRect.fromJson(Map<String, dynamic> j) => ColRect(
+        x: j["x"] as int, y: j["y"] as int,
+        w: j["w"] as int, h: j["h"] as int,
+      );
+
+  Map<String, dynamic> toJson() => {"x": x, "y": y, "w": w, "h": h};
+}
+
 class PlacedTile {
   const PlacedTile({
     required this.id,
@@ -68,22 +83,25 @@ class PlacedTile {
     this.frameCols = 1,
     this.frameRows = 1,
     this.overlayId,
+    this.colRect,
   });
 
   final String id;
   final String tileId;
   final int x;
   final int y;
-  final String layerName; // "floor" | "walls" | "objects"
-  final int rotation;     // 0, 90, 180, 270
+  final String layerName;
+  final int rotation;
   final bool flipX;
-  final int w;            // grid cells wide
-  final int h;            // grid cells tall
-  final int frameCol;     // sprite sheet column (selected frame)
-  final int frameRow;     // sprite sheet row (selected frame)
-  final int frameCols;    // total columns in sprite sheet
-  final int frameRows;    // total rows in sprite sheet
+  final int w;
+  final int h;
+  final int frameCol;
+  final int frameRow;
+  final int frameCols;
+  final int frameRows;
   final String? overlayId;
+  // Custom collision rectangle (absolute pixel coords). Null = use full tile bounds.
+  final ColRect? colRect;
 
   bool hits(int gx, int gy) =>
       gx >= x && gx < x + w && gy >= y && gy < y + h;
@@ -101,6 +119,8 @@ class PlacedTile {
     int? frameRows,
     String? overlayId,
     bool clearOverlay = false,
+    ColRect? colRect,
+    bool clearColRect = false,
   }) =>
       PlacedTile(
         id: id,
@@ -117,6 +137,7 @@ class PlacedTile {
         frameCols: frameCols ?? this.frameCols,
         frameRows: frameRows ?? this.frameRows,
         overlayId: clearOverlay ? null : (overlayId ?? this.overlayId),
+        colRect: clearColRect ? null : (colRect ?? this.colRect),
       );
 
   Map<String, dynamic> toJson() {
@@ -130,6 +151,7 @@ class PlacedTile {
     if (frameCols > 1) m["frameCols"] = frameCols;
     if (frameRows > 1) m["frameRows"] = frameRows;
     if (overlayId != null) m["overlayId"] = overlayId;
+    if (colRect != null) m["colRect"] = colRect!.toJson();
     return m;
   }
 }
@@ -371,7 +393,19 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
         return t.x < nx + tile.w && t.x + t.w > nx && t.y < ny + tile.h && t.y + t.h > ny;
       });
     }
-    updated[id] = tile.copyWith(x: nx, y: ny);
+    // ColRect is in absolute pixel coords — translate it with the tile.
+    ColRect? newColRect;
+    if (tile.colRect != null) {
+      final dx = isFloor ? (nx - tile.x) * 32 : nx - tile.x;
+      final dy = isFloor ? (ny - tile.y) * 32 : ny - tile.y;
+      newColRect = ColRect(
+        x: tile.colRect!.x + dx,
+        y: tile.colRect!.y + dy,
+        w: tile.colRect!.w,
+        h: tile.colRect!.h,
+      );
+    }
+    updated[id] = tile.copyWith(x: nx, y: ny, colRect: newColRect ?? tile.colRect);
     state = state.copyWith(placedTiles: updated, isDirty: true);
   }
 
@@ -445,6 +479,65 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
     state = state.copyWith(placedTiles: updated, isDirty: true);
   }
 
+  void setCollisionRect(String id, int x, int y, int w, int h) {
+    final tile = state.placedTiles[id];
+    if (tile == null) return;
+    final updated = Map<String, PlacedTile>.from(state.placedTiles);
+    updated[id] = tile.copyWith(colRect: ColRect(x: x, y: y, w: w, h: h));
+    state = state.copyWith(placedTiles: updated, isDirty: true);
+  }
+
+  void clearCollisionRect(String id) {
+    final tile = state.placedTiles[id];
+    if (tile == null) return;
+    final updated = Map<String, PlacedTile>.from(state.placedTiles);
+    updated[id] = tile.copyWith(clearColRect: true);
+    state = state.copyWith(placedTiles: updated, isDirty: true);
+  }
+
+  void duplicatePlaced(String id) {
+    final tile = state.placedTiles[id];
+    if (tile == null) return;
+    final newId = _genId();
+    final shift = tile.layerName == "floor" ? 1 : 32;
+    final updated = Map<String, PlacedTile>.from(state.placedTiles);
+    updated[newId] = PlacedTile(
+      id: newId,
+      tileId: tile.tileId,
+      x: tile.x + shift,
+      y: tile.y + shift,
+      layerName: tile.layerName,
+      rotation: tile.rotation,
+      flipX: tile.flipX,
+      w: tile.w,
+      h: tile.h,
+      frameCol: tile.frameCol,
+      frameRow: tile.frameRow,
+      frameCols: tile.frameCols,
+      frameRows: tile.frameRows,
+      overlayId: tile.overlayId,
+      // colRect is absolute px — shift by the same visual offset (1 cell = 32px).
+      colRect: tile.colRect != null
+          ? ColRect(
+              x: tile.colRect!.x + 32,
+              y: tile.colRect!.y + 32,
+              w: tile.colRect!.w,
+              h: tile.colRect!.h,
+            )
+          : null,
+    );
+    state = state.copyWith(placedTiles: updated, selectedId: newId, isDirty: true);
+  }
+
+  void bringToFront(String id) {
+    final tile = state.placedTiles[id];
+    if (tile == null) return;
+    final updated = Map<String, PlacedTile>.from(state.placedTiles);
+    updated.remove(id);
+    updated[id] = tile;
+    state = state.copyWith(placedTiles: updated, isDirty: true);
+  }
+
   void deletePlaced(String id) {
     final updated = Map<String, PlacedTile>.from(state.placedTiles);
     updated.remove(id);
@@ -502,6 +595,9 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
           frameCols: (tile["frameCols"] as int?) ?? 1,
           frameRows: (tile["frameRows"] as int?) ?? 1,
           overlayId: tile["overlayId"] as String?,
+          colRect: tile["colRect"] != null
+              ? ColRect.fromJson(tile["colRect"] as Map<String, dynamic>)
+              : null,
         );
       }
     }

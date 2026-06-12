@@ -255,6 +255,7 @@ class _OfficeCanvasState extends State<OfficeCanvas>
               playerX: movementController.avatar.position.x,
               playerY: movementController.avatar.position.y,
               tileById: scene.tileById,
+              showCollisionDebug: true,
             ),
             foregroundPainter: AvatarRenderer(
               map: scene.map,

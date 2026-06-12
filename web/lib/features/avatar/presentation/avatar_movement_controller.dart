@@ -20,25 +20,33 @@ class AvatarMovementController {
 
   // Quarter-tile steps for fine-grained positioning.
   static const double _step = 0.25;
+  // Smallest substep when sliding up against an obstacle: 1px (1/32 tile).
+  static const double _minStep = 0.03125;
 
   AvatarViewModel get avatar => _avatar;
 
   bool move(AvatarDirection direction) {
-    final (dx, dy) = switch (direction) {
-      AvatarDirection.front => (0.0, _step),
-      AvatarDirection.back  => (0.0, -_step),
-      AvatarDirection.left  => (-_step, 0.0),
-      AvatarDirection.right => (_step, 0.0),
+    final (ux, uy) = switch (direction) {
+      AvatarDirection.front => (0.0, 1.0),
+      AvatarDirection.back  => (0.0, -1.0),
+      AvatarDirection.left  => (-1.0, 0.0),
+      AvatarDirection.right => (1.0, 0.0),
     };
-    final next = _avatar.position.moveBy(dx, dy);
 
-    // Collision uses floor() — character occupies the tile it stands in.
-    if (!_map.canOccupyTile(next.tileX, next.tileY)) {
-      return false;
+    // Try the full step; when blocked, halve it until the avatar can slide
+    // flush against the obstacle (pixel-precise contact).
+    AvatarPosition? target;
+    for (var step = _step; step >= _minStep; step /= 2) {
+      final next = _avatar.position.moveBy(ux * step, uy * step);
+      if (_map.canOccupy(next.x, next.y)) {
+        target = next;
+        break;
+      }
     }
+    if (target == null) return false;
 
     _avatar = _avatar.copyWith(
-      position: next,
+      position: target,
       direction: direction,
       motionState: AvatarMotionState.walking,
     );

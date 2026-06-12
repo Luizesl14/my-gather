@@ -805,6 +805,7 @@ class _EditorCanvasState extends State<_EditorCanvas> {
 
   double _scale = 1.5;
   Offset _offset = const Offset(40, 40);
+  bool _showCollision = true;
 
   double _scaleStart = 1.0;
   Offset _panStartPointer = Offset.zero;
@@ -828,6 +829,14 @@ class _EditorCanvasState extends State<_EditorCanvas> {
   int _resizeStartH = 1;
   Offset _resizeGlobalStart = Offset.zero;
 
+  // Collision draw mode — non-null when user is drawing a collision rect
+  String? _collisionEditId;
+  Offset? _colDragStart;  // canvas-space start
+  Offset? _colDragEnd;    // canvas-space current end
+
+  // Tile action popover
+  bool _showTileMenu = false;
+
   Offset _toCanvas(Offset screen) => (screen - _offset) / _scale;
 
   (int, int) _toGrid(Offset canvas) => (
@@ -849,6 +858,16 @@ class _EditorCanvasState extends State<_EditorCanvas> {
   }
 
   void _onScaleStart(ScaleStartDetails details) {
+    // Collision draw mode — capture drag start and skip normal handling
+    if (_collisionEditId != null && details.pointerCount == 1) {
+      final cp = _toCanvas(details.localFocalPoint);
+      setState(() {
+        _colDragStart = cp;
+        _colDragEnd = cp;
+      });
+      return;
+    }
+
     _scaleStart = _scale;
     _panStartPointer = details.localFocalPoint;
     _panStartOffset = _offset;
@@ -897,6 +916,12 @@ class _EditorCanvasState extends State<_EditorCanvas> {
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
+    // Collision draw mode — update preview rect
+    if (_collisionEditId != null && _colDragStart != null) {
+      setState(() => _colDragEnd = _toCanvas(details.localFocalPoint));
+      return;
+    }
+
     if (_draggingId != null) {
       final delta = details.localFocalPoint - _dragStartPointer;
       if (delta.distance > _tapThreshold) _didPan = true;
@@ -933,6 +958,35 @@ class _EditorCanvasState extends State<_EditorCanvas> {
   }
 
   void _onScaleEnd(ScaleEndDetails _) {
+    // Collision draw mode — always intercept so tapCanvas never fires mid-draw.
+    if (_collisionEditId != null) {
+      if (_colDragStart != null && _colDragEnd != null) {
+        final x1 = _colDragStart!.dx;
+        final y1 = _colDragStart!.dy;
+        final x2 = _colDragEnd!.dx;
+        final y2 = _colDragEnd!.dy;
+        final rx = x1 < x2 ? x1 : x2;
+        final ry = y1 < y2 ? y1 : y2;
+        final rw = (x2 - x1).abs();
+        final rh = (y2 - y1).abs();
+        if (rw >= 4 && rh >= 4) {
+          widget.notifier.setCollisionRect(
+              _collisionEditId!, rx.round(), ry.round(), rw.round(), rh.round());
+          setState(() {
+            _collisionEditId = null;
+            _colDragStart = null;
+            _colDragEnd = null;
+          });
+        }
+        // If rect too small, keep collision mode active for a retry.
+      }
+      // Never call tapCanvas while in collision edit mode — it would deselect the tile.
+      _draggingId = null;
+      _draggingPixel = false;
+      _didPan = false;
+      return;
+    }
+
     if (!_didPan) {
       final canvasPos = _toCanvas(_panStartPointer);
       final (gx, gy) = _toGrid(canvasPos);
@@ -944,24 +998,21 @@ class _EditorCanvasState extends State<_EditorCanvas> {
     _didPan = false;
   }
 
-  // Inline buttons shown over the selected tile
-  List<Widget> _buildSelectionOverlay(PlacedTile tile) {
+  List<Widget> _buildSelectionOverlay(PlacedTile tile, Size availableSize) {
     final isFloor = tile.layerName == "floor";
-    // Floor: grid cell coords; everything else: pixel coords
     final sx = _offset.dx + (isFloor ? tile.x * _baseCell : tile.x.toDouble()) * _scale;
     final sy = _offset.dy + (isFloor ? tile.y * _baseCell : tile.y.toDouble()) * _scale;
     final sw = (isFloor ? tile.w * _baseCell : tile.w.toDouble()) * _scale;
     final sh = (isFloor ? tile.h * _baseCell : tile.h.toDouble()) * _scale;
 
-    Widget btn({
+    // ── Drag handle factory (move / resize) ──────────────────────────────────
+    Widget dragHandle({
       required double left,
       required double top,
-      required Color color,
       required IconData icon,
       required String tooltip,
-      VoidCallback? onTap,
-      void Function(DragStartDetails)? onPanStart,
-      void Function(DragUpdateDetails)? onPanUpdate,
+      required void Function(DragStartDetails) onPanStart,
+      required void Function(DragUpdateDetails) onPanUpdate,
     }) =>
         Positioned(
           left: left,
@@ -970,165 +1021,368 @@ class _EditorCanvasState extends State<_EditorCanvas> {
             message: tooltip,
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: onTap,
               onPanStart: onPanStart,
               onPanUpdate: onPanUpdate,
               child: Container(
-                width: 22,
-                height: 22,
+                width: 20,
+                height: 20,
                 decoration: BoxDecoration(
-                  color: color,
-                  shape: onPanStart != null
-                      ? BoxShape.rectangle
-                      : BoxShape.circle,
-                  borderRadius:
-                      onPanStart != null ? BorderRadius.circular(5) : null,
-                  boxShadow: const [
-                    BoxShadow(color: Color(0x55000000), blurRadius: 4)
-                  ],
+                  color: const Color(0xFF37474F),
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: const [BoxShadow(color: Color(0x66000000), blurRadius: 4)],
                 ),
-                child: Icon(icon, size: 12, color: Colors.white),
+                child: Icon(icon, size: 11, color: Colors.white.withValues(alpha: 0.85)),
               ),
             ),
           ),
         );
 
+    // ── Collision draw mode: show draw hint + cancel ─────────────────────────
+    if (_collisionEditId == tile.id) {
+      return [
+        // Move handle stays so tile can be repositioned
+        dragHandle(
+          left: sx - 10, top: sy - 10,
+          icon: Icons.open_with, tooltip: "Move",
+          onPanStart: (d) { _handleStartX = tile.x; _handleStartY = tile.y; _handleGlobalStart = d.globalPosition; },
+          onPanUpdate: (d) {
+            final delta = d.globalPosition - _handleGlobalStart;
+            final newX = !isFloor ? _handleStartX + (delta.dx / _scale).round()
+                                   : _handleStartX + (delta.dx / (_scale * _baseCell)).round();
+            final newY = !isFloor ? _handleStartY + (delta.dy / _scale).round()
+                                   : _handleStartY + (delta.dy / (_scale * _baseCell)).round();
+            widget.notifier.movePlaced(tile.id, newX, newY);
+          },
+        ),
+        // Draw-mode indicator: "+" icon at top-right
+        Positioned(
+          left: sx + sw - 10,
+          top: sy - 10,
+          child: Container(
+            width: 20, height: 20,
+            decoration: BoxDecoration(
+              color: const Color(0xFFFF9800),
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: const [BoxShadow(color: Color(0x66000000), blurRadius: 4)],
+            ),
+            child: const Icon(Icons.add, size: 13, color: Colors.white),
+          ),
+        ),
+        // Bottom hint bar
+        Positioned(
+          bottom: 12, left: 0, right: 0,
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xDD1A1E2B),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0xFFFF9800), width: 1),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.add, size: 14, color: Color(0xFFFF9800)),
+                  const SizedBox(width: 6),
+                  const Text("Drag to draw collision area",
+                      style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 12)),
+                  const SizedBox(width: 12),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => setState(() {
+                      _collisionEditId = null;
+                      _colDragStart = null;
+                      _colDragEnd = null;
+                    }),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF37474F),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text("Cancel",
+                          style: TextStyle(color: Colors.white, fontSize: 11)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ];
+    }
+
+    // ── Normal mode ──────────────────────────────────────────────────────────
+
+    // "⋯" pill trigger position (top-right of tile)
+    final trigL = sx + sw - 14;
+    final trigT = sy - 13;
+
+    // Popover sizing
+    const menuW = 168.0;
+    const menuH = 224.0; // 6 items × 34px + 16px padding
+
+    // Auto-position: prefer right of trigger, fall back to left, then above.
+    double menuL = trigL + 18;
+    double menuT = trigT - 4;
+    if (menuL + menuW > availableSize.width - 4) menuL = trigL - menuW - 2;
+    if (menuL < 4) menuL = 4;
+    if (menuT + menuH > availableSize.height - 4) menuT = availableSize.height - menuH - 4;
+    if (menuT < 4) menuT = 4;
+
+    // Action items
+    void doAction(VoidCallback action) {
+      setState(() => _showTileMenu = false);
+      action();
+    }
+
+    final actions = <({IconData icon, String label, Color color, VoidCallback onTap})>[
+      (icon: Icons.flip, label: "Mirror", color: const Color(0xFF5C6BC0),
+        onTap: () => doAction(() => widget.notifier.flipPlaced(tile.id))),
+      (icon: Icons.rotate_right, label: "Rotate", color: const Color(0xFF26A69A),
+        onTap: () => doAction(() => widget.notifier.rotatePlaced(tile.id))),
+      (icon: Icons.content_copy_outlined, label: "Duplicate", color: const Color(0xFF42A5F5),
+        onTap: () => doAction(() => widget.notifier.duplicatePlaced(tile.id))),
+      (icon: Icons.crop_free, label: tile.colRect != null ? "Collision ✓" : "Collision",
+        color: tile.colRect != null ? const Color(0xFFFF9800) : const Color(0xFF78909C),
+        onTap: () => doAction(() => setState(() {
+          _collisionEditId = tile.id;
+          _colDragStart = null;
+          _colDragEnd = null;
+        }))),
+      (icon: Icons.flip_to_front_outlined, label: "Bring to Front", color: const Color(0xFF8D6E63),
+        onTap: () => doAction(() => widget.notifier.bringToFront(tile.id))),
+      (icon: Icons.delete_outline, label: "Delete", color: const Color(0xFFEF5350),
+        onTap: () => doAction(() => widget.notifier.deletePlaced(tile.id))),
+    ];
+
     return [
       // Move handle — top-left
-      btn(
-        left: sx - 11,
-        top: sy - 11,
-        color: widget.colors.brandPrimary,
-        icon: Icons.open_with,
-        tooltip: "Mover",
-        onPanStart: (d) {
-          _handleStartX = tile.x;
-          _handleStartY = tile.y;
-          _handleGlobalStart = d.globalPosition;
-        },
+      dragHandle(
+        left: sx - 10, top: sy - 10,
+        icon: Icons.open_with, tooltip: "Move",
+        onPanStart: (d) { _handleStartX = tile.x; _handleStartY = tile.y; _handleGlobalStart = d.globalPosition; },
         onPanUpdate: (d) {
           final delta = d.globalPosition - _handleGlobalStart;
-          final int newX, newY;
-          if (!isFloor) {
-            newX = _handleStartX + (delta.dx / _scale).round();
-            newY = _handleStartY + (delta.dy / _scale).round();
-          } else {
-            newX = _handleStartX + (delta.dx / (_scale * _baseCell)).round();
-            newY = _handleStartY + (delta.dy / (_scale * _baseCell)).round();
-          }
+          final newX = !isFloor ? _handleStartX + (delta.dx / _scale).round()
+                                 : _handleStartX + (delta.dx / (_scale * _baseCell)).round();
+          final newY = !isFloor ? _handleStartY + (delta.dy / _scale).round()
+                                 : _handleStartY + (delta.dy / (_scale * _baseCell)).round();
           widget.notifier.movePlaced(tile.id, newX, newY);
         },
       ),
-      // Delete — top-right
-      btn(
-        left: sx + sw - 11,
-        top: sy - 11,
-        color: const Color(0xFFE53935),
-        icon: Icons.close,
-        tooltip: "Deletar",
-        onTap: () => widget.notifier.deletePlaced(tile.id),
+      // Resize handle — bottom-right (non-floor only)
+      if (!isFloor) dragHandle(
+        left: sx + sw - 10, top: sy + sh - 10,
+        icon: Icons.open_in_full, tooltip: "Resize",
+        onPanStart: (d) { _resizeStartW = tile.w; _resizeStartH = tile.h; _resizeGlobalStart = d.globalPosition; },
+        onPanUpdate: (d) {
+          final delta = d.globalPosition - _resizeGlobalStart;
+          widget.notifier.resizePlaced(tile.id,
+              _resizeStartW + (delta.dx / _scale).round(),
+              _resizeStartH + (delta.dy / _scale).round());
+        },
       ),
-      // Resize handle — bottom-right (non-floor tiles)
-      if (!isFloor)
-        btn(
-          left: sx + sw - 11,
-          top: sy + sh - 11,
-          color: const Color(0xFF37474F),
-          icon: Icons.open_in_full,
-          tooltip: "Redimensionar",
-          onPanStart: (d) {
-            _resizeStartW = tile.w;
-            _resizeStartH = tile.h;
-            _resizeGlobalStart = d.globalPosition;
-          },
-          onPanUpdate: (d) {
-            final delta = d.globalPosition - _resizeGlobalStart;
-            // Objects: pixel delta; grid tiles: cell delta
-            final dw = (delta.dx / _scale).round();
-            final dh = (delta.dy / _scale).round();
-            widget.notifier.resizePlaced(
-                tile.id, _resizeStartW + dw, _resizeStartH + dh);
-          },
+      // "⋯" pill trigger
+      Positioned(
+        left: trigL,
+        top: trigT,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => setState(() => _showTileMenu = !_showTileMenu),
+          child: Container(
+            width: 26, height: 18,
+            decoration: BoxDecoration(
+              color: _showTileMenu
+                  ? const Color(0xFF455A64)
+                  : const Color(0xFF263238),
+              borderRadius: BorderRadius.circular(9),
+              border: Border.all(
+                color: _showTileMenu
+                    ? const Color(0xFF90A4AE)
+                    : const Color(0xFF546E7A),
+                width: 1,
+              ),
+              boxShadow: const [BoxShadow(color: Color(0x66000000), blurRadius: 4)],
+            ),
+            child: const Center(
+              child: Text("···",
+                  style: TextStyle(color: Colors.white, fontSize: 11, height: 1.0,
+                      letterSpacing: 1)),
+            ),
+          ),
+        ),
+      ),
+      // Popover menu
+      if (_showTileMenu)
+        Positioned(
+          left: menuL,
+          top: menuT,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {}, // absorb taps so canvas doesn't deselect
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                width: menuW,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E2533),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: const Color(0xFF37474F), width: 1),
+                  boxShadow: const [
+                    BoxShadow(color: Color(0x88000000), blurRadius: 16, offset: Offset(0, 4)),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(9),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: actions.map((a) => _menuItem(a.icon, a.label, a.color, a.onTap)).toList(),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
     ];
   }
+
+  Widget _menuItem(IconData icon, String label, Color color, VoidCallback onTap) =>
+      InkWell(
+        onTap: onTap,
+        child: Container(
+          height: 34,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            children: [
+              Container(
+                width: 22, height: 22,
+                decoration: BoxDecoration(color: color.withValues(alpha: 0.18), borderRadius: BorderRadius.circular(5)),
+                child: Icon(icon, size: 13, color: color),
+              ),
+              const SizedBox(width: 10),
+              Text(label,
+                  style: const TextStyle(color: Color(0xFFCFD8DC), fontSize: 12,
+                      fontWeight: FontWeight.w500)),
+            ],
+          ),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
     final isPainting = widget.editorState.paletteSelectedId != null;
     final isEmpty = widget.editorState.placedTiles.isEmpty;
     final selectedTile = widget.editorState.selectedTile;
-    final cursor = isPainting
+    final isDrawingCollision = _collisionEditId != null;
+    final cursor = isDrawingCollision
         ? SystemMouseCursors.precise
-        : selectedTile != null
-            ? SystemMouseCursors.grab
-            : SystemMouseCursors.basic;
+        : isPainting
+            ? SystemMouseCursors.precise
+            : selectedTile != null
+                ? SystemMouseCursors.grab
+                : SystemMouseCursors.basic;
 
     return MouseRegion(
       cursor: cursor,
       child: Listener(
         onPointerSignal: _onPointerSignal,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onScaleStart: _onScaleStart,
-          onScaleUpdate: _onScaleUpdate,
-          onScaleEnd: _onScaleEnd,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              ClipRect(
-                child: CustomPaint(
-                  painter: _CanvasPainter(
-                    editorState: widget.editorState,
-                    tileById: widget.tileById,
-                    images: widget.images,
-                    scale: _scale,
-                    offset: _offset,
-                    colors: widget.colors,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final availableSize = Size(constraints.maxWidth, constraints.maxHeight);
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onScaleStart: _onScaleStart,
+              onScaleUpdate: _onScaleUpdate,
+              onScaleEnd: _onScaleEnd,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  ClipRect(
+                    child: CustomPaint(
+                      painter: _CanvasPainter(
+                        editorState: widget.editorState,
+                        tileById: widget.tileById,
+                        images: widget.images,
+                        scale: _scale,
+                        offset: _offset,
+                        colors: widget.colors,
+                        showCollision: _showCollision,
+                        collisionEditId: _collisionEditId,
+                        colDragStart: _colDragStart,
+                        colDragEnd: _colDragEnd,
+                      ),
+                      child: const SizedBox.expand(),
+                    ),
                   ),
-                  child: const SizedBox.expand(),
-                ),
-              ),
-              // Selection overlay: move handle + delete button
-              if (selectedTile != null)
-                ..._buildSelectionOverlay(selectedTile),
-              if (isEmpty && !isPainting)
-                const Positioned.fill(
-                  child: IgnorePointer(
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.touch_app_outlined,
-                              color: Color(0x33FFFFFF), size: 40),
-                          SizedBox(height: 10),
-                          Text(
-                            "Selecione um componente na paleta para pintar",
-                            style: TextStyle(
-                                color: Color(0x44FFFFFF), fontSize: 13),
+                  // Collision overlay toggle
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: GestureDetector(
+                      onTap: () => setState(() => _showCollision = !_showCollision),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: _showCollision
+                              ? const Color(0xEEFF3333)
+                              : const Color(0xBB000000),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFFFFFFF), width: 1),
+                        ),
+                        child: Text(
+                          _showCollision ? "COLLISION ON" : "COLLISION",
+                          style: const TextStyle(
+                            color: Color(0xFFFFFFFF),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              if (isPainting)
-                const Positioned(
-                  bottom: 12,
-                  left: 0,
-                  right: 0,
-                  child: IgnorePointer(
-                    child: Center(
-                      child: Text(
-                        "Clique no canvas para pintar • ESC para cancelar",
-                        style: TextStyle(
-                            color: Color(0x66FFFFFF), fontSize: 11),
+                  // Selection overlay
+                  if (selectedTile != null)
+                    ..._buildSelectionOverlay(selectedTile, availableSize),
+                  if (isEmpty && !isPainting)
+                    const Positioned.fill(
+                      child: IgnorePointer(
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.touch_app_outlined,
+                                  color: Color(0x33FFFFFF), size: 40),
+                              SizedBox(height: 10),
+                              Text(
+                                "Select a component from the palette to paint",
+                                style: TextStyle(
+                                    color: Color(0x44FFFFFF), fontSize: 13),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-            ],
-          ),
+                  if (isPainting)
+                    const Positioned(
+                      bottom: 12,
+                      left: 0,
+                      right: 0,
+                      child: IgnorePointer(
+                        child: Center(
+                          child: Text(
+                            "Click on canvas to paint  •  ESC to cancel",
+                            style: TextStyle(
+                                color: Color(0x66FFFFFF), fontSize: 11),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
@@ -1145,6 +1399,10 @@ class _CanvasPainter extends CustomPainter {
     required this.scale,
     required this.offset,
     required this.colors,
+    this.showCollision = false,
+    this.collisionEditId,
+    this.colDragStart,
+    this.colDragEnd,
   });
 
   final MapEditorData editorState;
@@ -1153,6 +1411,10 @@ class _CanvasPainter extends CustomPainter {
   final double scale;
   final Offset offset;
   final AppColors colors;
+  final bool showCollision;
+  final String? collisionEditId;
+  final Offset? colDragStart;
+  final Offset? colDragEnd;
 
   static const _cell = 32.0;
 
@@ -1226,11 +1488,69 @@ class _CanvasPainter extends CustomPainter {
         ..strokeWidth = 1.5 / scale,
     );
 
+    // Collision overlay — drawn before selection so selection stays on top
+    if (showCollision) _drawCollisionOverlay(canvas);
+
+    // Collision draw preview (drag rect)
+    if (collisionEditId != null && colDragStart != null && colDragEnd != null) {
+      final x1 = colDragStart!.dx; final y1 = colDragStart!.dy;
+      final x2 = colDragEnd!.dx;   final y2 = colDragEnd!.dy;
+      final previewRect = Rect.fromLTRB(
+        x1 < x2 ? x1 : x2, y1 < y2 ? y1 : y2,
+        x1 < x2 ? x2 : x1, y1 < y2 ? y2 : y1,
+      );
+      canvas.drawRect(previewRect, Paint()..color = const Color(0x88FF9800));
+      canvas.drawRect(previewRect, Paint()
+        ..color = const Color(0xFFFF9800)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.0 / scale);
+    }
+
     // Selection highlight (always on top)
     final sel = editorState.selectedTile;
     if (sel != null) _drawSelection(canvas, sel);
 
     canvas.restore();
+  }
+
+  void _drawCollisionOverlay(Canvas canvas) {
+    final passPaint  = Paint()..color = const Color(0x9922FF88);
+    final customPaint = Paint()..color = const Color(0xBBFF9800);
+    final border = Paint()
+      ..color = const Color(0xFFFFFFFF)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5 / scale;
+    final customBorder = Paint()
+      ..color = const Color(0xFFFF9800)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0 / scale;
+
+    for (final pt in editorState.placedTiles.values) {
+      final def = tileById[pt.tileId];
+      if (def == null) continue;
+
+      final isFloor = pt.layerName == "floor";
+      final Rect fullRect = isFloor
+          ? Rect.fromLTWH(pt.x * _cell, pt.y * _cell, pt.w * _cell, pt.h * _cell)
+          : Rect.fromLTWH(pt.x.toDouble(), pt.y.toDouble(), pt.w.toDouble(), pt.h.toDouble());
+
+      // If tile has a custom colRect, show it in orange (overrides default).
+      if (pt.colRect != null) {
+        final cr = pt.colRect!;
+        final crRect = Rect.fromLTWH(
+          cr.x.toDouble(), cr.y.toDouble(), cr.w.toDouble(), cr.h.toDouble());
+        canvas.drawRect(fullRect, Paint()..color = const Color(0x33FF9800));
+        canvas.drawRect(crRect, customPaint);
+        canvas.drawRect(crRect, customBorder);
+        continue;
+      }
+
+      // Doors/portals are passable (green).
+      if (def.category == "door") {
+        canvas.drawRect(fullRect, passPaint);
+        canvas.drawRect(fullRect, border);
+      }
+    }
   }
 
   void _drawPlaced(Canvas canvas, PlacedTile pt, Paint imgPaint) {
@@ -1334,5 +1654,9 @@ class _CanvasPainter extends CustomPainter {
       old.editorState.selectedId != editorState.selectedId ||
       old.scale != scale ||
       old.offset != offset ||
-      old.images != images;
+      old.images != images ||
+      old.showCollision != showCollision ||
+      old.collisionEditId != collisionEditId ||
+      old.colDragStart != colDragStart ||
+      old.colDragEnd != colDragEnd;
 }

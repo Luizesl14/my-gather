@@ -44,6 +44,7 @@ OfficeMap _map() {
       ),
     ],
     interactiveZones: [],
+    collidingTileIds: const {"wall-office"},
   );
 }
 
@@ -51,7 +52,8 @@ AvatarViewModel _avatar() {
   return AvatarViewModel(
     characterId: "character-01",
     displayName: "Ada",
-    position: AvatarPosition(tileX: 0, tileY: 0),
+    // Positioned so one right step lands on tileX=1 and one front step hits the wall at (1,1).
+    position: AvatarPosition(x: 0.75, y: 0.75),
     direction: AvatarDirection.front,
     motionState: AvatarMotionState.idle,
     presenceLabel: "Disponível",
@@ -92,7 +94,13 @@ void main() {
     expect(controller.avatar.direction, AvatarDirection.right);
     expect(controller.avatar.motionState, AvatarMotionState.walking);
 
-    expect(controller.move(AvatarDirection.front), isFalse);
+    // Walking into the wall at (1,1): the avatar slides flush against it
+    // (substeps), then further moves are rejected. It never enters the wall.
+    var guard = 0;
+    while (controller.move(AvatarDirection.front) && guard < 100) {
+      guard++;
+    }
+    expect(guard, lessThan(100));
     expect(controller.avatar.position.tileX, 1);
     expect(controller.avatar.position.tileY, 0);
 

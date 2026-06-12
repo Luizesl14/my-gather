@@ -12,6 +12,13 @@ export const createWorkspaceBodySchema = z.object({
   name: z.string().min(2).max(100),
 });
 
+const colRectSchema = z.object({
+  x: z.number().int(),
+  y: z.number().int(),
+  w: z.number().int().min(1),
+  h: z.number().int().min(1),
+});
+
 const mapTileSchema = z.object({
   tile: z.string().min(1),
   x: z.number().int().min(0),
@@ -25,6 +32,7 @@ const mapTileSchema = z.object({
   frameCols: z.number().int().min(1).optional(),
   frameRows: z.number().int().min(1).optional(),
   overlayId: z.string().optional(),
+  colRect: colRectSchema.optional(),
 });
 
 const mapObjectSchema = z.object({

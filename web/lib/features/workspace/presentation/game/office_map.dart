@@ -1,5 +1,4 @@
 import "dart:convert";
-import "dart:math" show max;
 
 import "package:flutter/services.dart";
 
@@ -66,8 +65,25 @@ class OfficeMap {
         passthroughTileIds: passthroughTileIds,
       );
 
-  bool canOccupyTile(int tileX, int tileY) {
+  // Pixel-precise occupancy check. [tx, ty] are tile-space coords (fractional).
+  // Tiles with a custom colRect block the exact drawn rect: the avatar's
+  // FEET hitbox may not overlap ANY part of it.
+  //
+  // The sprite is rendered half-tile wide, bottom-anchored (see AvatarRenderer):
+  // 16 map-px wide centered in the tile, feet at the tile's bottom edge.
+  // The hitbox mirrors that so collision matches what the player sees.
+  bool canOccupy(double tx, double ty) {
+    final tileX = tx.floor();
+    final tileY = ty.floor();
     if (tileX < 0 || tileY < 0 || tileX >= width || tileY >= height) return false;
+
+    // Feet hitbox in map pixel space. The sprite frame is 16 map-px wide but
+    // the visible body has transparent side padding (catalog hitbox: 20/32 of
+    // the frame ≈ 10 map-px). Box: central 10px wide, bottom 10px of the tile.
+    final axL = tx * tileSize + 11;
+    final axR = tx * tileSize + 21;
+    final ayT = ty * tileSize + 22;
+    final ayB = ty * tileSize + 32;
 
     bool blocked = false;
     bool hasPassthrough = false;
@@ -76,22 +92,27 @@ class OfficeMap {
       final isFloorLayer = layer.name == "floor";
       for (final tile in layer.tiles) {
         final bool atPosition;
-        if (isFloorLayer) {
+        final cr = tile.colRect;
+        if (cr != null) {
+          // Custom collision rect: box-vs-rect overlap, no grid snapping.
+          atPosition = axL < cr.x + cr.w && axR > cr.x &&
+                       ayT < cr.y + cr.h && ayB > cr.y;
+        } else if (isFloorLayer) {
           atPosition = tile.x == tileX && tile.y == tileY;
         } else {
-          final gx = tile.x ~/ tileSize;
-          final gy = tile.y ~/ tileSize;
-          final gw = max(1, tile.w ~/ tileSize);
-          final gh = max(1, tile.h ~/ tileSize);
-          atPosition = tileX >= gx && tileX < gx + gw && tileY >= gy && tileY < gy + gh;
+          // No custom rect: feet box vs the tile's exact pixel bounds —
+          // no grid snapping, so free-placed objects block at their sprite edge.
+          atPosition = axL < tile.x + tile.w && axR > tile.x &&
+                       ayT < tile.y + tile.h && ayB > tile.y;
         }
         if (!atPosition) continue;
         // Passthrough tiles (portals/doors) override wall collision.
         if (passthroughTileIds.contains(tile.tile)) hasPassthrough = true;
-        if (collidingTileIds.contains(tile.tile)) blocked = true;
+        // Custom colRect always blocks at the drawn rect; otherwise use collidingTileIds.
+        if (cr != null || collidingTileIds.contains(tile.tile)) blocked = true;
       }
       for (final object in layer.objects) {
-        if (_blockingAssetIds.contains(object.asset) &&
+        if (blockingAssetIds.contains(object.asset) &&
             _objectOccupiesTile(object, tileX, tileY)) {
           blocked = true;
         }
@@ -102,12 +123,21 @@ class OfficeMap {
     return !blocked;
   }
 
+  bool canOccupyTile(int tileX, int tileY) =>
+      canOccupy(tileX.toDouble(), tileY.toDouble());
+
   bool _objectOccupiesTile(MapObject object, int tileX, int tileY) {
     final bounds = _objectBounds(object);
     return tileX >= bounds.left &&
         tileX < bounds.right &&
         tileY >= bounds.top &&
         tileY < bounds.bottom;
+  }
+
+  // Exposed for the collision debug renderer — returns tile-grid Rect.
+  Rect objectTileRect(MapObject object) {
+    final b = _objectBounds(object);
+    return Rect.fromLTRB(b.left.toDouble(), b.top.toDouble(), b.right, b.bottom);
   }
 
   _TileBounds _objectBounds(MapObject object) {
@@ -128,7 +158,8 @@ class OfficeMap {
     );
   }
 
-  static const Set<String> _blockingAssetIds = {
+  // Public so the debug renderer can highlight blocking objects.
+  static const Set<String> blockingAssetIds = {
     "desk-wood",
     "meeting-table-wood",
     "sofa-blue",
@@ -189,6 +220,14 @@ class MapLayer {
   }
 }
 
+class MapColRect {
+  const MapColRect({required this.x, required this.y, required this.w, required this.h});
+  final int x, y, w, h;
+
+  factory MapColRect.fromJson(Map<String, dynamic> j) =>
+      MapColRect(x: j["x"] as int, y: j["y"] as int, w: j["w"] as int, h: j["h"] as int);
+}
+
 class MapTile {
   const MapTile({
     required this.tile,
@@ -202,6 +241,7 @@ class MapTile {
     this.frameRow = 0,
     this.frameCols = 1,
     this.frameRows = 1,
+    this.colRect,
   });
 
   final String tile;
@@ -215,6 +255,8 @@ class MapTile {
   final int frameRow;
   final int frameCols;
   final int frameRows;
+  // Custom collision rectangle (pixel coords, absolute on the map canvas).
+  final MapColRect? colRect;
 
   factory MapTile.fromJson(Map<String, dynamic> json, {bool isFloorLayer = false}) {
     final rawW = (json["w"] as int?) ?? 1;
@@ -224,6 +266,7 @@ class MapTile {
     // Mirror the editor's detection: non-floor tiles with w < 16 are old grid format.
     final isOldGridCoords = !isFloorLayer && rawW < 16;
     final scale = isOldGridCoords ? 32 : 1;
+    final colRectJson = json["colRect"] as Map<String, dynamic>?;
     return MapTile(
       tile: json["tile"] as String,
       x: (json["x"] as int) * scale,
@@ -236,6 +279,7 @@ class MapTile {
       frameRow: (json["frameRow"] as int?) ?? 0,
       frameCols: (json["frameCols"] as int?) ?? 1,
       frameRows: (json["frameRows"] as int?) ?? 1,
+      colRect: colRectJson != null ? MapColRect.fromJson(colRectJson) : null,
     );
   }
 }
