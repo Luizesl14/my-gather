@@ -1,5 +1,6 @@
 import "dart:async";
 import "dart:convert";
+import "dart:ui" as ui;
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -11,9 +12,13 @@ import "../../../avatar/data/avatar_scene_loader.dart";
 import "../../../avatar/domain/avatar_direction.dart";
 import "../../../avatar/domain/avatar_position.dart";
 import "../../../avatar/domain/avatar_scene.dart";
+import "../../../avatar/presentation/avatar_animation_controller.dart";
 import "../../../avatar/presentation/avatar_movement_controller.dart";
 import "../../../avatar/presentation/avatar_renderer.dart";
+import "../../../avatar/presentation/remote_avatars_renderer.dart";
+import "../../../avatar/domain/avatar_view_model.dart";
 import "../../data/workspace_service.dart";
+import "../remote_avatar_provider.dart";
 import "map_image_cache.dart";
 import "map_image_loader.dart";
 import "map_renderer.dart";
@@ -43,6 +48,9 @@ class OfficeCanvas extends StatefulWidget {
     this.statusEmoji,
     this.reactionSprite,
     this.reactionTargetName,
+    this.remoteAvatars = const {},
+    this.onAvatarMoved,
+    this.onAvatarStopped,
     super.key,
   });
 
@@ -59,6 +67,11 @@ class OfficeCanvas extends StatefulWidget {
   // optional name of who the gesture is aimed at ("wave at Maria").
   final String? reactionSprite;
   final String? reactionTargetName;
+  // Remote avatars from WebSocket — keyed by userId.
+  final Map<String, RemoteAvatar> remoteAvatars;
+  // Called on every position update so the parent can relay to WebSocket.
+  final void Function(double x, double y, String direction, String motionState)? onAvatarMoved;
+  final void Function(double x, double y, String direction)? onAvatarStopped;
 
   @override
   State<OfficeCanvas> createState() => _OfficeCanvasState();
@@ -85,6 +98,11 @@ class _OfficeCanvasState extends State<OfficeCanvas>
   Timer? _walkTimer;
   DateTime? _lastMoveAt;
   static const _moveIntervalMs = 120;
+  bool _wasMoving = false;
+
+  // Remote avatar rendering cache — keyed by characterId for frames, userId for controllers.
+  final _characterFrames = <String, Map<String, ui.Image>>{};
+  final _remoteControllers = <String, AvatarAnimationController>{};
 
   @override
   void initState() {
@@ -190,19 +208,80 @@ class _OfficeCanvasState extends State<OfficeCanvas>
       _scene = scene;
       _movementController = controller;
     });
+
+    _syncRemoteAvatars(widget.remoteAvatars, scene);
+  }
+
+  @override
+  void didUpdateWidget(OfficeCanvas oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.remoteAvatars != widget.remoteAvatars && _scene != null) {
+      _syncRemoteAvatars(widget.remoteAvatars, _scene!);
+    }
+  }
+
+  void _syncRemoteAvatars(Map<String, RemoteAvatar> avatars, _OfficeScene scene) {
+    final catalog = scene.avatarScene.catalog;
+
+    for (final entry in avatars.entries) {
+      final userId = entry.key;
+      final remote = entry.value;
+
+      final character = catalog.characters.firstWhere(
+        (c) => c.id == remote.characterId,
+        orElse: () => catalog.defaultCharacter,
+      );
+
+      if (_remoteControllers.containsKey(userId)) {
+        _remoteControllers[userId]!
+          ..setDirection(remote.direction)
+          ..setMotionState(remote.motionState);
+      } else {
+        _remoteControllers[userId] = AvatarAnimationController(
+          character: character,
+          direction: remote.direction,
+          motionState: remote.motionState,
+        );
+      }
+
+      if (!_characterFrames.containsKey(remote.characterId)) {
+        AvatarSceneLoader.loadFrameImages(character).then((frames) {
+          if (!mounted) return;
+          setState(() => _characterFrames[remote.characterId] = frames);
+        });
+      }
+    }
+
+    // Remove controllers for users who left.
+    _remoteControllers.removeWhere((uid, _) => !avatars.containsKey(uid));
   }
 
   void _tickMovement() {
     final dir = _currentDirection();
+    final controller = _movementController;
+
     if (dir == null) {
-      _movementController?.stop();
+      if (_wasMoving && controller != null) {
+        controller.stop();
+        final pos = controller.avatar.position;
+        widget.onAvatarStopped?.call(pos.x, pos.y, controller.avatar.direction.name);
+        _wasMoving = false;
+      } else {
+        controller?.stop();
+      }
       return;
     }
+
     final now = DateTime.now();
     if (_lastMoveAt == null ||
         now.difference(_lastMoveAt!).inMilliseconds >= _moveIntervalMs) {
-      _movementController?.move(dir);
-      _lastMoveAt = now;
+      final moved = controller?.move(dir) ?? false;
+      if (moved) {
+        _lastMoveAt = now;
+        _wasMoving = true;
+        final pos = controller!.avatar.position;
+        widget.onAvatarMoved?.call(pos.x, pos.y, dir.name, "walking");
+      }
     }
   }
 
@@ -295,6 +374,32 @@ class _OfficeCanvasState extends State<OfficeCanvas>
                     child: const SizedBox.expand(),
                   ),
                 ),
+                // Remote avatars layer — drawn on top of map, below reaction bubbles.
+                if (widget.remoteAvatars.isNotEmpty)
+                  CustomPaint(
+                    painter: RemoteAvatarsRenderer(
+                      map: scene.map,
+                      colors: colors,
+                      localPosition: pos,
+                      remotes: [
+                        for (final entry in widget.remoteAvatars.entries)
+                          if (_remoteControllers.containsKey(entry.key))
+                            RemoteAvatarEntry(
+                              frameImages: _characterFrames[entry.value.characterId] ?? const {},
+                              controller: _remoteControllers[entry.key]!,
+                              viewModel: AvatarViewModel(
+                                characterId: entry.value.characterId,
+                                displayName: entry.value.displayName,
+                                position: entry.value.position,
+                                direction: entry.value.direction,
+                                motionState: entry.value.motionState,
+                                presenceLabel: entry.value.presenceStatus,
+                              ),
+                            ),
+                      ],
+                    ),
+                    child: const SizedBox.expand(),
+                  ),
                 if (widget.reactionSprite != null)
                   _ReactionBubble(
                     sprite: widget.reactionSprite!,

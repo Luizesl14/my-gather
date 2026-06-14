@@ -1,0 +1,9 @@
+Crie várias imagens do personagem, cada uma com uma pegando um ângulo diferente de corpo inteiro, de lado, de frente, de costas, de cima de baixo 
+
+sempre um full body shot em todas imagens
+
+A luz é realista e cinematográfica da luz de um amanhecer, sempre gravado do lado da sombra, como em um documentário
+
+Mantenha os personagens, proporção e formatos bem fiéis, Apenas mude a ação para posição que foi pedido e estilo de animação 3d detalhado com texturas. 
+
+Quero texturas no personagem, na pele, leves imperfeições, textura na roupa e brilhos realistas. Lente Câmera alexa com lente 35mm f1.8 com aberração cromática

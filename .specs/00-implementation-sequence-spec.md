@@ -835,6 +835,142 @@ Critério de aceite:
 - Status muda no avatar.
 - Away automático funciona por timeout.
 
+## Fase 7.5 — WebRTC Proximidade (Áudio e Vídeo)
+
+Spec de referência: `todo/30-webrtc-proximity-spec.md`.
+
+### ATV-0750 — Criar relay WebRTC no backend (signaling server)
+
+Objetivo: encaminhar mensagens de sinalização WebRTC entre peers via WebSocket sem interpretar conteúdo.
+
+Criar/alterar:
+
+- `backend/src/realtime/events/room-events.ts` — adicionar handlers para eventos `webrtc:*`
+- Handler `webrtc:offer`: valida que ambos os usuários estão no mesmo floor → encaminha ao `targetUserId`
+- Handler `webrtc:answer`: relay para `fromUserId`
+- Handler `webrtc:ice-candidate`: relay para `targetUserId`
+- Handler `webrtc:hangup`: relay para `targetUserId`
+- Cleanup no disconnect: emitir `webrtc:hangup` para todos os peers da sessão
+
+Critério de aceite:
+
+- Evento `webrtc:offer` enviado por A chega em B como `webrtc:offer` com `fromUserId = A`.
+- Backend rejeita relay se usuários estiverem em floors diferentes.
+- Disconnect emite `webrtc:hangup` automaticamente.
+
+Não fazer ainda:
+
+- Não implementar TURN server.
+- Não fazer lógica de proximidade no backend.
+
+### ATV-0751 — Implementar detecção de proximidade avatar→avatar no client
+
+Objetivo: calcular distância entre o avatar local e avatares remotos a cada update de posição e emitir eventos internos de enter/leave.
+
+Criar/alterar:
+
+- `web/lib/features/workspace/presentation/game/proximity_detector.dart`
+- `web/lib/features/avatar/presentation/presence_provider.dart` — raio configurável
+
+Lógica:
+
+```
+distância = sqrt((ax - bx)² + (ay - by)²)
+se distância <= raio && não estava próximo → proximityEnter(userId)
+se distância > raio  && estava próximo    → proximityLeave(userId)
+```
+
+Critério de aceite:
+
+- `proximityEnter` dispara ao cruzar o raio.
+- `proximityLeave` dispara ao sair do raio.
+- Não dispara múltiplos eventos redundantes para o mesmo peer.
+- Raio padrão de `4 tiles`.
+
+### ATV-0752 — Implementar WebRTC peer connection no Flutter Web
+
+Objetivo: criar e gerenciar `RTCPeerConnection` por par de usuários próximos.
+
+Criar/alterar:
+
+- `web/lib/features/workspace/data/webrtc_service.dart`
+- `web/lib/features/workspace/presentation/proximity_provider.dart`
+
+Dependência: `flutter_webrtc` em `pubspec.yaml`.
+
+Fluxo:
+
+- `proximityEnter` → se `userId < peerId` (sort) → criar peer → enviar `webrtc:offer`
+- Receber `webrtc:offer` → criar peer → enviar `webrtc:answer`
+- Trocar ICE candidates até conexão estabelecida
+- `proximityLeave` → `webrtc:hangup` → fechar peer connection
+
+Critério de aceite:
+
+- Dois usuários no mesmo floor dentro do raio ouvem e veem um ao outro.
+- Sair do raio encerra a conexão.
+- Máximo de 8 peer connections simultâneas; excesso é ignorado com log.
+
+### ATV-0753 — Implementar áudio espacial por distância
+
+Objetivo: ajustar volume de cada peer proporcionalmente à distância dentro do raio.
+
+Criar/alterar:
+
+- `web/lib/features/workspace/data/spatial_audio_service.dart`
+
+Lógica:
+
+```
+volume = max(0.0, 1.0 - distância / raioMaximo)
+gainNode.gain.value = volume
+```
+
+Critério de aceite:
+
+- Volume diminui conforme avatar se afasta.
+- Volume é `1.0` quando sobrepostos, `0.0` na borda do raio.
+- Atualiza em tempo real a cada `avatar:moved`.
+
+### ATV-0754 — Criar UI de vídeo de proximidade e controles de mídia
+
+Objetivo: exibir miniaturas de peers próximos e permitir mudo/câmera na toolbar.
+
+Criar/alterar:
+
+- `web/lib/features/workspace/presentation/proximity_video_overlay.dart`
+- `web/lib/shared/widgets/media_control_bar.dart`
+- `web/lib/features/workspace/presentation/office_page.dart` — integrar overlay
+
+Componentes:
+
+- `ProximityVideoOverlay`: grade 2×2 no canto superior direito; avatar sem câmera exibe inicial do nome.
+- `MediaControlBar`: botões de mudo (microfone) e câmera; estado ativo/inativo.
+
+Critério de aceite:
+
+- Miniatura do peer aparece ao conectar, some ao desconectar.
+- Botão de mudo silencia microfone local sem encerrar peer connection.
+- Botão de câmera desliga vídeo local; peer vê placeholder.
+- Permissão de câmera/mic negada → app continua sem AV, sem crash.
+
+### ATV-0755 — Modo Spotlight em salas de reunião
+
+Objetivo: ao entrar em `MeetingRoom`, conectar com todos os participantes independente de distância.
+
+Criar/alterar:
+
+- `web/lib/features/workspace/data/webrtc_service.dart` — modo spotlight
+- `web/lib/features/workspace/presentation/proximity_provider.dart` — desativar raio em sala
+
+Critério de aceite:
+
+- Entrar em sala → peer connections com todos os participantes.
+- Sair da sala → encerrar peer connections de sala, retornar ao modo proximidade.
+- Modo spotlight não conflita com peer connections de proximidade preexistentes.
+
+---
+
 ## Fase 8 — Mesas e proximidade
 
 ### ATV-0801 — Implementar proximidade com mesa

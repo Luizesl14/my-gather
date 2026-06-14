@@ -23,7 +23,7 @@ class AvatarSceneLoader {
       orElse: () => catalog.defaultCharacter,
     );
 
-    final frameImages = await _loadFrameImages(character);
+    final frameImages = await loadFrameImages(character);
 
     return AvatarScene(
       catalog: catalog,
@@ -47,7 +47,7 @@ class AvatarSceneLoader {
   static Future<AvatarScene> loadDefault() =>
       load(characterId: "character-01", displayName: "Você");
 
-  static Future<Map<String, ui.Image>> _loadFrameImages(
+  static Future<Map<String, ui.Image>> loadFrameImages(
     AvatarCharacter character,
   ) async {
     final paths = [

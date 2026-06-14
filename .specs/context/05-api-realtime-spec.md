@@ -290,6 +290,45 @@ Regras:
 }
 ```
 
+### `webrtc:offer`
+
+```json
+{
+  "targetUserId": "uuid",
+  "sdp": "v=0\r\no=...\r\n..."
+}
+```
+
+### `webrtc:answer`
+
+```json
+{
+  "targetUserId": "uuid",
+  "sdp": "v=0\r\no=...\r\n..."
+}
+```
+
+### `webrtc:ice-candidate`
+
+```json
+{
+  "targetUserId": "uuid",
+  "candidate": {
+    "candidate": "candidate:...",
+    "sdpMid": "0",
+    "sdpMLineIndex": 0
+  }
+}
+```
+
+### `webrtc:hangup`
+
+```json
+{
+  "targetUserId": "uuid"
+}
+```
+
 ## Server -> Client
 
 ### `workspace:user.joined`
@@ -339,7 +378,9 @@ Regras:
 ```json
 {
   "nearbyUserId": "uuid",
-  "availableActions": ["wave", "call", "chat", "coffee", "shout"]
+  "distance": 2.8,
+  "availableActions": ["wave", "call", "chat", "coffee", "shout"],
+  "webrtcAvailable": true
 }
 ```
 
@@ -405,6 +446,45 @@ Regras:
 }
 ```
 
+### `webrtc:offer`
+
+```json
+{
+  "fromUserId": "uuid",
+  "sdp": "v=0\r\no=...\r\n..."
+}
+```
+
+### `webrtc:answer`
+
+```json
+{
+  "fromUserId": "uuid",
+  "sdp": "v=0\r\no=...\r\n..."
+}
+```
+
+### `webrtc:ice-candidate`
+
+```json
+{
+  "fromUserId": "uuid",
+  "candidate": {
+    "candidate": "candidate:...",
+    "sdpMid": "0",
+    "sdpMLineIndex": 0
+  }
+}
+```
+
+### `webrtc:hangup`
+
+```json
+{
+  "fromUserId": "uuid"
+}
+```
+
 ## Regras realtime
 
 - Movimento deve ter rate limit por conexão.
@@ -414,3 +494,7 @@ Regras:
 - Balões obedecem prioridade de `03-component-animation-spec.md`.
 - Eventos de sala são enviados apenas a participantes e usuários autorizados.
 - Eventos privados usam canal `user:{userId}`.
+- Eventos `webrtc:*` são relay puro: backend encaminha ao `targetUserId` sem interpretar SDP ou ICE.
+- Backend só encaminha `webrtc:*` se ambos os usuários estiverem no mesmo `floorId` e workspace.
+- `webrtc:hangup` deve ser emitido automaticamente ao desconectar WebSocket (cleanup no disconnect handler).
+- Detecção de proximidade e criação de peer connections é responsabilidade exclusiva do client.

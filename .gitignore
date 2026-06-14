@@ -11,7 +11,7 @@ logs/
 .DS_Store
 Thumbs.db
 .idea/
-.vscode/
+# .vscode/
 
 ## Node.js
 node_modules/

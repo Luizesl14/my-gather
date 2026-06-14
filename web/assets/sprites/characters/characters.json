@@ -243,6 +243,44 @@
         "w": 20,
         "h": 24
       }
+    },
+    {
+      "id": "claude",
+      "displayName": "Claude",
+      "description": "Claude - AI Assistant",
+      "default": false,
+      "frames": {
+        "idleFront": "claude/idle-front.png",
+        "idleBack": "claude/idle-back.png",
+        "idleLeft": "claude/idle-left.png",
+        "idleRight": "claude/idle-right.png",
+        "walkDown": [
+          "claude/walk-down-01.png",
+          "claude/walk-down-02.png",
+          "claude/walk-down-03.png"
+        ],
+        "walkLeft": [
+          "claude/walk-left-01.png",
+          "claude/walk-left-02.png",
+          "claude/walk-left-03.png"
+        ],
+        "walkRight": [
+          "claude/walk-right-01.png",
+          "claude/walk-right-02.png",
+          "claude/walk-right-03.png"
+        ],
+        "walkUp": [
+          "claude/walk-up-01.png",
+          "claude/walk-up-02.png",
+          "claude/walk-up-03.png"
+        ]
+      },
+      "hitbox": {
+        "x": 6,
+        "y": 22,
+        "w": 20,
+        "h": 24
+      }
     }
   ]
 }

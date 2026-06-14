@@ -9,7 +9,12 @@ import "auth_provider.dart";
 import "auth_text_field.dart";
 
 class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+  final Map<String, dynamic>? extra;
+
+  const LoginPage({
+    this.extra,
+    super.key,
+  });
 
   @override
   ConsumerState<LoginPage> createState() => _LoginPageState();
@@ -35,6 +40,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           password: _passwordCtrl.text,
         );
     if (ok && mounted) {
+      final extra = widget.extra;
+      if (extra != null && extra['redirectTo'] == '/accept-invitation') {
+        final token = extra['token'] as String?;
+        if (token != null) {
+          context.go('/accept-invitation?token=$token');
+          return;
+        }
+      }
       context.goNamed(AppRouteNames.organizationSelection);
     }
   }

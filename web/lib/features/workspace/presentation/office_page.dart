@@ -5,6 +5,7 @@ import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 
+import "../../../core/realtime/realtime_provider.dart";
 import "../../../core/router/app_router.dart";
 import "../../../core/theme/app_colors.dart";
 import "../../../core/theme/app_spacing.dart";
@@ -14,6 +15,7 @@ import "../../avatar/presentation/character_provider.dart";
 import "../../avatar/presentation/presence_provider.dart";
 import "../data/workspace_service.dart";
 import "game/office_canvas.dart";
+import "remote_avatar_provider.dart";
 import "workspace_provider.dart";
 
 // Keyboard shortcuts for the reaction hotbar (Gather-style: keys 1..5).
@@ -25,13 +27,45 @@ const _reactionKeys = [
   LogicalKeyboardKey.digit5,
 ];
 
-class OfficePage extends ConsumerWidget {
+class OfficePage extends ConsumerStatefulWidget {
   const OfficePage({required this.workspaceId, super.key});
 
   final String workspaceId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<OfficePage> createState() => _OfficePageState();
+}
+
+class _OfficePageState extends ConsumerState<OfficePage> {
+  static const _wsUrl = "ws://localhost:3001/ws";
+
+  @override
+  void initState() {
+    super.initState();
+    // Defer connection until the widget tree is mounted so providers are ready.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _connect());
+  }
+
+  @override
+  void dispose() {
+    ref.read(realtimeSessionProvider.notifier).leave(widget.workspaceId);
+    super.dispose();
+  }
+
+  void _connect() {
+    final token = ref.read(authProvider).token;
+    final characterId = ref.read(characterProvider);
+    if (token == null) return;
+    ref.read(realtimeSessionProvider.notifier).join(
+      wsUrl: _wsUrl,
+      token: token,
+      workspaceId: widget.workspaceId,
+      characterId: characterId,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final colors = context.appColors;
     final user = ref.watch(authProvider).user;
     final characterId = ref.watch(characterProvider);
@@ -43,6 +77,8 @@ class OfficePage extends ConsumerWidget {
     final dotColor = presenceColor(
         colors, catalog?.presenceById(status.presenceId)?.colorKey ?? "");
     final reactions = catalog?.reactions ?? const <ReactionOption>[];
+    final remoteAvatars = ref.watch(remoteAvatarsProvider);
+    final session = ref.read(realtimeSessionProvider.notifier);
 
     return Scaffold(
       backgroundColor: colors.app,
@@ -67,7 +103,7 @@ class OfficePage extends ConsumerWidget {
               child: OfficeCanvas(
                 characterId: characterId,
                 displayName: displayName,
-                workspaceId: workspaceId,
+                workspaceId: widget.workspaceId,
                 token: ref.watch(authProvider).token ?? "",
                 canToggleCollision: canEditMap,
                 presenceDotColor: dotColor,
@@ -75,6 +111,11 @@ class OfficePage extends ConsumerWidget {
                 reactionSprite: ref.watch(activeReactionProvider)?.sprite,
                 reactionTargetName:
                     ref.watch(activeReactionProvider)?.targetName,
+                remoteAvatars: remoteAvatars,
+                onAvatarMoved: (x, y, direction, motionState) =>
+                    session.sendMove(x, y, direction, motionState),
+                onAvatarStopped: (x, y, direction) =>
+                    session.sendStop(x, y, direction),
               ),
             ),
             Positioned(

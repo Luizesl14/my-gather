@@ -69,4 +69,23 @@ class AuthService {
       throw AuthException(code ?? "auth.unknown_error");
     }
   }
+
+  Future<Map<String, dynamic>> acceptInvitation(String token) async {
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        "/invitations/$token/accept",
+      );
+      return response.data ?? {};
+    } on DioException catch (e) {
+      final errorData = (e.response?.data as Map?);
+      final code = errorData?["error"]?["code"] as String?;
+      final message = errorData?["error"]?["message"] as String?;
+
+      return {
+        'success': false,
+        'code': code ?? 'invitation.unknown_error',
+        'message': message ?? 'Erro ao aceitar convite',
+      };
+    }
+  }
 }

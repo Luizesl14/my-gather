@@ -1,0 +1,771 @@
+{
+  "version": 1,
+  "theme": "industrial",
+  "generatedFrom": "scripts/slice_component_atlas.py",
+  "sections": [
+    {
+      "theme": "industrial",
+      "atlas": "landscaping",
+      "source": "industrial-landscaping-layout-alpha.png",
+      "count": 21,
+      "entries": [
+        {
+          "index": 1,
+          "name": "floreira_concreto_horizontal_longa",
+          "file": "industrial/floreira_concreto_horizontal_longa.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 70,
+            "top": 72,
+            "right": 725,
+            "bottom": 281
+          },
+          "size": {
+            "w": 655,
+            "h": 209
+          }
+        },
+        {
+          "index": 2,
+          "name": "floreira_concreto_vertical_longa",
+          "file": "industrial/floreira_concreto_vertical_longa.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 797,
+            "top": 72,
+            "right": 964,
+            "bottom": 790
+          },
+          "size": {
+            "w": 167,
+            "h": 718
+          }
+        },
+        {
+          "index": 3,
+          "name": "jardineira_metal_horizontal_longa",
+          "file": "industrial/jardineira_metal_horizontal_longa.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 1111,
+            "top": 72,
+            "right": 1671,
+            "bottom": 277
+          },
+          "size": {
+            "w": 560,
+            "h": 205
+          }
+        },
+        {
+          "index": 4,
+          "name": "jardineira_metal_vertical_alta",
+          "file": "industrial/jardineira_metal_vertical_alta.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 1752,
+            "top": 72,
+            "right": 1923,
+            "bottom": 487
+          },
+          "size": {
+            "w": 171,
+            "h": 415
+          }
+        },
+        {
+          "index": 5,
+          "name": "jardineira_metal_vertical_estreita",
+          "file": "industrial/jardineira_metal_vertical_estreita.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 2082,
+            "top": 72,
+            "right": 2255,
+            "bottom": 381
+          },
+          "size": {
+            "w": 173,
+            "h": 309
+          }
+        },
+        {
+          "index": 6,
+          "name": "floreira_concreto_canto_l",
+          "file": "industrial/floreira_concreto_canto_l.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 69,
+            "top": 360,
+            "right": 661,
+            "bottom": 812
+          },
+          "size": {
+            "w": 592,
+            "h": 460
+          }
+        },
+        {
+          "index": 7,
+          "name": "pedestal_concreto_estreito",
+          "file": "industrial/pedestal_concreto_estreito.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 1119,
+            "top": 380,
+            "right": 1317,
+            "bottom": 790
+          },
+          "size": {
+            "w": 198,
+            "h": 410
+          }
+        },
+        {
+          "index": 8,
+          "name": "jardineira_metal_dupla_palmeiras",
+          "file": "industrial/jardineira_metal_dupla_palmeiras.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 1931,
+            "top": 434,
+            "right": 2357,
+            "bottom": 920
+          },
+          "size": {
+            "w": 434,
+            "h": 494
+          }
+        },
+        {
+          "index": 9,
+          "name": "vaso_concreto_redondo_medio",
+          "file": "industrial/vaso_concreto_redondo_medio.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 1425,
+            "top": 532,
+            "right": 1656,
+            "bottom": 792
+          },
+          "size": {
+            "w": 231,
+            "h": 260
+          }
+        },
+        {
+          "index": 10,
+          "name": "pedestal_concreto_retangular",
+          "file": "industrial/pedestal_concreto_retangular.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 396,
+            "top": 585,
+            "right": 533,
+            "bottom": 856
+          },
+          "size": {
+            "w": 137,
+            "h": 271
+          }
+        },
+        {
+          "index": 11,
+          "name": "arvore_interna_vaso_preto",
+          "file": "industrial/arvore_interna_vaso_preto.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 1723,
+            "top": 728,
+            "right": 2026,
+            "bottom": 1285
+          },
+          "size": {
+            "w": 303,
+            "h": 565
+          }
+        },
+        {
+          "index": 12,
+          "name": "vaso_quadrado_concreto_folhagem",
+          "file": "industrial/vaso_quadrado_concreto_folhagem.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 1411,
+            "top": 859,
+            "right": 1676,
+            "bottom": 1285
+          },
+          "size": {
+            "w": 265,
+            "h": 426
+          }
+        },
+        {
+          "index": 13,
+          "name": "vaso_espada_sao_jorge_branco",
+          "file": "industrial/vaso_espada_sao_jorge_branco.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 773,
+            "top": 877,
+            "right": 959,
+            "bottom": 1285
+          },
+          "size": {
+            "w": 186,
+            "h": 408
+          }
+        },
+        {
+          "index": 14,
+          "name": "vaso_monstera_preto",
+          "file": "industrial/vaso_monstera_preto.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 1072,
+            "top": 899,
+            "right": 1337,
+            "bottom": 1285
+          },
+          "size": {
+            "w": 265,
+            "h": 386
+          }
+        },
+        {
+          "index": 15,
+          "name": "vaso_cilindrico_branco_01",
+          "file": "industrial/vaso_cilindrico_branco_01.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 82,
+            "top": 918,
+            "right": 277,
+            "bottom": 1285
+          },
+          "size": {
+            "w": 195,
+            "h": 367
+          }
+        },
+        {
+          "index": 16,
+          "name": "vaso_cilindrico_branco_02",
+          "file": "industrial/vaso_cilindrico_branco_02.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 413,
+            "top": 918,
+            "right": 612,
+            "bottom": 1285
+          },
+          "size": {
+            "w": 199,
+            "h": 367
+          }
+        },
+        {
+          "index": 17,
+          "name": "jardineira_palmeiras_dupla_01",
+          "file": "industrial/jardineira_palmeiras_dupla_01.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 2090,
+            "top": 1262,
+            "right": 2350,
+            "bottom": 1736
+          },
+          "size": {
+            "w": 260,
+            "h": 474
+          }
+        },
+        {
+          "index": 18,
+          "name": "jardineira_palmeiras_dupla_02",
+          "file": "industrial/jardineira_palmeiras_dupla_02.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 1807,
+            "top": 1290,
+            "right": 2067,
+            "bottom": 1735
+          },
+          "size": {
+            "w": 260,
+            "h": 453
+          }
+        },
+        {
+          "index": 19,
+          "name": "jardineira_concreto_canto_verde",
+          "file": "industrial/jardineira_concreto_canto_verde.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 1349,
+            "top": 1340,
+            "right": 1705,
+            "bottom": 1754
+          },
+          "size": {
+            "w": 356,
+            "h": 414
+          }
+        },
+        {
+          "index": 20,
+          "name": "floreira_concreto_horizontal_arbustos",
+          "file": "industrial/floreira_concreto_horizontal_arbustos.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 69,
+            "top": 1435,
+            "right": 592,
+            "bottom": 1735
+          },
+          "size": {
+            "w": 523,
+            "h": 300
+          }
+        },
+        {
+          "index": 21,
+          "name": "jardineira_metal_horizontal_agaves",
+          "file": "industrial/jardineira_metal_horizontal_agaves.png",
+          "atlas": "landscaping",
+          "source": "industrial-landscaping-layout-alpha.png",
+          "bbox": {
+            "left": 732,
+            "top": 1439,
+            "right": 1227,
+            "bottom": 1736
+          },
+          "size": {
+            "w": 495,
+            "h": 297
+          }
+        }
+      ]
+    },
+    {
+      "theme": "industrial",
+      "atlas": "architecture",
+      "source": "industrial-architecture-layout-alpha.png",
+      "count": 23,
+      "entries": [
+        {
+          "index": 1,
+          "name": "parede_concreto_topo_horizontal",
+          "file": "industrial/parede_concreto_topo_horizontal.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 61,
+            "top": 64,
+            "right": 555,
+            "bottom": 375
+          },
+          "size": {
+            "w": 494,
+            "h": 311
+          }
+        },
+        {
+          "index": 2,
+          "name": "parede_concreto_lateral_vertical_01",
+          "file": "industrial/parede_concreto_lateral_vertical_01.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 625,
+            "top": 64,
+            "right": 759,
+            "bottom": 375
+          },
+          "size": {
+            "w": 134,
+            "h": 311
+          }
+        },
+        {
+          "index": 3,
+          "name": "canto_interno_concreto_01",
+          "file": "industrial/canto_interno_concreto_01.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 829,
+            "top": 64,
+            "right": 1162,
+            "bottom": 399
+          },
+          "size": {
+            "w": 333,
+            "h": 335
+          }
+        },
+        {
+          "index": 4,
+          "name": "canto_interno_concreto_02",
+          "file": "industrial/canto_interno_concreto_02.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1223,
+            "top": 64,
+            "right": 1556,
+            "bottom": 399
+          },
+          "size": {
+            "w": 333,
+            "h": 335
+          }
+        },
+        {
+          "index": 5,
+          "name": "juncao_t_concreto",
+          "file": "industrial/juncao_t_concreto.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1625,
+            "top": 64,
+            "right": 2083,
+            "bottom": 403
+          },
+          "size": {
+            "w": 458,
+            "h": 339
+          }
+        },
+        {
+          "index": 6,
+          "name": "parede_concreto_lateral_vertical_02",
+          "file": "industrial/parede_concreto_lateral_vertical_02.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 2165,
+            "top": 64,
+            "right": 2339,
+            "bottom": 375
+          },
+          "size": {
+            "w": 174,
+            "h": 311
+          }
+        },
+        {
+          "index": 7,
+          "name": "parede_topo_porta_madeira",
+          "file": "industrial/parede_topo_porta_madeira.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 61,
+            "top": 455,
+            "right": 555,
+            "bottom": 767
+          },
+          "size": {
+            "w": 494,
+            "h": 312
+          }
+        },
+        {
+          "index": 8,
+          "name": "parede_lateral_porta_metal",
+          "file": "industrial/parede_lateral_porta_metal.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 651,
+            "top": 455,
+            "right": 987,
+            "bottom": 767
+          },
+          "size": {
+            "w": 336,
+            "h": 312
+          }
+        },
+        {
+          "index": 9,
+          "name": "parede_topo_janela_longa",
+          "file": "industrial/parede_topo_janela_longa.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1107,
+            "top": 455,
+            "right": 1760,
+            "bottom": 767
+          },
+          "size": {
+            "w": 653,
+            "h": 312
+          }
+        },
+        {
+          "index": 10,
+          "name": "parede_lateral_janela_vertical",
+          "file": "industrial/parede_lateral_janela_vertical.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 2013,
+            "top": 455,
+            "right": 2339,
+            "bottom": 767
+          },
+          "size": {
+            "w": 326,
+            "h": 312
+          }
+        },
+        {
+          "index": 11,
+          "name": "divisoria_vidro_frontal_larga",
+          "file": "industrial/divisoria_vidro_frontal_larga.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 747,
+            "top": 809,
+            "right": 839,
+            "bottom": 1136
+          },
+          "size": {
+            "w": 92,
+            "h": 327
+          }
+        },
+        {
+          "index": 12,
+          "name": "divisoria_metal_tela_industrial",
+          "file": "industrial/divisoria_metal_tela_industrial.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1015,
+            "top": 836,
+            "right": 1628,
+            "bottom": 1136
+          },
+          "size": {
+            "w": 613,
+            "h": 300
+          }
+        },
+        {
+          "index": 13,
+          "name": "divisoria_vidro_lateral_estreita",
+          "file": "industrial/divisoria_vidro_lateral_estreita.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 61,
+            "top": 846,
+            "right": 555,
+            "bottom": 1128
+          },
+          "size": {
+            "w": 494,
+            "h": 282
+          }
+        },
+        {
+          "index": 14,
+          "name": "piso_concreto_claro",
+          "file": "industrial/piso_concreto_claro.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 61,
+            "top": 1210,
+            "right": 335,
+            "bottom": 1483
+          },
+          "size": {
+            "w": 274,
+            "h": 273
+          }
+        },
+        {
+          "index": 15,
+          "name": "piso_metal_grafite",
+          "file": "industrial/piso_metal_grafite.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 379,
+            "top": 1210,
+            "right": 652,
+            "bottom": 1483
+          },
+          "size": {
+            "w": 273,
+            "h": 273
+          }
+        },
+        {
+          "index": 16,
+          "name": "piso_madeira_industrial",
+          "file": "industrial/piso_madeira_industrial.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 696,
+            "top": 1210,
+            "right": 971,
+            "bottom": 1483
+          },
+          "size": {
+            "w": 275,
+            "h": 273
+          }
+        },
+        {
+          "index": 17,
+          "name": "piso_carpete_xadrez_grafite",
+          "file": "industrial/piso_carpete_xadrez_grafite.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1008,
+            "top": 1210,
+            "right": 1280,
+            "bottom": 1483
+          },
+          "size": {
+            "w": 272,
+            "h": 273
+          }
+        },
+        {
+          "index": 18,
+          "name": "tapete_azul_reuniao",
+          "file": "industrial/tapete_azul_reuniao.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1319,
+            "top": 1210,
+            "right": 1790,
+            "bottom": 1534
+          },
+          "size": {
+            "w": 471,
+            "h": 324
+          }
+        },
+        {
+          "index": 19,
+          "name": "tapete_geometrico_olive",
+          "file": "industrial/tapete_geometrico_olive.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1851,
+            "top": 1210,
+            "right": 2316,
+            "bottom": 1534
+          },
+          "size": {
+            "w": 465,
+            "h": 324
+          }
+        },
+        {
+          "index": 20,
+          "name": "rodape_metal_grafite_longo_01",
+          "file": "industrial/rodape_metal_grafite_longo_01.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 697,
+            "top": 1545,
+            "right": 1209,
+            "bottom": 1728
+          },
+          "size": {
+            "w": 512,
+            "h": 183
+          }
+        },
+        {
+          "index": 21,
+          "name": "jardineira_concreto_longa_pendente",
+          "file": "industrial/jardineira_concreto_longa_pendente.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1829,
+            "top": 1564,
+            "right": 2339,
+            "bottom": 1728
+          },
+          "size": {
+            "w": 510,
+            "h": 164
+          }
+        },
+        {
+          "index": 22,
+          "name": "rodape_metal_grafite_longo_02",
+          "file": "industrial/rodape_metal_grafite_longo_02.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 61,
+            "top": 1654,
+            "right": 659,
+            "bottom": 1728
+          },
+          "size": {
+            "w": 598,
+            "h": 74
+          }
+        },
+        {
+          "index": 23,
+          "name": "jardineira_concreto_longa_suculentas",
+          "file": "industrial/jardineira_concreto_longa_suculentas.png",
+          "atlas": "architecture",
+          "source": "industrial-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1319,
+            "top": 1654,
+            "right": 1790,
+            "bottom": 1728
+          },
+          "size": {
+            "w": 471,
+            "h": 74
+          }
+        }
+      ]
+    }
+  ]
+}

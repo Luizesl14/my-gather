@@ -29,8 +29,11 @@ Implementar ações sociais, gestos, reações e interações contextuais.
 - Convites expiram.
 - Algumas interações geram notificação.
 - Algumas interações geram balão.
+- Proximidade avatar→avatar também aciona WebRTC (ver `30-webrtc-proximity-spec.md`).
+- O raio de interação social (gestos, acenar, café) usa o mesmo raio do WebRTC.
 
 ## Critérios de aceite
 
 - Fora do raio, ação local falha.
 - Chamada expira em `30s`.
+- `proximity:user.detected` deve incluir flag `webrtcAvailable: true` quando câmera/mic estiverem disponíveis.

@@ -6,7 +6,7 @@ import { startWebsocketServer } from "./realtime/websocket-server";
 
 async function main() {
   const app = await buildApp({ jwtSecret: config.jwtSecret });
-  const wsServer = await startWebsocketServer({ port: config.wsPort });
+  const wsServer = await startWebsocketServer({ port: config.wsPort, jwtSecret: config.jwtSecret });
 
   await app.listen({ port: config.apiPort, host: "0.0.0.0" });
   app.log.info({ apiPort: config.apiPort }, "backend_started");
