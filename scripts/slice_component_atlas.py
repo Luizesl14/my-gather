@@ -450,6 +450,11 @@ def validate_unique_names(configs: list[dict[str, object]]) -> None:
             seen.add(key)
 
 
+def cleanup_theme_root(theme_dir: Path) -> None:
+    for path in theme_dir.glob("*.png"):
+        path.unlink()
+
+
 def slice_atlas(config: dict[str, object]) -> dict[str, object]:
     source = Path(config["source"])
     theme = str(config["theme"])
@@ -522,6 +527,8 @@ def write_theme_manifest(theme: str, sections: list[dict[str, object]]) -> None:
 def main() -> None:
     validate_unique_names(ATLAS_CONFIGS)
     grouped: dict[str, list[dict[str, object]]] = {"office": [], "industrial": []}
+    cleanup_theme_root(COMPONENTS_ROOT / "office")
+    cleanup_theme_root(COMPONENTS_ROOT / "industrial")
     for config in ATLAS_CONFIGS:
         result = slice_atlas(config)
         grouped[result["theme"]].append(result)
