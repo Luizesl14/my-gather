@@ -13,6 +13,60 @@ COMPONENTS_ROOT = ROOT / "images" / "trae" / "components"
 MIN_PIXELS = 200
 PADDING = 8
 
+CONSTRUCTION_PREFIXES = (
+    "office_arch_",
+    "parede_",
+    "canto_",
+    "juncao_",
+    "rodape_",
+    "janela_",
+)
+
+CONSTRUCTION_EXACT = {
+    "divisoria_baixa_bicolor_horizontal",
+    "divisoria_madeira_ripada_horizontal",
+    "divisoria_vidro_baixa_horizontal",
+    "divisoria_vidro_canto",
+    "divisoria_vidro_vertical",
+    "pilar_madeira_ripado",
+    "coluna_trim_clara",
+    "piso_bege_carpete",
+    "piso_cinza_azulejo",
+    "piso_claro_quadriculado",
+    "piso_grafite_quadriculado",
+    "piso_madeira_clara",
+    "piso_preto_tecnico",
+    "modulo_banheiro_claro",
+    "modulo_copa_clara",
+    "parede_concreto_topo_horizontal",
+    "parede_concreto_lateral_vertical_01",
+    "parede_concreto_lateral_vertical_02",
+    "parede_lateral_janela_vertical",
+    "parede_lateral_porta_metal",
+    "parede_topo_janela_longa",
+    "parede_topo_porta_madeira",
+    "divisoria_metal_tela_industrial",
+    "divisoria_vidro_frontal_larga",
+    "divisoria_vidro_lateral_estreita",
+    "piso_carpete_xadrez_grafite",
+    "piso_concreto_claro",
+    "piso_madeira_industrial",
+    "piso_metal_grafite",
+    "rodape_metal_grafite_longo_01",
+    "rodape_metal_grafite_longo_02",
+}
+
+CONSTRUCTION_CONTAINS = (
+    "_porta_",
+    "_janela_",
+    "_parede_",
+    "_vidro_",
+    "_rodape_",
+    "_coluna_",
+    "_pilar_",
+    "_divisoria_",
+)
+
 
 def detect_components(image: Image.Image, min_pixels: int = MIN_PIXELS) -> list[tuple[int, int, int, int]]:
     alpha = image.getchannel("A")
@@ -68,6 +122,16 @@ def crop_component(image: Image.Image, box: tuple[int, int, int, int], padding: 
     if bbox:
         cropped = cropped.crop(bbox)
     return cropped
+
+
+def component_category(name: str) -> str:
+    if name in CONSTRUCTION_EXACT:
+        return "construcao"
+    if name.startswith(CONSTRUCTION_PREFIXES):
+        return "construcao"
+    if any(token in name for token in CONSTRUCTION_CONTAINS):
+        return "construcao"
+    return "componentes"
 
 
 ATLAS_CONFIGS: list[dict[str, object]] = [
@@ -390,8 +454,10 @@ def slice_atlas(config: dict[str, object]) -> dict[str, object]:
     source = Path(config["source"])
     theme = str(config["theme"])
     atlas_name = str(config["atlas"])
-    output_dir = COMPONENTS_ROOT / theme
-    output_dir.mkdir(parents=True, exist_ok=True)
+    theme_dir = COMPONENTS_ROOT / theme
+    theme_dir.mkdir(parents=True, exist_ok=True)
+    (theme_dir / "construcao").mkdir(parents=True, exist_ok=True)
+    (theme_dir / "componentes").mkdir(parents=True, exist_ok=True)
 
     image = Image.open(source).convert("RGBA")
     boxes = detect_components(image)
@@ -403,6 +469,8 @@ def slice_atlas(config: dict[str, object]) -> dict[str, object]:
 
     entries: list[dict[str, object]] = []
     for index, (box, name) in enumerate(zip(boxes, names), start=1):
+        category = component_category(name)
+        output_dir = theme_dir / category
         filename = f"{name}.png"
         target = output_dir / filename
         cropped = crop_component(image, box)
@@ -411,7 +479,8 @@ def slice_atlas(config: dict[str, object]) -> dict[str, object]:
             {
                 "index": index,
                 "name": name,
-                "file": f"{theme}/{filename}",
+                "category": category,
+                "file": f"{theme}/{category}/{filename}",
                 "atlas": atlas_name,
                 "source": source.name,
                 "bbox": {"left": box[0], "top": box[1], "right": box[2], "bottom": box[3]},
@@ -436,6 +505,10 @@ def write_theme_manifest(theme: str, sections: list[dict[str, object]]) -> None:
                 "version": 1,
                 "theme": theme,
                 "generatedFrom": "scripts/slice_component_atlas.py",
+                "folders": {
+                    "construcao": f"{theme}/construcao",
+                    "componentes": f"{theme}/componentes",
+                },
                 "sections": sections,
             },
             indent=2,
