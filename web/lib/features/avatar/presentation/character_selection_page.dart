@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
@@ -7,303 +9,595 @@ import "../../../core/theme/app_colors.dart";
 import "../../auth/data/auth_service.dart";
 import "../../auth/presentation/auth_provider.dart";
 import "../data/avatar_catalog_loader.dart";
+import "../domain/avatar_catalog.dart";
 import "../domain/avatar_character.dart";
 import "character_provider.dart";
 
-final _catalogProvider = FutureProvider.autoDispose<List<AvatarCharacter>>((ref) async {
-  final catalog = await AvatarCatalogLoader.loadDefault();
-  return catalog.characters;
-});
+// ─── Providers ────────────────────────────────────────────────────────────────
+
+// Not autoDispose: catalog is an immutable asset loaded once per session.
+final _catalogProvider =
+    FutureProvider<AvatarCatalog>((ref) => AvatarCatalogLoader.loadDefault());
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 class CharacterSelectionPage extends ConsumerStatefulWidget {
   const CharacterSelectionPage({super.key});
 
   @override
-  ConsumerState<CharacterSelectionPage> createState() => _CharacterSelectionPageState();
+  ConsumerState<CharacterSelectionPage> createState() =>
+      _CharacterSelectionPageState();
 }
 
-class _CharacterSelectionPageState extends ConsumerState<CharacterSelectionPage> {
-  late final PageController _pageController;
-  int _index = 0;
+class _CharacterSelectionPageState
+    extends ConsumerState<CharacterSelectionPage> {
+  CharacterCategory _category = CharacterCategory.man;
+  AvatarCharacter? _selectedChar;
+  bool _isEntering = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(viewportFraction: 0.52, initialPage: 0);
-  }
+  void _selectCategory(CharacterCategory cat) => setState(() {
+        _category = cat;
+        if (_selectedChar?.category != cat) _selectedChar = null;
+      });
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
+  void _selectChar(AvatarCharacter ch) => setState(() => _selectedChar = ch);
 
-  void _prev(int total) { if (_index > 0) _goto(_index - 1); }
-  void _next(int total) { if (_index < total - 1) _goto(_index + 1); }
+  Future<void> _enter() async {
+    final ch = _selectedChar;
+    if (ch == null || _isEntering) return;
+    setState(() => _isEntering = true);
 
-  void _goto(int i) {
-    setState(() => _index = i);
-    _pageController.animateToPage(i,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-  }
-
-  Future<void> _enter(List<AvatarCharacter> characters) async {
-    final ch = characters[_index];
     ref.read(characterProvider.notifier).state = ch.id;
+
     final token = ref.read(authProvider).token ?? "";
-    try { await AuthService().updateAvatar(token, ch.id); } catch (_) {}
-    if (mounted) {
-      context.goNamed(AppRouteNames.workspaceSelection);
-    }
+    AuthService().updateAvatar(token, ch.id).catchError((_) {});
+
+    if (mounted) context.goNamed(AppRouteNames.workspaceSelection);
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final user = ref.watch(authProvider).user;
     final catalogAsync = ref.watch(_catalogProvider);
 
     return Scaffold(
       backgroundColor: colors.app,
-      body: SafeArea(
-        child: catalogAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (_, __) => const Center(child: Text("Erro ao carregar personagens")),
-          data: (characters) => _buildContent(context, colors, user?.displayName ?? "", characters),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 860, maxHeight: 640),
+          child: catalogAsync.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) =>
+                const Center(child: Text("Erro ao carregar personagens")),
+            data: (catalog) => _buildShell(context, colors, catalog),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildContent(
+  // ─── Shell ─────────────────────────────────────────────────────────────────
+
+  Widget _buildShell(
     BuildContext context,
     AppColors colors,
-    String displayName,
-    List<AvatarCharacter> characters,
+    AvatarCatalog catalog,
   ) {
-    final safeIndex = _index.clamp(0, characters.length - 1);
-    final ch = characters[safeIndex];
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.panel,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colors.border),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.35),
+            blurRadius: 40,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          children: [
+            _buildHeader(colors),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _PreviewPanel(
+                    selectedChar: _selectedChar,
+                    colors: colors,
+                  ),
+                  VerticalDivider(width: 1, thickness: 1, color: colors.border),
+                  Expanded(
+                    child: _CharacterPanel(
+                      catalog: catalog,
+                      category: _category,
+                      selectedChar: _selectedChar,
+                      colors: colors,
+                      onCategoryChanged: _selectCategory,
+                      onCharSelected: _selectChar,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            _buildFooter(colors),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ─── Header ────────────────────────────────────────────────────────────────
+
+  Widget _buildHeader(AppColors colors) {
+    return Container(
+      height: 48,
+      decoration: BoxDecoration(
+        color: colors.panelMuted,
+        border: Border(bottom: BorderSide(color: colors.border)),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 20),
+          ShaderMask(
+            shaderCallback: (b) => LinearGradient(
+              colors: [colors.brandSecondary, colors.brandPrimary],
+            ).createShader(b),
+            child: const Text(
+              "Love+Robot",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 13,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
+          const Spacer(),
+          Text(
+            "Escolha seu personagem",
+            style: TextStyle(color: colors.textMuted, fontSize: 11),
+          ),
+          const SizedBox(width: 20),
+        ],
+      ),
+    );
+  }
+
+  // ─── Footer ────────────────────────────────────────────────────────────────
+
+  Widget _buildFooter(AppColors colors) {
+    return Container(
+      height: 52,
+      decoration: BoxDecoration(
+        color: colors.panelMuted,
+        border: Border(top: BorderSide(color: colors.border)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          Text(
+            "Você pode alterar seu personagem depois",
+            style: TextStyle(color: colors.textMuted, fontSize: 11),
+          ),
+          const Spacer(),
+          FilledButton.icon(
+            onPressed:
+                _selectedChar != null && !_isEntering ? () => _enter() : null,
+            icon: _isEntering
+                ? const SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Icon(Icons.arrow_forward_rounded, size: 16),
+            label: const Text("Entrar"),
+            style: FilledButton.styleFrom(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              textStyle:
+                  const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Left preview panel ───────────────────────────────────────────────────────
+
+const double _kNewCharNativeH = 186.0;
+const double _kNewCharNativeW = 90.0;
+
+class _PreviewPanel extends StatefulWidget {
+  const _PreviewPanel({
+    required this.selectedChar,
+    required this.colors,
+  });
+
+  final AvatarCharacter? selectedChar;
+  final AppColors colors;
+
+  @override
+  State<_PreviewPanel> createState() => _PreviewPanelState();
+}
+
+class _PreviewPanelState extends State<_PreviewPanel> {
+  Timer? _timer;
+  int _frame = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  @override
+  void didUpdateWidget(_PreviewPanel old) {
+    super.didUpdateWidget(old);
+    if (old.selectedChar?.id != widget.selectedChar?.id) {
+      _frame = 0;
+      _timer?.cancel();
+      _startTimer();
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = null;
+    final frames = widget.selectedChar?.frames.walkDown;
+    if (frames == null || frames.isEmpty || !mounted) return;
+    _timer = Timer.periodic(const Duration(milliseconds: 125), (_) {
+      if (mounted) setState(() => _frame = (_frame + 1) % frames.length);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ch = widget.selectedChar;
+    final colors = widget.colors;
+
+    final walkFrames = ch?.frames.walkDown ?? [];
+    final framePath = ch != null
+        ? (walkFrames.isNotEmpty
+            ? walkFrames[_frame % walkFrames.length]
+            : ch.frames.idleFront)
+        : null;
+
+    final isLegacy = ch != null && !ch.frames.idleFront.startsWith("normal/");
+
+    return Container(
+      width: 200,
+      color: colors.panelMuted,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 120,
+            height: 160,
+            child: ch != null && framePath != null
+                ? _buildPreview(framePath, isLegacy, colors)
+                : _placeholder(colors),
+          ),
+          const SizedBox(height: 12),
+          if (ch != null) ...[
+            Text(
+              ch.displayName,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+            ),
+            if (ch.type == "special")
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: colors.brandPrimary.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    "Especial",
+                    style: TextStyle(
+                      color: colors.brandPrimary,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+          ] else
+            Text(
+              "Nenhum\nselecionado",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: colors.textMuted, fontSize: 12),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPreview(String framePath, bool isLegacy, AppColors colors) {
+    const containerW = 120.0, containerH = 160.0;
+    const charScale = containerH / _kNewCharNativeH;
+    const charDisplayW = _kNewCharNativeW * charScale;
+    const charLeft = (containerW - charDisplayW) / 2;
+
+    if (isLegacy) {
+      return Image.asset(
+        "assets/sprites/characters/$framePath",
+        width: containerW,
+        fit: BoxFit.fitWidth,
+        filterQuality: FilterQuality.none,
+        errorBuilder: (_, __, ___) => _placeholder(colors),
+      );
+    }
+
+    return ClipRect(
+      child: Stack(
+        children: [
+          Positioned(
+            left: charLeft,
+            top: 0,
+            child: SizedBox(
+              width: charDisplayW,
+              height: containerH,
+              child: Image.asset(
+                "assets/sprites/characters/$framePath",
+                fit: BoxFit.fill,
+                filterQuality: FilterQuality.none,
+                errorBuilder: (_, __, ___) => _placeholder(colors),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _placeholder(AppColors colors) => Icon(
+        Icons.person_outline_rounded,
+        size: 72,
+        color: colors.border,
+      );
+}
+
+// ─── Character panel ──────────────────────────────────────────────────────────
+
+class _CharacterPanel extends StatelessWidget {
+  const _CharacterPanel({
+    required this.catalog,
+    required this.category,
+    required this.selectedChar,
+    required this.colors,
+    required this.onCategoryChanged,
+    required this.onCharSelected,
+  });
+
+  final AvatarCatalog catalog;
+  final CharacterCategory category;
+  final AvatarCharacter? selectedChar;
+  final AppColors colors;
+  final ValueChanged<CharacterCategory> onCategoryChanged;
+  final ValueChanged<AvatarCharacter> onCharSelected;
+
+  static const _cats = [
+    (CharacterCategory.man, "Personagens"),
+    (CharacterCategory.special, "Especiais"),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final chars =
+        catalog.characters.where((c) => c.category == category).toList();
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
-        // ── Header ────────────────────────────────────────────────
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 28, 24, 0),
-          child: Column(children: [
-            ShaderMask(
-              shaderCallback: (b) => LinearGradient(
-                colors: [colors.brandSecondary, colors.brandPrimary],
-              ).createShader(b),
-              child: Text("Love+Robot",
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
-            ),
-            const SizedBox(height: 10),
-            Text("Escolha seu personagem",
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: colors.textPrimary, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 6),
-            Text(
-              "Olá${displayName.isNotEmpty ? ', $displayName' : ''}! "
-              "Como você quer aparecer no escritório?",
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.textSecondary),
-              textAlign: TextAlign.center),
-          ]),
-        ),
-
-        // ── Carrossel + Nome + Controles ──────────────────────────
-        Expanded(
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-
-                SizedBox(
-                  height: 260,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: characters.length,
-                    onPageChanged: (i) => setState(() => _index = i),
-                    itemBuilder: (context, i) {
-                      final isCenter = i == safeIndex;
-                      final info = characters[i];
-                      return Center(
-                        child: GestureDetector(
-                          onTap: () => _goto(i),
-                          child: AnimatedScale(
-                            scale: isCenter ? 1.0 : 0.80,
-                            duration: const Duration(milliseconds: 260),
-                            curve: Curves.easeOut,
-                            child: AnimatedOpacity(
-                              opacity: isCenter ? 1.0 : 0.38,
-                              duration: const Duration(milliseconds: 260),
-                              child: SizedBox(
-                                width: 156,
-                                height: 240,
-                                child: _CharacterCard(info: info, isSelected: isCenter, colors: colors),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: Column(
-                    key: ValueKey(ch.id),
-                    children: [
-                      Text(ch.displayName,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: colors.textPrimary, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 14),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _ArrowButton(
-                      icon: Icons.chevron_left_rounded,
-                      enabled: safeIndex > 0,
-                      colors: colors,
-                      onTap: () => _prev(characters.length),
-                    ),
-                    const SizedBox(width: 8),
-                    ...List.generate(characters.length, (i) {
-                      final active = i == safeIndex;
-                      return GestureDetector(
-                        onTap: () => _goto(i),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          margin: const EdgeInsets.symmetric(horizontal: 3),
-                          width: active ? 18 : 6,
-                          height: 6,
-                          decoration: BoxDecoration(
-                            color: active ? colors.brandPrimary : colors.border,
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                        ),
-                      );
-                    }),
-                    const SizedBox(width: 8),
-                    _ArrowButton(
-                      icon: Icons.chevron_right_rounded,
-                      enabled: safeIndex < characters.length - 1,
-                      colors: colors,
-                      onTap: () => _next(characters.length),
-                    ),
-                  ],
-                ),
-
-              ],
-            ),
+        Container(
+          height: 44,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: colors.border)),
           ),
-        ),
-
-        // ── Footer ───────────────────────────────────────────────
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 28),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Você poderá mudar depois",
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: colors.textMuted)),
-              FilledButton.icon(
-                onPressed: () => _enter(characters),
-                icon: const Icon(Icons.arrow_forward, size: 18),
-                label: const Text("Entrar no escritório"),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14)),
-              ),
-            ],
+            children: _cats.map((c) {
+              final (cat, label) = c;
+              final sel = cat == category;
+              return Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: GestureDetector(
+                  onTap: () => onCategoryChanged(cat),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 140),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: sel
+                          ? colors.brandPrimary.withValues(alpha: 0.12)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: sel ? colors.brandPrimary : colors.border,
+                        width: sel ? 1.5 : 1,
+                      ),
+                    ),
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        color: sel
+                            ? colors.brandPrimary
+                            : colors.textSecondary,
+                        fontWeight:
+                            sel ? FontWeight.bold : FontWeight.normal,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
           ),
         ),
-
+        Expanded(
+          child: chars.isEmpty
+              ? Center(
+                  child: Text(
+                    "Nenhum personagem",
+                    style: TextStyle(color: colors.textMuted),
+                  ),
+                )
+              : GridView.builder(
+                  padding: const EdgeInsets.all(12),
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 0.72,
+                  ),
+                  itemCount: chars.length,
+                  itemBuilder: (ctx, i) {
+                    final ch = chars[i];
+                    return _Thumb(
+                      imagePath:
+                          "assets/sprites/characters/${ch.frames.idleFront}",
+                      label: ch.displayName,
+                      selected: selectedChar?.id == ch.id,
+                      colors: colors,
+                      onTap: () => onCharSelected(ch),
+                    );
+                  },
+                ),
+        ),
       ],
     );
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Shared thumbnail ─────────────────────────────────────────────────────────
 
-class _CharacterCard extends StatelessWidget {
-  const _CharacterCard({required this.info, required this.isSelected, required this.colors});
-  final AvatarCharacter info;
-  final bool isSelected;
-  final AppColors colors;
+class _Thumb extends StatelessWidget {
+  const _Thumb({
+    required this.imagePath,
+    required this.label,
+    required this.selected,
+    required this.colors,
+    required this.onTap,
+  });
 
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      decoration: BoxDecoration(
-        color: isSelected ? colors.brandPrimary.withValues(alpha: 0.07) : colors.panel,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isSelected ? colors.brandPrimary : colors.border,
-          width: isSelected ? 2 : 1,
-        ),
-        boxShadow: isSelected
-            ? [BoxShadow(color: colors.brandPrimary.withValues(alpha: 0.20), blurRadius: 20, spreadRadius: 1)]
-            : [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 6)],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(19),
-        child: Image.asset(
-          "assets/sprites/characters/${info.id}/preview.png",
-          filterQuality: FilterQuality.none,
-          fit: BoxFit.contain,
-          alignment: Alignment.center,
-          errorBuilder: (_, __, ___) => Center(
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Icon(Icons.person, size: 48, color: colors.textMuted),
-              const SizedBox(height: 8),
-              Text(info.displayName,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: colors.textMuted, fontSize: 11)),
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ArrowButton extends StatelessWidget {
-  const _ArrowButton({required this.icon, required this.enabled, required this.colors, required this.onTap});
-  final IconData icon;
-  final bool enabled;
+  final String imagePath;
+  final String label;
+  final bool selected;
   final AppColors colors;
   final VoidCallback onTap;
+
+  bool get _isLegacy => !imagePath.contains("/normal/");
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: enabled ? onTap : null,
-      child: Container(
-        width: 40,
-        height: 40,
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 140),
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: enabled ? colors.panel : Colors.transparent,
+          color: selected
+              ? colors.brandPrimary.withValues(alpha: 0.10)
+              : colors.panel,
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: enabled ? colors.border : colors.border.withValues(alpha: 0.3),
+            color: selected ? colors.brandPrimary : colors.border,
+            width: selected ? 2 : 1,
           ),
         ),
-        child: Center(
-          child: Icon(
-            icon,
-            size: 22,
-            color: enabled ? colors.textPrimary : colors.border.withValues(alpha: 0.4),
-          ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(4, 6, 4, 2),
+                child: ClipRect(
+                  child: LayoutBuilder(
+                    builder: (ctx, box) {
+                      final imgH = box.maxHeight;
+                      final imgW = box.maxWidth;
+                      const charScale = 1.0 / _kNewCharNativeH;
+                      final charDisplayW = _kNewCharNativeW * imgH * charScale;
+                      final charLeft = (imgW - charDisplayW) / 2;
+
+                      if (_isLegacy) {
+                        return Image.asset(
+                          imagePath,
+                          width: imgW,
+                          fit: BoxFit.fitWidth,
+                          filterQuality: FilterQuality.none,
+                          errorBuilder: (_, __, ___) => Icon(
+                            Icons.person,
+                            color: colors.border,
+                            size: 28,
+                          ),
+                        );
+                      }
+
+                      return Stack(
+                        children: [
+                          Positioned(
+                            left: charLeft,
+                            top: 0,
+                            child: SizedBox(
+                              width: charDisplayW,
+                              height: imgH,
+                              child: Image.asset(
+                                imagePath,
+                                fit: BoxFit.fill,
+                                filterQuality: FilterQuality.none,
+                                errorBuilder: (_, __, ___) => Icon(
+                                  Icons.person,
+                                  color: colors.border,
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(2, 0, 2, 4),
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: selected ? colors.brandPrimary : colors.textMuted,
+                  fontWeight:
+                      selected ? FontWeight.bold : FontWeight.normal,
+                  fontSize: 9,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

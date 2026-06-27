@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "bodyId": "body-office-01",
+  "preview": "hair-generated/body-office-01/all-generated-hair-preview.png",
+  "packs": [
+    {
+      "id": "hair-short-brown-01",
+      "gender": "unisex",
+      "displayName": "Cabelo curto castanho 01",
+      "status": "validation-full-sheet",
+      "source": {
+        "generator": "magnific",
+        "rawSheet": "hair-generated/body-office-01/hair-short-brown-01/source/full-sheet-raw.png",
+        "preview": "hair-generated/body-office-01/hair-short-brown-01/preview-on-body.png"
+      },
+      "framePattern": "hair-generated/body-office-01/hair-short-brown-01/{frame}.png",
+      "directionalPattern": "hair-generated/body-office-01/hair-short-brown-01/directional/{direction}.png"
+    },
+    {
+      "id": "hair-male-black-messy-01",
+      "gender": "male",
+      "displayName": "Masculino preto baguncado 01",
+      "status": "validation-full-sheet",
+      "source": {
+        "generator": "magnific",
+        "rawSheet": "hair-generated/body-office-01/hair-male-black-messy-01/source/full-sheet-raw.png",
+        "preview": "hair-generated/body-office-01/hair-male-black-messy-01/preview-on-body.png"
+      },
+      "framePattern": "hair-generated/body-office-01/hair-male-black-messy-01/{frame}.png",
+      "directionalPattern": "hair-generated/body-office-01/hair-male-black-messy-01/directional/{direction}.png"
+    },
+    {
+      "id": "hair-male-brown-sidepart-01",
+      "gender": "male",
+      "displayName": "Masculino castanho lateral 01",
+      "status": "validation-full-sheet",
+      "source": {
+        "generator": "magnific",
+        "rawSheet": "hair-generated/body-office-01/hair-male-brown-sidepart-01/source/full-sheet-raw.png",
+        "preview": "hair-generated/body-office-01/hair-male-brown-sidepart-01/preview-on-body.png"
+      },
+      "framePattern": "hair-generated/body-office-01/hair-male-brown-sidepart-01/{frame}.png",
+      "directionalPattern": "hair-generated/body-office-01/hair-male-brown-sidepart-01/directional/{direction}.png"
+    },
+    {
+      "id": "hair-female-auburn-bob-01",
+      "gender": "female",
+      "displayName": "Feminino bob ruivo 01",
+      "status": "validation-full-sheet",
+      "source": {
+        "generator": "magnific",
+        "rawSheet": "hair-generated/body-office-01/hair-female-auburn-bob-01/source/full-sheet-raw.png",
+        "preview": "hair-generated/body-office-01/hair-female-auburn-bob-01/preview-on-body.png"
+      },
+      "framePattern": "hair-generated/body-office-01/hair-female-auburn-bob-01/{frame}.png",
+      "directionalPattern": "hair-generated/body-office-01/hair-female-auburn-bob-01/directional/{direction}.png"
+    },
+    {
+      "id": "hair-female-dark-ponytail-01",
+      "gender": "female",
+      "displayName": "Feminino rabo de cavalo escuro 01",
+      "status": "validation-full-sheet",
+      "source": {
+        "generator": "magnific",
+        "rawSheet": "hair-generated/body-office-01/hair-female-dark-ponytail-01/source/full-sheet-raw.png",
+        "preview": "hair-generated/body-office-01/hair-female-dark-ponytail-01/preview-on-body.png"
+      },
+      "framePattern": "hair-generated/body-office-01/hair-female-dark-ponytail-01/{frame}.png",
+      "directionalPattern": "hair-generated/body-office-01/hair-female-dark-ponytail-01/directional/{direction}.png"
+    }
+  ]
+}

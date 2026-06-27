@@ -1,3 +1,7 @@
+import "character_voice.dart";
+
+enum CharacterCategory { man, woman, mix, special }
+
 class AvatarCharacter {
   const AvatarCharacter({
     required this.id,
@@ -5,6 +9,10 @@ class AvatarCharacter {
     required this.defaultCharacter,
     required this.frames,
     required this.hitbox,
+    this.type = "normal",
+    this.category = CharacterCategory.man,
+    this.reactions = const [],
+    this.voice,
   });
 
   final String id;
@@ -12,6 +20,10 @@ class AvatarCharacter {
   final bool defaultCharacter;
   final AvatarCharacterFrames frames;
   final AvatarHitbox hitbox;
+  final String type;
+  final CharacterCategory category;
+  final List<String> reactions;
+  final CharacterVoice? voice;
 }
 
 class AvatarCharacterFrames {

@@ -11,6 +11,8 @@ class ScenaryTile {
     required this.category,
     required this.label,
     required this.collision,
+    this.assetRoot = "assets/tilesets",
+    this.theme,
     this.sizeW = 1,
     this.sizeH = 1,
     this.frameCols = 1,
@@ -24,12 +26,17 @@ class ScenaryTile {
   final String category;
   final String label;
   final bool collision;
+  final String assetRoot;
+  final String? theme;
   final int sizeW;
   final int sizeH;
   final int frameCols;
   final int frameRows;
   final bool isOverlay;
   final bool acceptsOverlay;
+
+  // Full Flutter asset path ready for Image.asset()
+  String get imagePath => "$assetRoot/$path";
 
   factory ScenaryTile.fromJson(Map<String, dynamic> j) {
     final size = j["size"] as Map<String, dynamic>?;
@@ -39,7 +46,9 @@ class ScenaryTile {
       path: j["path"] as String,
       category: j["category"] as String,
       label: j["label"] as String,
-      collision: j["collision"] as bool,
+      collision: (j["collision"] as bool?) ?? false,
+      assetRoot: (j["assetRoot"] as String?) ?? "assets/tilesets",
+      theme: j["theme"] as String?,
       sizeW: (size?["w"] as int?) ?? 1,
       sizeH: (size?["h"] as int?) ?? 1,
       frameCols: (frames?["cols"] as int?) ?? 1,
@@ -171,6 +180,10 @@ class MapEditorData {
     required this.paletteTileFrameRows,
     required this.isSaving,
     required this.isDirty,
+    this.displayZoom = 2.5,
+    this.avatarScale = 0.5,
+    this.avatarYOffset = 0.0,
+    this.avatarXOffset = 0.0,
     this.selectedId,
     this.paletteSelectedId,
   });
@@ -186,6 +199,10 @@ class MapEditorData {
   final int paletteTileFrameRows;
   final bool isSaving;
   final bool isDirty;
+  final double displayZoom;
+  final double avatarScale;
+  final double avatarYOffset;
+  final double avatarXOffset;
   final String? selectedId;
   final String? paletteSelectedId;
 
@@ -204,6 +221,10 @@ class MapEditorData {
     int? paletteTileFrameRows,
     bool? isSaving,
     bool? isDirty,
+    double? displayZoom,
+    double? avatarScale,
+    double? avatarYOffset,
+    double? avatarXOffset,
     String? selectedId,
     bool clearSelectedId = false,
     String? paletteSelectedId,
@@ -221,6 +242,10 @@ class MapEditorData {
         paletteTileFrameRows: paletteTileFrameRows ?? this.paletteTileFrameRows,
         isSaving: isSaving ?? this.isSaving,
         isDirty: isDirty ?? this.isDirty,
+        displayZoom: displayZoom ?? this.displayZoom,
+        avatarScale: avatarScale ?? this.avatarScale,
+        avatarYOffset: avatarYOffset ?? this.avatarYOffset,
+        avatarXOffset: avatarXOffset ?? this.avatarXOffset,
         selectedId: clearSelectedId ? null : (selectedId ?? this.selectedId),
         paletteSelectedId: clearPaletteSelected
             ? null
@@ -266,6 +291,51 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
 
   final WorkspaceService _service;
   final String _workspaceId;
+
+  // ─ Map resize ─
+
+  void resizeMap(int newW, int newH) {
+    final w = newW.clamp(4, 200);
+    final h = newH.clamp(4, 200);
+    // Remove tiles that start outside the new bounds.
+    final kept = Map.of(state.placedTiles)..removeWhere((_, tile) {
+      final isFloor = tile.layerName == "floor";
+      return isFloor
+          ? tile.x >= w || tile.y >= h
+          : tile.x >= w * 32 || tile.y >= h * 32;
+    });
+    state = state.copyWith(
+      width: w,
+      height: h,
+      placedTiles: kept,
+      isDirty: true,
+      clearSelectedId: true,
+    );
+  }
+
+  void setDisplayZoom(double zoom) {
+    final z = zoom.clamp(1.0, 4.0);
+    if (z == state.displayZoom) return;
+    state = state.copyWith(displayZoom: z, isDirty: true);
+  }
+
+  void setAvatarScale(double scale) {
+    final s = scale.clamp(0.3, 1.5);
+    if (s == state.avatarScale) return;
+    state = state.copyWith(avatarScale: s, isDirty: true);
+  }
+
+  void setAvatarYOffset(double offset) {
+    final o = offset.clamp(-0.8, 0.8);
+    if (o == state.avatarYOffset) return;
+    state = state.copyWith(avatarYOffset: o, isDirty: true);
+  }
+
+  void setAvatarXOffset(double offset) {
+    final o = offset.clamp(-0.8, 0.8);
+    if (o == state.avatarXOffset) return;
+    state = state.copyWith(avatarXOffset: o, isDirty: true);
+  }
 
   // ─ Layer ─
 
@@ -604,6 +674,10 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
     state = MapEditorData(
       width: data.width,
       height: data.height,
+      displayZoom: data.displayZoom,
+      avatarScale: data.avatarScale,
+      avatarYOffset: data.avatarYOffset,
+      avatarXOffset: data.avatarXOffset,
       placedTiles: placed,
       activeLayer: "floor",
       paletteTileW: 1,
@@ -634,6 +708,10 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
           width: state.width,
           height: state.height,
           tileSize: 32,
+          displayZoom: state.displayZoom,
+          avatarScale: state.avatarScale,
+          avatarYOffset: state.avatarYOffset,
+          avatarXOffset: state.avatarXOffset,
           assetPackId: "office-scenary-v1",
           spawn: const {"x": 1, "y": 1, "direction": "front"},
           layers: [

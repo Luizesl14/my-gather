@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "body-office-01",
+      "displayName": "Office Body 01",
+      "supportedSkinToneIds": ["skin-01"],
+      "genderPresentation": "neutral",
+      "status": "validation-full-sheet",
+      "source": {
+        "generator": "magnific",
+        "approvedConcept": "Hibrido 1: cabeca da opcao 1 com corpo da opcao 2",
+        "rawFrame": "body/body-office-01/skin-01/source/idle-front-raw.png",
+        "rawSheet": "body/body-office-01/skin-01/source/full-sheet-raw.png",
+        "preview": "body/body-office-01/skin-01/source/full-sheet-preview.png"
+      },
+      "frames": {
+        "idle": {
+          "front": "body/body-office-01/skin-01/idle-front.png",
+          "back": "body/body-office-01/skin-01/idle-back.png",
+          "left": "body/body-office-01/skin-01/idle-left.png",
+          "right": "body/body-office-01/skin-01/idle-right.png"
+        },
+        "walk": {
+          "down": [
+            "body/body-office-01/skin-01/walk-down-01.png",
+            "body/body-office-01/skin-01/walk-down-02.png",
+            "body/body-office-01/skin-01/walk-down-03.png"
+          ],
+          "up": [
+            "body/body-office-01/skin-01/walk-up-01.png",
+            "body/body-office-01/skin-01/walk-up-02.png",
+            "body/body-office-01/skin-01/walk-up-03.png"
+          ],
+          "left": [
+            "body/body-office-01/skin-01/walk-left-01.png",
+            "body/body-office-01/skin-01/walk-left-02.png",
+            "body/body-office-01/skin-01/walk-left-03.png"
+          ],
+          "right": [
+            "body/body-office-01/skin-01/walk-right-01.png",
+            "body/body-office-01/skin-01/walk-right-02.png",
+            "body/body-office-01/skin-01/walk-right-03.png"
+          ]
+        }
+      }
+    }
+  ],
+  "expectedItemShape": {
+    "id": "body-office-01",
+    "displayName": "Office Body 01",
+    "supportedSkinToneIds": ["skin-01"],
+    "genderPresentation": "neutral",
+    "frames": {
+      "idle": {
+        "front": "body/body-office-01/skin-01/idle-front.png",
+        "back": "body/body-office-01/skin-01/idle-back.png",
+        "left": "body/body-office-01/skin-01/idle-left.png",
+        "right": "body/body-office-01/skin-01/idle-right.png"
+      },
+      "walk": {
+        "down": [
+          "body/body-office-01/skin-01/walk-down-01.png",
+          "body/body-office-01/skin-01/walk-down-02.png",
+          "body/body-office-01/skin-01/walk-down-03.png"
+        ],
+        "up": [
+          "body/body-office-01/skin-01/walk-up-01.png",
+          "body/body-office-01/skin-01/walk-up-02.png",
+          "body/body-office-01/skin-01/walk-up-03.png"
+        ],
+        "left": [
+          "body/body-office-01/skin-01/walk-left-01.png",
+          "body/body-office-01/skin-01/walk-left-02.png",
+          "body/body-office-01/skin-01/walk-left-03.png"
+        ],
+        "right": [
+          "body/body-office-01/skin-01/walk-right-01.png",
+          "body/body-office-01/skin-01/walk-right-02.png",
+          "body/body-office-01/skin-01/walk-right-03.png"
+        ]
+      }
+    }
+  }
+}

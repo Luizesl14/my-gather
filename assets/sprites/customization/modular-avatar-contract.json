@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "validationCatalog": "assets/sprites/customization/modular-avatar-catalog.json",
+  "promotionTarget": "web/assets/sprites/customization/modular-avatar-catalog.json",
+  "sprite": {
+    "width": 32,
+    "height": 48,
+    "tileSize": 32,
+    "anchor": {
+      "x": 16,
+      "y": 44,
+      "description": "Centro inferior visual, alinhado aos pes."
+    },
+    "fixedHitbox": {
+      "x": 6,
+      "y": 22,
+      "w": 20,
+      "h": 24,
+      "description": "Mesma area logica usada pelos personagens atuais."
+    }
+  },
+  "directions": ["front", "back", "left", "right"],
+  "animations": {
+    "idle": {
+      "framesPerDirection": 1,
+      "required": true
+    },
+    "walk": {
+      "framesPerDirection": 3,
+      "required": false,
+      "frameNames": ["01", "02", "03"]
+    }
+  },
+  "layers": [
+    {
+      "id": "body",
+      "order": 10,
+      "required": true,
+      "recolorable": true,
+      "sourcePath": "body/{bodyId}/{skinToneId}/{animation}-{direction}[-{frame}].png"
+    },
+    {
+      "id": "outfitBottom",
+      "order": 20,
+      "required": true,
+      "recolorable": true,
+      "sourcePath": "outfits/bottoms/{bottomId}/{bottomColorId}/{animation}-{direction}[-{frame}].png"
+    },
+    {
+      "id": "outfitTop",
+      "order": 30,
+      "required": true,
+      "recolorable": true,
+      "sourcePath": "outfits/tops/{topId}/{topColorId}/{animation}-{direction}[-{frame}].png"
+    },
+    {
+      "id": "shoes",
+      "order": 40,
+      "required": true,
+      "recolorable": false,
+      "sourcePath": "outfits/shoes/{shoesId}/{animation}-{direction}[-{frame}].png"
+    },
+    {
+      "id": "hair",
+      "order": 50,
+      "required": false,
+      "recolorable": true,
+      "sourcePath": "hair/{gender}/{packId}/{styleId}/{direction}.png"
+    },
+    {
+      "id": "accessory",
+      "order": 60,
+      "required": false,
+      "recolorable": false,
+      "sourcePath": "accessories/{accessoryId}/{animation}-{direction}[-{frame}].png"
+    }
+  ],
+  "avatarProfileShape": {
+    "userId": "string",
+    "displayName": "string",
+    "bodyId": "body-office-01",
+    "skinToneId": "skin-01",
+    "hairPackId": "male-hair-pack-02",
+    "hairStyleId": "style-01",
+    "hairColorId": "hair-brown",
+    "topId": "top-shirt",
+    "topColorId": "cloth-blue",
+    "bottomId": "bottom-pants",
+    "bottomColorId": "cloth-black",
+    "shoesId": "shoes-black",
+    "accessoryIds": ["accessory-badge"],
+    "accentColorId": "accent-blue"
+  },
+  "avatarPresenceShape": {
+    "userId": "string",
+    "workspaceId": "string",
+    "position": {
+      "x": 0,
+      "y": 0
+    },
+    "direction": "front",
+    "animationState": "idle",
+    "status": "available"
+  }
+}

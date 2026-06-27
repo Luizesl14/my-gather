@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "bodyId": "body-office-01",
+  "packs": [
+    {
+      "id": "female-hair-pack-11",
+      "gender": "female",
+      "displayName": "Female Hair Pack 11",
+      "styles": [
+        {
+          "id": "style-01",
+          "displayName": "Style 01",
+          "frames": {
+            "front": "hair-fitted/body-office-01/female/female-hair-pack-11/style-01/front.png",
+            "back": "hair-fitted/body-office-01/female/female-hair-pack-11/style-01/back.png",
+            "left": "hair-fitted/body-office-01/female/female-hair-pack-11/style-01/left.png",
+            "right": "hair-fitted/body-office-01/female/female-hair-pack-11/style-01/right.png"
+          },
+          "preview": "previews/hair-fit/female-hair-pack-11-style-01.png"
+        },
+        {
+          "id": "style-02",
+          "displayName": "Style 02",
+          "frames": {
+            "front": "hair-fitted/body-office-01/female/female-hair-pack-11/style-02/front.png",
+            "back": "hair-fitted/body-office-01/female/female-hair-pack-11/style-02/back.png",
+            "left": "hair-fitted/body-office-01/female/female-hair-pack-11/style-02/left.png",
+            "right": "hair-fitted/body-office-01/female/female-hair-pack-11/style-02/right.png"
+          },
+          "preview": "previews/hair-fit/female-hair-pack-11-style-02.png"
+        },
+        {
+          "id": "style-03",
+          "displayName": "Style 03",
+          "frames": {
+            "front": "hair-fitted/body-office-01/female/female-hair-pack-11/style-03/front.png",
+            "back": "hair-fitted/body-office-01/female/female-hair-pack-11/style-03/back.png",
+            "left": "hair-fitted/body-office-01/female/female-hair-pack-11/style-03/left.png",
+            "right": "hair-fitted/body-office-01/female/female-hair-pack-11/style-03/right.png"
+          },
+          "preview": "previews/hair-fit/female-hair-pack-11-style-03.png"
+        },
+        {
+          "id": "style-04",
+          "displayName": "Style 04",
+          "frames": {
+            "front": "hair-fitted/body-office-01/female/female-hair-pack-11/style-04/front.png",
+            "back": "hair-fitted/body-office-01/female/female-hair-pack-11/style-04/back.png",
+            "left": "hair-fitted/body-office-01/female/female-hair-pack-11/style-04/left.png",
+            "right": "hair-fitted/body-office-01/female/female-hair-pack-11/style-04/right.png"
+          },
+          "preview": "previews/hair-fit/female-hair-pack-11-style-04.png"
+        }
+      ]
+    },
+    {
+      "id": "male-hair-pack-02",
+      "gender": "male",
+      "displayName": "Male Hair Pack 02",
+      "styles": [
+        {
+          "id": "style-01",
+          "displayName": "Style 01",
+          "frames": {
+            "front": "hair-fitted/body-office-01/male/male-hair-pack-02/style-01/front.png",
+            "back": "hair-fitted/body-office-01/male/male-hair-pack-02/style-01/back.png",
+            "left": "hair-fitted/body-office-01/male/male-hair-pack-02/style-01/left.png",
+            "right": "hair-fitted/body-office-01/male/male-hair-pack-02/style-01/right.png"
+          },
+          "preview": "previews/hair-fit/male-hair-pack-02-style-01.png"
+        },
+        {
+          "id": "style-02",
+          "displayName": "Style 02",
+          "frames": {
+            "front": "hair-fitted/body-office-01/male/male-hair-pack-02/style-02/front.png",
+            "back": "hair-fitted/body-office-01/male/male-hair-pack-02/style-02/back.png",
+            "left": "hair-fitted/body-office-01/male/male-hair-pack-02/style-02/left.png",
+            "right": "hair-fitted/body-office-01/male/male-hair-pack-02/style-02/right.png"
+          },
+          "preview": "previews/hair-fit/male-hair-pack-02-style-02.png"
+        },
+        {
+          "id": "style-03",
+          "displayName": "Style 03",
+          "frames": {
+            "front": "hair-fitted/body-office-01/male/male-hair-pack-02/style-03/front.png",
+            "back": "hair-fitted/body-office-01/male/male-hair-pack-02/style-03/back.png",
+            "left": "hair-fitted/body-office-01/male/male-hair-pack-02/style-03/left.png",
+            "right": "hair-fitted/body-office-01/male/male-hair-pack-02/style-03/right.png"
+          },
+          "preview": "previews/hair-fit/male-hair-pack-02-style-03.png"
+        },
+        {
+          "id": "style-04",
+          "displayName": "Style 04",
+          "frames": {
+            "front": "hair-fitted/body-office-01/male/male-hair-pack-02/style-04/front.png",
+            "back": "hair-fitted/body-office-01/male/male-hair-pack-02/style-04/back.png",
+            "left": "hair-fitted/body-office-01/male/male-hair-pack-02/style-04/left.png",
+            "right": "hair-fitted/body-office-01/male/male-hair-pack-02/style-04/right.png"
+          },
+          "preview": "previews/hair-fit/male-hair-pack-02-style-04.png"
+        }
+      ]
+    },
+    {
+      "id": "male-hair-pack-03",
+      "gender": "male",
+      "displayName": "Male Hair Pack 03",
+      "styles": [
+        {
+          "id": "style-01",
+          "displayName": "Style 01",
+          "frames": {
+            "front": "hair-fitted/body-office-01/male/male-hair-pack-03/style-01/front.png",
+            "back": "hair-fitted/body-office-01/male/male-hair-pack-03/style-01/back.png",
+            "left": "hair-fitted/body-office-01/male/male-hair-pack-03/style-01/left.png",
+            "right": "hair-fitted/body-office-01/male/male-hair-pack-03/style-01/right.png"
+          },
+          "preview": "previews/hair-fit/male-hair-pack-03-style-01.png"
+        },
+        {
+          "id": "style-02",
+          "displayName": "Style 02",
+          "frames": {
+            "front": "hair-fitted/body-office-01/male/male-hair-pack-03/style-02/front.png",
+            "back": "hair-fitted/body-office-01/male/male-hair-pack-03/style-02/back.png",
+            "left": "hair-fitted/body-office-01/male/male-hair-pack-03/style-02/left.png",
+            "right": "hair-fitted/body-office-01/male/male-hair-pack-03/style-02/right.png"
+          },
+          "preview": "previews/hair-fit/male-hair-pack-03-style-02.png"
+        },
+        {
+          "id": "style-03",
+          "displayName": "Style 03",
+          "frames": {
+            "front": "hair-fitted/body-office-01/male/male-hair-pack-03/style-03/front.png",
+            "back": "hair-fitted/body-office-01/male/male-hair-pack-03/style-03/back.png",
+            "left": "hair-fitted/body-office-01/male/male-hair-pack-03/style-03/left.png",
+            "right": "hair-fitted/body-office-01/male/male-hair-pack-03/style-03/right.png"
+          },
+          "preview": "previews/hair-fit/male-hair-pack-03-style-03.png"
+        },
+        {
+          "id": "style-04",
+          "displayName": "Style 04",
+          "frames": {
+            "front": "hair-fitted/body-office-01/male/male-hair-pack-03/style-04/front.png",
+            "back": "hair-fitted/body-office-01/male/male-hair-pack-03/style-04/back.png",
+            "left": "hair-fitted/body-office-01/male/male-hair-pack-03/style-04/left.png",
+            "right": "hair-fitted/body-office-01/male/male-hair-pack-03/style-04/right.png"
+          },
+          "preview": "previews/hair-fit/male-hair-pack-03-style-04.png"
+        }
+      ]
+    }
+  ]
+}

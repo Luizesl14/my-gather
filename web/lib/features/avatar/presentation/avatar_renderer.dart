@@ -30,27 +30,26 @@ class AvatarRenderer extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const zoom = MapRenderer.kDisplayZoom;
-    // Position uses full tile zoom so the avatar snaps to tile grid correctly.
-    // Sprite rendered at natural pixel size (no zoom) — 32×48 on screen vs
-    // 64px tiles, giving the character a proportional top-down scale.
-    const spriteZoom = zoom * 0.5;
+    final zoom = map.displayZoom;
     final ts = map.tileSize * zoom;
-    final offset = MapRenderer.cameraOffset(size, map, avatar.position.x, avatar.position.y);
+    final offset = MapRenderer.cameraOffset(size, map, avatar.position.x, avatar.position.y, zoom: zoom);
     final spawnX = avatar.position.x * ts + offset.dx;
     final spawnY = avatar.position.y * ts + offset.dy;
     final currentFrame = frameImages[avatarController.currentFramePath()];
-    final spriteWidth = (currentFrame?.width.toDouble() ?? map.tileSize.toDouble()) * spriteZoom;
-    final spriteHeight = (currentFrame?.height.toDouble() ?? map.tileSize.toDouble()) * spriteZoom;
+    final double targetH = ts * map.avatarScale;
+    final double srcW = currentFrame?.width.toDouble() ?? ts;
+    final double srcH = currentFrame?.height.toDouble() ?? (ts * 1.5);
+    final spriteWidth = srcW * (targetH / srcH);
+    final spriteHeight = targetH;
     final spriteRect = Rect.fromLTWH(
-      spawnX - spriteWidth / 2 + ts / 2,
-      spawnY - spriteHeight + ts,
+      spawnX - spriteWidth / 2 + ts / 2 + ts * map.avatarXOffset,
+      spawnY - spriteHeight + ts - ts * map.avatarYOffset,
       spriteWidth,
       spriteHeight,
     );
 
     if (currentFrame != null) {
-      final paint = Paint()..filterQuality = FilterQuality.none;
+      final paint = Paint()..filterQuality = FilterQuality.medium;
       canvas.drawImageRect(
         currentFrame,
         Rect.fromLTWH(

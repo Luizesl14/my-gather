@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "status": "validation-only",
+  "notes": "Catalogo fonte para validar avatar modular estilo Gather antes de promover para web/assets.",
+  "sprite": {
+    "w": 32,
+    "h": 48,
+    "tileSize": 32,
+    "anchor": {
+      "x": 16,
+      "y": 44
+    },
+    "fixedHitbox": {
+      "x": 6,
+      "y": 22,
+      "w": 20,
+      "h": 24
+    }
+  },
+  "renderOrder": [
+    "body",
+    "outfitBottom",
+    "outfitTop",
+    "shoes",
+    "hair",
+    "accessories",
+    "status"
+  ],
+  "body": {
+    "catalog": "body/body-catalog.json",
+    "items": [
+      {
+        "id": "body-office-01",
+        "displayName": "Office Body 01",
+        "status": "validation-full-sheet"
+      }
+    ]
+  },
+  "outfits": {
+    "catalog": "outfits/outfit-catalog.json",
+    "tops": ["top-shirt"],
+    "bottoms": ["bottom-pants"],
+    "shoes": ["shoes-black"]
+  },
+  "accessories": {
+    "catalog": "accessories/accessory-catalog.json",
+    "items": [
+      "accessory-beard-short",
+      "accessory-glasses-round",
+      "accessory-badge"
+    ]
+  },
+  "assembled": {
+    "catalog": "assembled/assembled-catalog.json",
+    "items": ["avatar-office-01"]
+  },
+  "hair": {
+    "catalog": "hair-fitted/body-office-01/hair-fitted-catalog.json",
+    "packs": [
+      "female-hair-pack-11",
+      "male-hair-pack-02",
+      "male-hair-pack-03"
+    ],
+    "preview": "previews/hair-fit/all-hair-fit-preview.png"
+  },
+  "hairGenerated": {
+    "catalog": "hair-generated/body-office-01/hair-generated-catalog.json",
+    "packs": [
+      "hair-short-brown-01",
+      "hair-male-black-messy-01",
+      "hair-male-brown-sidepart-01",
+      "hair-female-auburn-bob-01",
+      "hair-female-dark-ponytail-01"
+    ],
+    "preview": "hair-generated/body-office-01/all-generated-hair-preview.png"
+  },
+  "profileShape": {
+    "bodyId": "body-office-01",
+    "skinToneId": "skin-01",
+    "hairPackId": "hair-short-01",
+    "hairStyleId": "style-01",
+    "hairColorId": "hair-brown",
+    "topId": "top-shirt",
+    "topColorId": "cloth-blue",
+    "bottomId": "bottom-pants",
+    "bottomColorId": "cloth-black",
+    "shoesId": "shoes-black",
+    "accessoryIds": [
+      "accessory-beard-short",
+      "accessory-glasses-round",
+      "accessory-badge"
+    ]
+  }
+}

@@ -10,8 +10,8 @@ class AcceptInvitationPage extends ConsumerStatefulWidget {
 
   const AcceptInvitationPage({
     required this.token,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   ConsumerState<AcceptInvitationPage> createState() =>
@@ -36,7 +36,7 @@ class _AcceptInvitationPageState extends ConsumerState<AcceptInvitationPage> {
     try {
       final authState = ref.read(authProvider);
 
-      if (authState == null) {
+      if (authState.user == null) {
         // Não está logado - redireciona para login com redirect
         if (mounted) {
           context.push(
@@ -51,7 +51,7 @@ class _AcceptInvitationPageState extends ConsumerState<AcceptInvitationPage> {
       }
 
       // Está logado - aceita o convite
-      await _acceptInvitation(authState);
+      await _acceptInvitation(authState.user!);
     } catch (e) {
       if (mounted) {
         setState(() => _error = 'Erro ao processar convite: $e');

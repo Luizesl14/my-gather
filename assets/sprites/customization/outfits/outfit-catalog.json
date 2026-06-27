@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "tops": [
+    {
+      "id": "top-shirt",
+      "displayName": "Camisa azul",
+      "supportedColorIds": ["cloth-blue"],
+      "status": "validation-full-sheet",
+      "framePattern": "outfits/tops/top-shirt/cloth-blue/{frame}.png"
+    }
+  ],
+  "bottoms": [
+    {
+      "id": "bottom-pants",
+      "displayName": "Calca preta",
+      "supportedColorIds": ["cloth-black"],
+      "status": "validation-full-sheet",
+      "framePattern": "outfits/bottoms/bottom-pants/cloth-black/{frame}.png"
+    }
+  ],
+  "shoes": [
+    {
+      "id": "shoes-black",
+      "displayName": "Sapato preto",
+      "status": "validation-full-sheet",
+      "framePattern": "outfits/shoes/shoes-black/{frame}.png"
+    }
+  ],
+  "expectedTopShape": {
+    "id": "top-shirt",
+    "displayName": "Camisa",
+    "supportedColorIds": ["cloth-blue"],
+    "frames": {
+      "idle": {
+        "front": "outfits/tops/top-shirt/cloth-blue/idle-front.png",
+        "back": "outfits/tops/top-shirt/cloth-blue/idle-back.png",
+        "left": "outfits/tops/top-shirt/cloth-blue/idle-left.png",
+        "right": "outfits/tops/top-shirt/cloth-blue/idle-right.png"
+      }
+    }
+  },
+  "expectedBottomShape": {
+    "id": "bottom-pants",
+    "displayName": "Calca",
+    "supportedColorIds": ["cloth-black"],
+    "frames": {
+      "idle": {
+        "front": "outfits/bottoms/bottom-pants/cloth-black/idle-front.png",
+        "back": "outfits/bottoms/bottom-pants/cloth-black/idle-back.png",
+        "left": "outfits/bottoms/bottom-pants/cloth-black/idle-left.png",
+        "right": "outfits/bottoms/bottom-pants/cloth-black/idle-right.png"
+      }
+    }
+  },
+  "expectedShoesShape": {
+    "id": "shoes-black",
+    "displayName": "Sapato preto",
+    "frames": {
+      "idle": {
+        "front": "outfits/shoes/shoes-black/idle-front.png",
+        "back": "outfits/shoes/shoes-black/idle-back.png",
+        "left": "outfits/shoes/shoes-black/idle-left.png",
+        "right": "outfits/shoes/shoes-black/idle-right.png"
+      }
+    }
+  }
+}

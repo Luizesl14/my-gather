@@ -1,47 +1,3440 @@
 {
   "version": 2,
   "tileSize": 32,
-  "categories": ["floor", "mat", "wall", "door", "window", "furniture"],
+  "categories": [
+    "floor",
+    "mat",
+    "wall",
+    "door",
+    "window",
+    "furniture"
+  ],
   "tiles": [
-    { "id": "granite-flor-with",   "path": "scenary/granite-flor-with.png",   "category": "floor",     "label": "Granito Branco",   "collision": false },
-    { "id": "grayish-floor",       "path": "scenary/grayish-floor.png",       "category": "floor",     "label": "Piso Cinza",       "collision": false },
-    { "id": "iron-floor",          "path": "scenary/iron-floor.png",          "category": "floor",     "label": "Piso Ferro",       "collision": false },
-    { "id": "yellowed-floor",      "path": "scenary/yellowed-floor.png",      "category": "floor",     "label": "Piso Amarelado",   "collision": false },
-    { "id": "scenario",            "path": "scenary/scenario.png",            "category": "floor",     "label": "Piso Cenário",     "collision": false },
-
-    { "id": "gray-mat",            "path": "scenary/gray-mat.png",            "category": "mat",       "label": "Tapete Cinza",     "collision": false },
-    { "id": "yellowed-mat",        "path": "scenary/yellowed-mat.png",        "category": "mat",       "label": "Tapete Amarelado", "collision": false },
-
-    { "id": "half-wall",           "path": "scenary/half-wall.png",           "category": "wall",      "label": "Meia Parede",      "collision": true,  "acceptsOverlay": true },
-    { "id": "mini-wall",           "path": "scenary/mini-wall.png",           "category": "wall",      "label": "Mini Parede",      "collision": true,  "acceptsOverlay": true },
-    { "id": "small-wall",          "path": "scenary/small-wall.png",          "category": "wall",      "label": "Parede Pequena",   "collision": true,  "acceptsOverlay": true },
-    { "id": "long-wall",           "path": "scenary/long-wall.png",           "category": "wall",      "label": "Parede Longa",     "collision": true,  "acceptsOverlay": true, "size": { "w": 3, "h": 1 } },
-    { "id": "iron-wall",           "path": "scenary/iron-wall.png",           "category": "wall",      "label": "Parede Ferro",     "collision": true,  "acceptsOverlay": true },
-    { "id": "iron-wall-left",      "path": "scenary/iron-wall-left.png",      "category": "wall",      "label": "Parede Ferro E",   "collision": true,  "acceptsOverlay": true },
-    { "id": "iron-wall-rigth",     "path": "scenary/iron-wall-rigth.png",     "category": "wall",      "label": "Parede Ferro D",   "collision": true,  "acceptsOverlay": true },
-    { "id": "iron-medium-wall",    "path": "scenary/iron-medium-wall.png",    "category": "wall",      "label": "Parede Ferro M",   "collision": true,  "acceptsOverlay": true, "size": { "w": 2, "h": 1 } },
-    { "id": "iron-medium-small",   "path": "scenary/iron-medium-small.png",   "category": "wall",      "label": "Parede Ferro P",   "collision": true,  "acceptsOverlay": true },
-    { "id": "wooden-wall",         "path": "scenary/wooden-wall.png",         "category": "wall",      "label": "Parede Madeira",   "collision": true,  "acceptsOverlay": true },
-    { "id": "wooden-wall-left",    "path": "scenary/wooden-wall-left.png",    "category": "wall",      "label": "Parede Madeira E", "collision": true,  "acceptsOverlay": true },
-    { "id": "wooden-wall-rigth",   "path": "scenary/wooden-wall-rigth.png",   "category": "wall",      "label": "Parede Madeira D", "collision": true,  "acceptsOverlay": true },
-    { "id": "wooden-medium-wall",  "path": "scenary/wooden-medium-wall.png",  "category": "wall",      "label": "Parede Madeira M", "collision": true,  "acceptsOverlay": true, "size": { "w": 2, "h": 1 } },
-    { "id": "wooden-medium-small", "path": "scenary/wooden-medium-small.png", "category": "wall",      "label": "Parede Madeira P", "collision": true,  "acceptsOverlay": true },
-
-    { "id": "iron-dor",            "path": "scenary/iron-dor.png",            "category": "door",      "label": "Porta Ferro",      "collision": false, "isOverlay": true },
-    { "id": "iron-portal",         "path": "scenary/iron-portal.png",         "category": "door",      "label": "Portal Ferro",     "collision": false, "isOverlay": true },
-    { "id": "wooden-door",         "path": "scenary/wooden-door.png",         "category": "door",      "label": "Porta Madeira",    "collision": false, "isOverlay": true },
-    { "id": "wooden-portal",       "path": "scenary/wooden-portal.png",       "category": "door",      "label": "Portal Madeira",   "collision": false, "isOverlay": true },
-
-    { "id": "blindex",             "path": "scenary/blindex.png",             "category": "window",    "label": "Blindex",          "collision": true,  "isOverlay": true },
-    { "id": "window-one",          "path": "scenary/window-one.png",          "category": "window",    "label": "Janela",           "collision": false, "isOverlay": true },
-    { "id": "window-one-block",    "path": "scenary/window-one-block.png",    "category": "window",    "label": "Janela Bloco",     "collision": true,  "isOverlay": true },
-    { "id": "window-tree-block",   "path": "scenary/window-tree-block.png",   "category": "window",    "label": "Janela 3 Blocos",  "collision": true,  "isOverlay": true },
-
-    { "id": "chair-black",         "path": "scenary/chair-black.png",         "category": "furniture", "label": "Cadeira Preta",    "collision": true,  "size": { "w": 1, "h": 1 }, "frames": { "cols": 3, "rows": 1 } },
-    { "id": "chair-blue",          "path": "scenary/chair-blue.png",          "category": "furniture", "label": "Cadeira Azul",     "collision": true,  "size": { "w": 1, "h": 1 }, "frames": { "cols": 3, "rows": 1 } },
-    { "id": "chair-green",         "path": "scenary/chair-green.png",         "category": "furniture", "label": "Cadeira Verde",    "collision": true,  "size": { "w": 1, "h": 1 }, "frames": { "cols": 3, "rows": 1 } },
-    { "id": "meeting-table",       "path": "scenary/meeting-table.png",       "category": "furniture", "label": "Mesa Reunião",     "collision": true,  "size": { "w": 4, "h": 3 }, "frames": { "cols": 2, "rows": 1 } },
-    { "id": "work-table",          "path": "scenary/work-table.png",          "category": "furniture", "label": "Mesa Trabalho",    "collision": true,  "size": { "w": 2, "h": 2 }, "frames": { "cols": 3, "rows": 1 } },
-    { "id": "materiais",           "path": "scenary/materiais.png",           "category": "furniture", "label": "Materiais",        "collision": true,  "size": { "w": 1, "h": 1 } }
+    {
+      "id": "granite-flor-with",
+      "path": "scenary/granite-flor-with.png",
+      "category": "floor",
+      "label": "Granito Branco",
+      "collision": false
+    },
+    {
+      "id": "grayish-floor",
+      "path": "scenary/grayish-floor.png",
+      "category": "floor",
+      "label": "Piso Cinza",
+      "collision": false
+    },
+    {
+      "id": "iron-floor",
+      "path": "scenary/iron-floor.png",
+      "category": "floor",
+      "label": "Piso Ferro",
+      "collision": false
+    },
+    {
+      "id": "yellowed-floor",
+      "path": "scenary/yellowed-floor.png",
+      "category": "floor",
+      "label": "Piso Amarelado",
+      "collision": false
+    },
+    {
+      "id": "gray-mat",
+      "path": "scenary/gray-mat.png",
+      "category": "mat",
+      "label": "Tapete Cinza",
+      "collision": false
+    },
+    {
+      "id": "yellowed-mat",
+      "path": "scenary/yellowed-mat.png",
+      "category": "mat",
+      "label": "Tapete Amarelado",
+      "collision": false
+    },
+    {
+      "id": "chair-black",
+      "path": "scenary/chair-black.png",
+      "category": "furniture",
+      "label": "Cadeira Preta",
+      "collision": true,
+      "size": {
+        "w": 1,
+        "h": 1
+      },
+      "frames": {
+        "cols": 3,
+        "rows": 1
+      }
+    },
+    {
+      "id": "chair-blue",
+      "path": "scenary/chair-blue.png",
+      "category": "furniture",
+      "label": "Cadeira Azul",
+      "collision": true,
+      "size": {
+        "w": 1,
+        "h": 1
+      },
+      "frames": {
+        "cols": 3,
+        "rows": 1
+      }
+    },
+    {
+      "id": "chair-green",
+      "path": "scenary/chair-green.png",
+      "category": "furniture",
+      "label": "Cadeira Verde",
+      "collision": true,
+      "size": {
+        "w": 1,
+        "h": 1
+      },
+      "frames": {
+        "cols": 3,
+        "rows": 1
+      }
+    },
+    {
+      "id": "meeting-table",
+      "path": "scenary/meeting-table.png",
+      "category": "furniture",
+      "label": "Mesa Reunião",
+      "collision": true,
+      "size": {
+        "w": 4,
+        "h": 3
+      },
+      "frames": {
+        "cols": 2,
+        "rows": 1
+      }
+    },
+    {
+      "id": "work-table",
+      "path": "scenary/work-table.png",
+      "category": "furniture",
+      "label": "Mesa Trabalho",
+      "collision": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      },
+      "frames": {
+        "cols": 3,
+        "rows": 1
+      }
+    },
+    {
+      "id": "materiais",
+      "path": "scenary/materiais.png",
+      "category": "furniture",
+      "label": "Materiais",
+      "collision": true,
+      "size": {
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-coluna_trim_clara",
+      "path": "construcao/coluna_trim_clara.png",
+      "category": "wall",
+      "label": "Coluna Trim Clara",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-divisoria_baixa_bicolor_horizontal",
+      "path": "construcao/divisoria_baixa_bicolor_horizontal.png",
+      "category": "wall",
+      "label": "Divisoria Baixa Bicolor Horizontal",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-divisoria_madeira_ripada_horizontal",
+      "path": "construcao/divisoria_madeira_ripada_horizontal.png",
+      "category": "wall",
+      "label": "Divisoria Madeira Ripada Horizontal",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-divisoria_vidro_baixa_horizontal",
+      "path": "construcao/divisoria_vidro_baixa_horizontal.png",
+      "category": "wall",
+      "label": "Divisoria Vidro Baixa Horizontal",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-divisoria_vidro_canto",
+      "path": "construcao/divisoria_vidro_canto.png",
+      "category": "wall",
+      "label": "Divisoria Vidro Canto",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-divisoria_vidro_vertical",
+      "path": "construcao/divisoria_vidro_vertical.png",
+      "category": "wall",
+      "label": "Divisoria Vidro Vertical",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-janela_horizontal_dupla",
+      "path": "construcao/janela_horizontal_dupla.png",
+      "category": "window",
+      "label": "Janela Horizontal Dupla",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-janela_horizontal_longa",
+      "path": "construcao/janela_horizontal_longa.png",
+      "category": "window",
+      "label": "Janela Horizontal Longa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-janela_vertical_simples",
+      "path": "construcao/janela_vertical_simples.png",
+      "category": "window",
+      "label": "Janela Vertical Simples",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-mesa_centro_vidro_01",
+      "path": "construcao/mesa_centro_vidro_01.png",
+      "category": "wall",
+      "label": "Mesa Centro Vidro 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-mesa_escritorio_horizontal_divisoria_azul",
+      "path": "construcao/mesa_escritorio_horizontal_divisoria_azul.png",
+      "category": "wall",
+      "label": "Mesa Escritorio Horizontal Divisoria Azul",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-modulo_banheiro_claro",
+      "path": "construcao/modulo_banheiro_claro.png",
+      "category": "wall",
+      "label": "Modulo Banheiro Claro",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 8,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-office-modulo_copa_clara",
+      "path": "construcao/modulo_copa_clara.png",
+      "category": "wall",
+      "label": "Modulo Copa Clara",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_001_parede_superior_longa",
+      "path": "construcao/office_arch_001_parede_superior_longa.png",
+      "category": "wall",
+      "label": "Office Arch 001 Parede Superior Longa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 8,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_002_parede_superior_canto_direito",
+      "path": "construcao/office_arch_002_parede_superior_canto_direito.png",
+      "category": "wall",
+      "label": "Office Arch 002 Parede Superior Canto Direito",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_003_parede_superior_divisao_01",
+      "path": "construcao/office_arch_003_parede_superior_divisao_01.png",
+      "category": "wall",
+      "label": "Office Arch 003 Parede Superior Divisao 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_004_parede_superior_divisao_02",
+      "path": "construcao/office_arch_004_parede_superior_divisao_02.png",
+      "category": "wall",
+      "label": "Office Arch 004 Parede Superior Divisao 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_005_parede_superior_porta_madeira",
+      "path": "construcao/office_arch_005_parede_superior_porta_madeira.png",
+      "category": "door",
+      "label": "Office Arch 005 Parede Superior Porta Madeira",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 5,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_006_parede_superior_janela_longa",
+      "path": "construcao/office_arch_006_parede_superior_janela_longa.png",
+      "category": "window",
+      "label": "Office Arch 006 Parede Superior Janela Longa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 9,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_007_parede_lateral_fina_esquerda",
+      "path": "construcao/office_arch_007_parede_lateral_fina_esquerda.png",
+      "category": "wall",
+      "label": "Office Arch 007 Parede Lateral Fina Esquerda",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-office-office_arch_008_modulo_sala_pequeno_01",
+      "path": "construcao/office_arch_008_modulo_sala_pequeno_01.png",
+      "category": "wall",
+      "label": "Office Arch 008 Modulo Sala Pequeno 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_009_modulo_sala_pequeno_02",
+      "path": "construcao/office_arch_009_modulo_sala_pequeno_02.png",
+      "category": "wall",
+      "label": "Office Arch 009 Modulo Sala Pequeno 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_010_parede_lateral_fina_direita_01",
+      "path": "construcao/office_arch_010_parede_lateral_fina_direita_01.png",
+      "category": "wall",
+      "label": "Office Arch 010 Parede Lateral Fina Direita 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 6
+      }
+    },
+    {
+      "id": "env-office-office_arch_011_parede_lateral_fina_direita_02",
+      "path": "construcao/office_arch_011_parede_lateral_fina_direita_02.png",
+      "category": "wall",
+      "label": "Office Arch 011 Parede Lateral Fina Direita 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 6
+      }
+    },
+    {
+      "id": "env-office-office_arch_012_juncao_t_superior",
+      "path": "construcao/office_arch_012_juncao_t_superior.png",
+      "category": "wall",
+      "label": "Office Arch 012 Juncao T Superior",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_013_canto_externo_esquerdo",
+      "path": "construcao/office_arch_013_canto_externo_esquerdo.png",
+      "category": "wall",
+      "label": "Office Arch 013 Canto Externo Esquerdo",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-office-office_arch_014_modulo_sala_pequeno_03",
+      "path": "construcao/office_arch_014_modulo_sala_pequeno_03.png",
+      "category": "wall",
+      "label": "Office Arch 014 Modulo Sala Pequeno 03",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_015_modulo_sala_pequeno_04",
+      "path": "construcao/office_arch_015_modulo_sala_pequeno_04.png",
+      "category": "wall",
+      "label": "Office Arch 015 Modulo Sala Pequeno 04",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_016_vidro_frontal_longo",
+      "path": "construcao/office_arch_016_vidro_frontal_longo.png",
+      "category": "wall",
+      "label": "Office Arch 016 Vidro Frontal Longo",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-office_arch_017_vidro_canto_l_esquerdo",
+      "path": "construcao/office_arch_017_vidro_canto_l_esquerdo.png",
+      "category": "wall",
+      "label": "Office Arch 017 Vidro Canto L Esquerdo",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-office-office_arch_018_vidro_frontal_t",
+      "path": "construcao/office_arch_018_vidro_frontal_t.png",
+      "category": "wall",
+      "label": "Office Arch 018 Vidro Frontal T",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-office-office_arch_019_modulo_canto_interno_01",
+      "path": "construcao/office_arch_019_modulo_canto_interno_01.png",
+      "category": "wall",
+      "label": "Office Arch 019 Modulo Canto Interno 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_020_parede_lateral_fina_direita_03",
+      "path": "construcao/office_arch_020_parede_lateral_fina_direita_03.png",
+      "category": "wall",
+      "label": "Office Arch 020 Parede Lateral Fina Direita 03",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-office-office_arch_021_parede_lateral_fina_direita_04",
+      "path": "construcao/office_arch_021_parede_lateral_fina_direita_04.png",
+      "category": "wall",
+      "label": "Office Arch 021 Parede Lateral Fina Direita 04",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-office-office_arch_022_modulo_canto_interno_02",
+      "path": "construcao/office_arch_022_modulo_canto_interno_02.png",
+      "category": "wall",
+      "label": "Office Arch 022 Modulo Canto Interno 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_023_canto_chanfrado",
+      "path": "construcao/office_arch_023_canto_chanfrado.png",
+      "category": "wall",
+      "label": "Office Arch 023 Canto Chanfrado",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_024_parede_baixa_horizontal_01",
+      "path": "construcao/office_arch_024_parede_baixa_horizontal_01.png",
+      "category": "wall",
+      "label": "Office Arch 024 Parede Baixa Horizontal 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_025_parede_baixa_horizontal_02",
+      "path": "construcao/office_arch_025_parede_baixa_horizontal_02.png",
+      "category": "wall",
+      "label": "Office Arch 025 Parede Baixa Horizontal 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_026_modulo_sala_pequeno_05",
+      "path": "construcao/office_arch_026_modulo_sala_pequeno_05.png",
+      "category": "wall",
+      "label": "Office Arch 026 Modulo Sala Pequeno 05",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_027_porta_madeira_topo_01",
+      "path": "construcao/office_arch_027_porta_madeira_topo_01.png",
+      "category": "door",
+      "label": "Office Arch 027 Porta Madeira Topo 01",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_028_porta_madeira_topo_02",
+      "path": "construcao/office_arch_028_porta_madeira_topo_02.png",
+      "category": "door",
+      "label": "Office Arch 028 Porta Madeira Topo 02",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_029_janela_pequena_quadrada_01",
+      "path": "construcao/office_arch_029_janela_pequena_quadrada_01.png",
+      "category": "window",
+      "label": "Office Arch 029 Janela Pequena Quadrada 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_030_janela_horizontal_tripla_01",
+      "path": "construcao/office_arch_030_janela_horizontal_tripla_01.png",
+      "category": "window",
+      "label": "Office Arch 030 Janela Horizontal Tripla 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_031_janela_vertical_estreita_01",
+      "path": "construcao/office_arch_031_janela_vertical_estreita_01.png",
+      "category": "window",
+      "label": "Office Arch 031 Janela Vertical Estreita 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_032_janela_horizontal_dupla_01",
+      "path": "construcao/office_arch_032_janela_horizontal_dupla_01.png",
+      "category": "window",
+      "label": "Office Arch 032 Janela Horizontal Dupla 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_033_janela_horizontal_longa_frontal",
+      "path": "construcao/office_arch_033_janela_horizontal_longa_frontal.png",
+      "category": "window",
+      "label": "Office Arch 033 Janela Horizontal Longa Frontal",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 8,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_034_canto_externo_direito",
+      "path": "construcao/office_arch_034_canto_externo_direito.png",
+      "category": "wall",
+      "label": "Office Arch 034 Canto Externo Direito",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_035_parede_pequena_vertical_01",
+      "path": "construcao/office_arch_035_parede_pequena_vertical_01.png",
+      "category": "wall",
+      "label": "Office Arch 035 Parede Pequena Vertical 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_036_parede_baixa_horizontal_03",
+      "path": "construcao/office_arch_036_parede_baixa_horizontal_03.png",
+      "category": "wall",
+      "label": "Office Arch 036 Parede Baixa Horizontal 03",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_037_porta_madeira_vertical_01",
+      "path": "construcao/office_arch_037_porta_madeira_vertical_01.png",
+      "category": "door",
+      "label": "Office Arch 037 Porta Madeira Vertical 01",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_038_janela_vertical_dupla_01",
+      "path": "construcao/office_arch_038_janela_vertical_dupla_01.png",
+      "category": "window",
+      "label": "Office Arch 038 Janela Vertical Dupla 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_039_janela_vertical_dupla_02",
+      "path": "construcao/office_arch_039_janela_vertical_dupla_02.png",
+      "category": "window",
+      "label": "Office Arch 039 Janela Vertical Dupla 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_040_janela_vertical_dupla_03",
+      "path": "construcao/office_arch_040_janela_vertical_dupla_03.png",
+      "category": "window",
+      "label": "Office Arch 040 Janela Vertical Dupla 03",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_041_janela_vertical_estreita_02",
+      "path": "construcao/office_arch_041_janela_vertical_estreita_02.png",
+      "category": "window",
+      "label": "Office Arch 041 Janela Vertical Estreita 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_042_janela_vidro_lateral_longa",
+      "path": "construcao/office_arch_042_janela_vidro_lateral_longa.png",
+      "category": "window",
+      "label": "Office Arch 042 Janela Vidro Lateral Longa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_043_janela_vidro_lateral_media",
+      "path": "construcao/office_arch_043_janela_vidro_lateral_media.png",
+      "category": "window",
+      "label": "Office Arch 043 Janela Vidro Lateral Media",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_044_coluna_fina_01",
+      "path": "construcao/office_arch_044_coluna_fina_01.png",
+      "category": "wall",
+      "label": "Office Arch 044 Coluna Fina 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_045_coluna_fina_02",
+      "path": "construcao/office_arch_045_coluna_fina_02.png",
+      "category": "wall",
+      "label": "Office Arch 045 Coluna Fina 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_046_coluna_fina_03",
+      "path": "construcao/office_arch_046_coluna_fina_03.png",
+      "category": "wall",
+      "label": "Office Arch 046 Coluna Fina 03",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_047_coluna_fina_04",
+      "path": "construcao/office_arch_047_coluna_fina_04.png",
+      "category": "wall",
+      "label": "Office Arch 047 Coluna Fina 04",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_048_coluna_fina_05",
+      "path": "construcao/office_arch_048_coluna_fina_05.png",
+      "category": "wall",
+      "label": "Office Arch 048 Coluna Fina 05",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-office_arch_049_divisoria_bicolor_longa",
+      "path": "construcao/office_arch_049_divisoria_bicolor_longa.png",
+      "category": "wall",
+      "label": "Office Arch 049 Divisoria Bicolor Longa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_050_divisoria_bicolor_media",
+      "path": "construcao/office_arch_050_divisoria_bicolor_media.png",
+      "category": "wall",
+      "label": "Office Arch 050 Divisoria Bicolor Media",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-office_arch_051_rodape_horizontal_curto_01",
+      "path": "construcao/office_arch_051_rodape_horizontal_curto_01.png",
+      "category": "wall",
+      "label": "Office Arch 051 Rodape Horizontal Curto 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-office_arch_052_rodape_horizontal_curto_02",
+      "path": "construcao/office_arch_052_rodape_horizontal_curto_02.png",
+      "category": "wall",
+      "label": "Office Arch 052 Rodape Horizontal Curto 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-office_arch_053_rodape_horizontal_medio_01",
+      "path": "construcao/office_arch_053_rodape_horizontal_medio_01.png",
+      "category": "wall",
+      "label": "Office Arch 053 Rodape Horizontal Medio 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-office_arch_054_rodape_horizontal_longo_01",
+      "path": "construcao/office_arch_054_rodape_horizontal_longo_01.png",
+      "category": "wall",
+      "label": "Office Arch 054 Rodape Horizontal Longo 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-office_arch_055_rodape_vertical_fino",
+      "path": "construcao/office_arch_055_rodape_vertical_fino.png",
+      "category": "wall",
+      "label": "Office Arch 055 Rodape Vertical Fino",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-office_arch_056_rodape_vertical_medio",
+      "path": "construcao/office_arch_056_rodape_vertical_medio.png",
+      "category": "wall",
+      "label": "Office Arch 056 Rodape Vertical Medio",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-office_arch_057_rodape_vertical_largo",
+      "path": "construcao/office_arch_057_rodape_vertical_largo.png",
+      "category": "wall",
+      "label": "Office Arch 057 Rodape Vertical Largo",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-office_arch_058_rodape_horizontal_largo",
+      "path": "construcao/office_arch_058_rodape_horizontal_largo.png",
+      "category": "wall",
+      "label": "Office Arch 058 Rodape Horizontal Largo",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-pilar_madeira_ripado",
+      "path": "construcao/pilar_madeira_ripado.png",
+      "category": "wall",
+      "label": "Pilar Madeira Ripado",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 6,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-porta_vidro_interna",
+      "path": "construcao/porta_vidro_interna.png",
+      "category": "door",
+      "label": "Porta Vidro Interna",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office"
+    },
+    {
+      "id": "env-office-arbusto_redondo_vaso_preto",
+      "path": "componentes/arbusto_redondo_vaso_preto.png",
+      "category": "furniture",
+      "label": "Arbusto Redondo Vaso Preto",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-area_reuniao_azul_mesa",
+      "path": "componentes/area_reuniao_azul_mesa.png",
+      "category": "furniture",
+      "label": "Area Reuniao Azul Mesa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-armario_alto_azul_01",
+      "path": "componentes/armario_alto_azul_01.png",
+      "category": "furniture",
+      "label": "Armario Alto Azul 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-armario_alto_bege_01",
+      "path": "componentes/armario_alto_bege_01.png",
+      "category": "furniture",
+      "label": "Armario Alto Bege 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-armario_alto_cinza_01",
+      "path": "componentes/armario_alto_cinza_01.png",
+      "category": "furniture",
+      "label": "Armario Alto Cinza 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-armario_alto_cinza_02",
+      "path": "componentes/armario_alto_cinza_02.png",
+      "category": "furniture",
+      "label": "Armario Alto Cinza 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-armario_alto_verde_01",
+      "path": "componentes/armario_alto_verde_01.png",
+      "category": "furniture",
+      "label": "Armario Alto Verde 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-balcao_recepcao_curvo_branco_l",
+      "path": "componentes/balcao_recepcao_curvo_branco_l.png",
+      "category": "furniture",
+      "label": "Balcao Recepcao Curvo Branco L",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-balcao_recepcao_curvo_branco_l_02",
+      "path": "componentes/balcao_recepcao_curvo_branco_l_02.png",
+      "category": "furniture",
+      "label": "Balcao Recepcao Curvo Branco L 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-balcao_recepcao_curvo_branco_longo",
+      "path": "componentes/balcao_recepcao_curvo_branco_longo.png",
+      "category": "furniture",
+      "label": "Balcao Recepcao Curvo Branco Longo",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-balcao_recepcao_curvo_branco_pequeno",
+      "path": "componentes/balcao_recepcao_curvo_branco_pequeno.png",
+      "category": "furniture",
+      "label": "Balcao Recepcao Curvo Branco Pequeno",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-balcao_recepcao_l_claro",
+      "path": "componentes/balcao_recepcao_l_claro.png",
+      "category": "furniture",
+      "label": "Balcao Recepcao L Claro",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-office-balcao_recepcao_reto_claro",
+      "path": "componentes/balcao_recepcao_reto_claro.png",
+      "category": "furniture",
+      "label": "Balcao Recepcao Reto Claro",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-office-bancada_copa_completa",
+      "path": "componentes/bancada_copa_completa.png",
+      "category": "furniture",
+      "label": "Bancada Copa Completa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_azul_costas_01",
+      "path": "componentes/cadeira_azul_costas_01.png",
+      "category": "furniture",
+      "label": "Cadeira Azul Costas 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_azul_frente_02",
+      "path": "componentes/cadeira_azul_frente_02.png",
+      "category": "furniture",
+      "label": "Cadeira Azul Frente 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_azul_lateral_01",
+      "path": "componentes/cadeira_azul_lateral_01.png",
+      "category": "furniture",
+      "label": "Cadeira Azul Lateral 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_escritorio_azul_3_4",
+      "path": "componentes/cadeira_escritorio_azul_3_4.png",
+      "category": "furniture",
+      "label": "Cadeira Escritorio Azul 3 4",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_escritorio_azul_frente_01",
+      "path": "componentes/cadeira_escritorio_azul_frente_01.png",
+      "category": "furniture",
+      "label": "Cadeira Escritorio Azul Frente 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_escritorio_cinza_frente_01",
+      "path": "componentes/cadeira_escritorio_cinza_frente_01.png",
+      "category": "furniture",
+      "label": "Cadeira Escritorio Cinza Frente 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_escritorio_preta_frente_01",
+      "path": "componentes/cadeira_escritorio_preta_frente_01.png",
+      "category": "furniture",
+      "label": "Cadeira Escritorio Preta Frente 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_escritorio_preta_frente_02",
+      "path": "componentes/cadeira_escritorio_preta_frente_02.png",
+      "category": "furniture",
+      "label": "Cadeira Escritorio Preta Frente 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_escritorio_verde_frente_01",
+      "path": "componentes/cadeira_escritorio_verde_frente_01.png",
+      "category": "furniture",
+      "label": "Cadeira Escritorio Verde Frente 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_espera_azul_01",
+      "path": "componentes/cadeira_espera_azul_01.png",
+      "category": "furniture",
+      "label": "Cadeira Espera Azul 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_preta_costas_01",
+      "path": "componentes/cadeira_preta_costas_01.png",
+      "category": "furniture",
+      "label": "Cadeira Preta Costas 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_preta_frente_01",
+      "path": "componentes/cadeira_preta_frente_01.png",
+      "category": "furniture",
+      "label": "Cadeira Preta Frente 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-cadeira_preta_lateral_01",
+      "path": "componentes/cadeira_preta_lateral_01.png",
+      "category": "furniture",
+      "label": "Cadeira Preta Lateral 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-carpete_azul_quadrado",
+      "path": "componentes/carpete_azul_quadrado.png",
+      "category": "mat",
+      "label": "Carpete Azul Quadrado",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-carpete_bege_quadrado",
+      "path": "componentes/carpete_bege_quadrado.png",
+      "category": "mat",
+      "label": "Carpete Bege Quadrado",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-carpete_verde_quadrado",
+      "path": "componentes/carpete_verde_quadrado.png",
+      "category": "mat",
+      "label": "Carpete Verde Quadrado",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-carpete_vermelho_quadrado",
+      "path": "componentes/carpete_vermelho_quadrado.png",
+      "category": "mat",
+      "label": "Carpete Vermelho Quadrado",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-chair-black",
+      "path": "componentes/chair-black.png",
+      "category": "furniture",
+      "label": "Chair Black",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 9,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-cpu_torre_preta",
+      "path": "componentes/cpu_torre_preta.png",
+      "category": "furniture",
+      "label": "Cpu Torre Preta",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-decoracao_extra_01",
+      "path": "componentes/decoracao_extra_01.png",
+      "category": "furniture",
+      "label": "Decoracao Extra 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-decoracao_extra_02",
+      "path": "componentes/decoracao_extra_02.png",
+      "category": "furniture",
+      "label": "Decoracao Extra 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-decoracao_extra_03",
+      "path": "componentes/decoracao_extra_03.png",
+      "category": "furniture",
+      "label": "Decoracao Extra 03",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-decoracao_extra_04",
+      "path": "componentes/decoracao_extra_04.png",
+      "category": "furniture",
+      "label": "Decoracao Extra 04",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-decoracao_extra_05",
+      "path": "componentes/decoracao_extra_05.png",
+      "category": "furniture",
+      "label": "Decoracao Extra 05",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-diploma_moldura_01",
+      "path": "componentes/diploma_moldura_01.png",
+      "category": "furniture",
+      "label": "Diploma Moldura 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-diploma_moldura_02",
+      "path": "componentes/diploma_moldura_02.png",
+      "category": "furniture",
+      "label": "Diploma Moldura 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-estante_madeira_01",
+      "path": "componentes/estante_madeira_01.png",
+      "category": "furniture",
+      "label": "Estante Madeira 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-estante_madeira_02",
+      "path": "componentes/estante_madeira_02.png",
+      "category": "furniture",
+      "label": "Estante Madeira 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-floreira_branca_canto_l",
+      "path": "componentes/floreira_branca_canto_l.png",
+      "category": "furniture",
+      "label": "Floreira Branca Canto L",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-floreira_branca_linear_curta",
+      "path": "componentes/floreira_branca_linear_curta.png",
+      "category": "furniture",
+      "label": "Floreira Branca Linear Curta",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-floreira_branca_linear_longa",
+      "path": "componentes/floreira_branca_linear_longa.png",
+      "category": "furniture",
+      "label": "Floreira Branca Linear Longa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-floreira_branca_linear_media",
+      "path": "componentes/floreira_branca_linear_media.png",
+      "category": "furniture",
+      "label": "Floreira Branca Linear Media",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-floreira_linear_madeira",
+      "path": "componentes/floreira_linear_madeira.png",
+      "category": "furniture",
+      "label": "Floreira Linear Madeira",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-gaveteiro_arquivo_cinza_01",
+      "path": "componentes/gaveteiro_arquivo_cinza_01.png",
+      "category": "furniture",
+      "label": "Gaveteiro Arquivo Cinza 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-gaveteiro_arquivo_cinza_02",
+      "path": "componentes/gaveteiro_arquivo_cinza_02.png",
+      "category": "furniture",
+      "label": "Gaveteiro Arquivo Cinza 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-gaveteiro_arquivo_cinza_03",
+      "path": "componentes/gaveteiro_arquivo_cinza_03.png",
+      "category": "furniture",
+      "label": "Gaveteiro Arquivo Cinza 03",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-geladeira_branca_01",
+      "path": "componentes/geladeira_branca_01.png",
+      "category": "furniture",
+      "label": "Geladeira Branca 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-impressora_azul_pequena",
+      "path": "componentes/impressora_azul_pequena.png",
+      "category": "furniture",
+      "label": "Impressora Azul Pequena",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-impressora_branca_01",
+      "path": "componentes/impressora_branca_01.png",
+      "category": "furniture",
+      "label": "Impressora Branca 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-impressora_branca_02",
+      "path": "componentes/impressora_branca_02.png",
+      "category": "furniture",
+      "label": "Impressora Branca 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-luminaria_mesa_preta_01",
+      "path": "componentes/luminaria_mesa_preta_01.png",
+      "category": "furniture",
+      "label": "Luminaria Mesa Preta 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-luminaria_mesa_preta_02",
+      "path": "componentes/luminaria_mesa_preta_02.png",
+      "category": "furniture",
+      "label": "Luminaria Mesa Preta 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-luminaria_piso_bege_01",
+      "path": "componentes/luminaria_piso_bege_01.png",
+      "category": "furniture",
+      "label": "Luminaria Piso Bege 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-luminaria_piso_bege_02",
+      "path": "componentes/luminaria_piso_bege_02.png",
+      "category": "furniture",
+      "label": "Luminaria Piso Bege 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-luminaria_piso_verde",
+      "path": "componentes/luminaria_piso_verde.png",
+      "category": "furniture",
+      "label": "Luminaria Piso Verde",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-mesa_centro_madeira_01",
+      "path": "componentes/mesa_centro_madeira_01.png",
+      "category": "furniture",
+      "label": "Mesa Centro Madeira 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-mesa_escritorio_horizontal_madeira",
+      "path": "componentes/mesa_escritorio_horizontal_madeira.png",
+      "category": "furniture",
+      "label": "Mesa Escritorio Horizontal Madeira",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-mesa_escritorio_l_madeira_01",
+      "path": "componentes/mesa_escritorio_l_madeira_01.png",
+      "category": "furniture",
+      "label": "Mesa Escritorio L Madeira 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-mesa_escritorio_l_madeira_02",
+      "path": "componentes/mesa_escritorio_l_madeira_02.png",
+      "category": "furniture",
+      "label": "Mesa Escritorio L Madeira 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-mesa_redonda_madeira_01",
+      "path": "componentes/mesa_redonda_madeira_01.png",
+      "category": "furniture",
+      "label": "Mesa Redonda Madeira 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-mesa_reuniao_horizontal_6_lugares",
+      "path": "componentes/mesa_reuniao_horizontal_6_lugares.png",
+      "category": "furniture",
+      "label": "Mesa Reuniao Horizontal 6 Lugares",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-mesa_reuniao_horizontal_8_lugares",
+      "path": "componentes/mesa_reuniao_horizontal_8_lugares.png",
+      "category": "furniture",
+      "label": "Mesa Reuniao Horizontal 8 Lugares",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-mesa_reuniao_quadrada_verde_com_cadeiras_01",
+      "path": "componentes/mesa_reuniao_quadrada_verde_com_cadeiras_01.png",
+      "category": "furniture",
+      "label": "Mesa Reuniao Quadrada Verde Com Cadeiras 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-office-mesa_reuniao_retangular_verde_com_cadeiras_01",
+      "path": "componentes/mesa_reuniao_retangular_verde_com_cadeiras_01.png",
+      "category": "furniture",
+      "label": "Mesa Reuniao Retangular Verde Com Cadeiras 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 9,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-office-mesa_reuniao_vertical_6_lugares",
+      "path": "componentes/mesa_reuniao_vertical_6_lugares.png",
+      "category": "furniture",
+      "label": "Mesa Reuniao Vertical 6 Lugares",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-office-monitor_duplo_largo",
+      "path": "componentes/monitor_duplo_largo.png",
+      "category": "furniture",
+      "label": "Monitor Duplo Largo",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-monitor_pequeno_azul",
+      "path": "componentes/monitor_pequeno_azul.png",
+      "category": "furniture",
+      "label": "Monitor Pequeno Azul",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-monitor_retro_azul",
+      "path": "componentes/monitor_retro_azul.png",
+      "category": "furniture",
+      "label": "Monitor Retro Azul",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-notebook_prata_aberto",
+      "path": "componentes/notebook_prata_aberto.png",
+      "category": "furniture",
+      "label": "Notebook Prata Aberto",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-notebook_preto_aberto",
+      "path": "componentes/notebook_preto_aberto.png",
+      "category": "furniture",
+      "label": "Notebook Preto Aberto",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-planta_arvore_vaso_marrom",
+      "path": "componentes/planta_arvore_vaso_marrom.png",
+      "category": "furniture",
+      "label": "Planta Arvore Vaso Marrom",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-planta_folha_longa_vaso_branco_01",
+      "path": "componentes/planta_folha_longa_vaso_branco_01.png",
+      "category": "furniture",
+      "label": "Planta Folha Longa Vaso Branco 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-planta_folha_longa_vaso_branco_02",
+      "path": "componentes/planta_folha_longa_vaso_branco_02.png",
+      "category": "furniture",
+      "label": "Planta Folha Longa Vaso Branco 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-planta_vaso_grande_clara",
+      "path": "componentes/planta_vaso_grande_clara.png",
+      "category": "furniture",
+      "label": "Planta Vaso Grande Clara",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-planta_vaso_medio_clara",
+      "path": "componentes/planta_vaso_medio_clara.png",
+      "category": "furniture",
+      "label": "Planta Vaso Medio Clara",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-office-planta_vaso_pequeno_claro",
+      "path": "componentes/planta_vaso_pequeno_claro.png",
+      "category": "furniture",
+      "label": "Planta Vaso Pequeno Claro",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-planta_vaso_suporte_branco",
+      "path": "componentes/planta_vaso_suporte_branco.png",
+      "category": "furniture",
+      "label": "Planta Vaso Suporte Branco",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-poltrona_preta_01",
+      "path": "componentes/poltrona_preta_01.png",
+      "category": "furniture",
+      "label": "Poltrona Preta 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-porta_automatica_vidro",
+      "path": "componentes/porta_automatica_vidro.png",
+      "category": "door",
+      "label": "Porta Automatica Vidro",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office"
+    },
+    {
+      "id": "env-office-porta_banheiro",
+      "path": "componentes/porta_banheiro.png",
+      "category": "door",
+      "label": "Porta Banheiro",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office"
+    },
+    {
+      "id": "env-office-porta_madeira_fechada",
+      "path": "componentes/porta_madeira_fechada.png",
+      "category": "door",
+      "label": "Porta Madeira Fechada",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-porta_madeira_interna",
+      "path": "componentes/porta_madeira_interna.png",
+      "category": "door",
+      "label": "Porta Madeira Interna",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office"
+    },
+    {
+      "id": "env-office-porta_metal_fechada",
+      "path": "componentes/porta_metal_fechada.png",
+      "category": "door",
+      "label": "Porta Metal Fechada",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-portal_madeira_aberto",
+      "path": "componentes/portal_madeira_aberto.png",
+      "category": "door",
+      "label": "Portal Madeira Aberto",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-puff_azul_01",
+      "path": "componentes/puff_azul_01.png",
+      "category": "furniture",
+      "label": "Puff Azul 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-quadro_abstrato",
+      "path": "componentes/quadro_abstrato.png",
+      "category": "furniture",
+      "label": "Quadro Abstrato",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-quadro_avisos_cortica",
+      "path": "componentes/quadro_avisos_cortica.png",
+      "category": "furniture",
+      "label": "Quadro Avisos Cortica",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-quadro_branco",
+      "path": "componentes/quadro_branco.png",
+      "category": "furniture",
+      "label": "Quadro Branco",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-quadro_paisagem",
+      "path": "componentes/quadro_paisagem.png",
+      "category": "furniture",
+      "label": "Quadro Paisagem",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-relogio_parede",
+      "path": "componentes/relogio_parede.png",
+      "category": "furniture",
+      "label": "Relogio Parede",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-reserva_directional_01",
+      "path": "componentes/reserva_directional_01.png",
+      "category": "furniture",
+      "label": "Reserva Directional 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-reserva_directional_02",
+      "path": "componentes/reserva_directional_02.png",
+      "category": "furniture",
+      "label": "Reserva Directional 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-roteador_preto_wifi",
+      "path": "componentes/roteador_preto_wifi.png",
+      "category": "furniture",
+      "label": "Roteador Preto Wifi",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-sofa_2_lugares_azul",
+      "path": "componentes/sofa_2_lugares_azul.png",
+      "category": "furniture",
+      "label": "Sofa 2 Lugares Azul",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-sofa_azul_3_lugares",
+      "path": "componentes/sofa_azul_3_lugares.png",
+      "category": "furniture",
+      "label": "Sofa Azul 3 Lugares",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-sofa_preto_3_lugares",
+      "path": "componentes/sofa_preto_3_lugares.png",
+      "category": "furniture",
+      "label": "Sofa Preto 3 Lugares",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-sofa_verde_2_lugares",
+      "path": "componentes/sofa_verde_2_lugares.png",
+      "category": "furniture",
+      "label": "Sofa Verde 2 Lugares",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-suculenta_vaso_claro",
+      "path": "componentes/suculenta_vaso_claro.png",
+      "category": "furniture",
+      "label": "Suculenta Vaso Claro",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_azul_moldura",
+      "path": "componentes/tapete_azul_moldura.png",
+      "category": "mat",
+      "label": "Tapete Azul Moldura",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office"
+    },
+    {
+      "id": "env-office-tapete_azul_retangular",
+      "path": "componentes/tapete_azul_retangular.png",
+      "category": "mat",
+      "label": "Tapete Azul Retangular",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-office-tapete_azul_retangular_grande",
+      "path": "componentes/tapete_azul_retangular_grande.png",
+      "category": "mat",
+      "label": "Tapete Azul Retangular Grande",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_azul_textura",
+      "path": "componentes/tapete_azul_textura.png",
+      "category": "mat",
+      "label": "Tapete Azul Textura",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_bege_classico",
+      "path": "componentes/tapete_bege_classico.png",
+      "category": "mat",
+      "label": "Tapete Bege Classico",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office"
+    },
+    {
+      "id": "env-office-tapete_bege_retangular",
+      "path": "componentes/tapete_bege_retangular.png",
+      "category": "mat",
+      "label": "Tapete Bege Retangular",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 1,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-tapete_bege_textura",
+      "path": "componentes/tapete_bege_textura.png",
+      "category": "mat",
+      "label": "Tapete Bege Textura",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_cinza_textura",
+      "path": "componentes/tapete_cinza_textura.png",
+      "category": "mat",
+      "label": "Tapete Cinza Textura",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_extra_01",
+      "path": "componentes/tapete_extra_01.png",
+      "category": "mat",
+      "label": "Tapete Extra 01",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-tapete_extra_02",
+      "path": "componentes/tapete_extra_02.png",
+      "category": "mat",
+      "label": "Tapete Extra 02",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-tapete_extra_03",
+      "path": "componentes/tapete_extra_03.png",
+      "category": "mat",
+      "label": "Tapete Extra 03",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_extra_04",
+      "path": "componentes/tapete_extra_04.png",
+      "category": "mat",
+      "label": "Tapete Extra 04",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_extra_05",
+      "path": "componentes/tapete_extra_05.png",
+      "category": "mat",
+      "label": "Tapete Extra 05",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_extra_06",
+      "path": "componentes/tapete_extra_06.png",
+      "category": "mat",
+      "label": "Tapete Extra 06",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_extra_07",
+      "path": "componentes/tapete_extra_07.png",
+      "category": "mat",
+      "label": "Tapete Extra 07",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 3,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_extra_08",
+      "path": "componentes/tapete_extra_08.png",
+      "category": "mat",
+      "label": "Tapete Extra 08",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_extra_09",
+      "path": "componentes/tapete_extra_09.png",
+      "category": "mat",
+      "label": "Tapete Extra 09",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_extra_10",
+      "path": "componentes/tapete_extra_10.png",
+      "category": "mat",
+      "label": "Tapete Extra 10",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_grafite_simples",
+      "path": "componentes/tapete_grafite_simples.png",
+      "category": "mat",
+      "label": "Tapete Grafite Simples",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office"
+    },
+    {
+      "id": "env-office-tapete_persa_vermelho",
+      "path": "componentes/tapete_persa_vermelho.png",
+      "category": "mat",
+      "label": "Tapete Persa Vermelho",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_redondo_azul",
+      "path": "componentes/tapete_redondo_azul.png",
+      "category": "mat",
+      "label": "Tapete Redondo Azul",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_redondo_bege",
+      "path": "componentes/tapete_redondo_bege.png",
+      "category": "mat",
+      "label": "Tapete Redondo Bege",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 4,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-tapete_verde_classico",
+      "path": "componentes/tapete_verde_classico.png",
+      "category": "mat",
+      "label": "Tapete Verde Classico",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office"
+    },
+    {
+      "id": "env-office-tapete_verde_redondo",
+      "path": "componentes/tapete_verde_redondo.png",
+      "category": "mat",
+      "label": "Tapete Verde Redondo",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-tapete_verde_retangular",
+      "path": "componentes/tapete_verde_retangular.png",
+      "category": "mat",
+      "label": "Tapete Verde Retangular",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-tapete_verde_textura",
+      "path": "componentes/tapete_verde_textura.png",
+      "category": "mat",
+      "label": "Tapete Verde Textura",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-tapete_vermelho_retangular",
+      "path": "componentes/tapete_vermelho_retangular.png",
+      "category": "mat",
+      "label": "Tapete Vermelho Retangular",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-office-tela_projecao",
+      "path": "componentes/tela_projecao.png",
+      "category": "furniture",
+      "label": "Tela Projecao",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-office-telefone_preto_01",
+      "path": "componentes/telefone_preto_01.png",
+      "category": "furniture",
+      "label": "Telefone Preto 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-telefone_preto_02",
+      "path": "componentes/telefone_preto_02.png",
+      "category": "furniture",
+      "label": "Telefone Preto 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-vaso_pequeno_claro_01",
+      "path": "componentes/vaso_pequeno_claro_01.png",
+      "category": "furniture",
+      "label": "Vaso Pequeno Claro 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-vaso_pequeno_claro_02",
+      "path": "componentes/vaso_pequeno_claro_02.png",
+      "category": "furniture",
+      "label": "Vaso Pequeno Claro 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-office-work-table",
+      "path": "componentes/work-table.png",
+      "category": "furniture",
+      "label": "Work Table",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/office",
+      "theme": "office",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 10,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-industrial-canto_interno_concreto_01",
+      "path": "construcao/canto_interno_concreto_01.png",
+      "category": "wall",
+      "label": "Canto Interno Concreto 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-canto_interno_concreto_02",
+      "path": "construcao/canto_interno_concreto_02.png",
+      "category": "wall",
+      "label": "Canto Interno Concreto 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-divisoria_metal_tela_industrial",
+      "path": "construcao/divisoria_metal_tela_industrial.png",
+      "category": "wall",
+      "label": "Divisoria Metal Tela Industrial",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 10,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-divisoria_vidro_frontal_larga",
+      "path": "construcao/divisoria_vidro_frontal_larga.png",
+      "category": "wall",
+      "label": "Divisoria Vidro Frontal Larga",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 1,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-divisoria_vidro_lateral_estreita",
+      "path": "construcao/divisoria_vidro_lateral_estreita.png",
+      "category": "wall",
+      "label": "Divisoria Vidro Lateral Estreita",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 8,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-industrial-juncao_t_concreto",
+      "path": "construcao/juncao_t_concreto.png",
+      "category": "wall",
+      "label": "Juncao T Concreto",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 7,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-parede_concreto_lateral_vertical_01",
+      "path": "construcao/parede_concreto_lateral_vertical_01.png",
+      "category": "wall",
+      "label": "Parede Concreto Lateral Vertical 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-parede_concreto_lateral_vertical_02",
+      "path": "construcao/parede_concreto_lateral_vertical_02.png",
+      "category": "wall",
+      "label": "Parede Concreto Lateral Vertical 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-parede_concreto_topo_horizontal",
+      "path": "construcao/parede_concreto_topo_horizontal.png",
+      "category": "wall",
+      "label": "Parede Concreto Topo Horizontal",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 8,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-parede_lateral_janela_vertical",
+      "path": "construcao/parede_lateral_janela_vertical.png",
+      "category": "window",
+      "label": "Parede Lateral Janela Vertical",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-parede_lateral_porta_metal",
+      "path": "construcao/parede_lateral_porta_metal.png",
+      "category": "door",
+      "label": "Parede Lateral Porta Metal",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "size": {
+        "w": 5,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-parede_topo_janela_longa",
+      "path": "construcao/parede_topo_janela_longa.png",
+      "category": "window",
+      "label": "Parede Topo Janela Longa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 10,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-parede_topo_porta_madeira",
+      "path": "construcao/parede_topo_porta_madeira.png",
+      "category": "door",
+      "label": "Parede Topo Porta Madeira",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "size": {
+        "w": 8,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-rodape_metal_grafite_longo_01",
+      "path": "construcao/rodape_metal_grafite_longo_01.png",
+      "category": "wall",
+      "label": "Rodape Metal Grafite Longo 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 8,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-industrial-rodape_metal_grafite_longo_02",
+      "path": "construcao/rodape_metal_grafite_longo_02.png",
+      "category": "wall",
+      "label": "Rodape Metal Grafite Longo 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 9,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-industrial-arvore_interna_vaso_preto",
+      "path": "componentes/arvore_interna_vaso_preto.png",
+      "category": "furniture",
+      "label": "Arvore Interna Vaso Preto",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 6
+      }
+    },
+    {
+      "id": "env-industrial-floreira_concreto_canto_l",
+      "path": "componentes/floreira_concreto_canto_l.png",
+      "category": "furniture",
+      "label": "Floreira Concreto Canto L",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 6,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-floreira_concreto_horizontal_arbustos",
+      "path": "componentes/floreira_concreto_horizontal_arbustos.png",
+      "category": "furniture",
+      "label": "Floreira Concreto Horizontal Arbustos",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-industrial-floreira_concreto_horizontal_longa",
+      "path": "componentes/floreira_concreto_horizontal_longa.png",
+      "category": "furniture",
+      "label": "Floreira Concreto Horizontal Longa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-industrial-floreira_concreto_vertical_longa",
+      "path": "componentes/floreira_concreto_vertical_longa.png",
+      "category": "furniture",
+      "label": "Floreira Concreto Vertical Longa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true
+    },
+    {
+      "id": "env-industrial-jardineira_concreto_canto_verde",
+      "path": "componentes/jardineira_concreto_canto_verde.png",
+      "category": "furniture",
+      "label": "Jardineira Concreto Canto Verde",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-industrial-jardineira_concreto_longa_pendente",
+      "path": "componentes/jardineira_concreto_longa_pendente.png",
+      "category": "furniture",
+      "label": "Jardineira Concreto Longa Pendente",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-industrial-jardineira_concreto_longa_suculentas",
+      "path": "componentes/jardineira_concreto_longa_suculentas.png",
+      "category": "furniture",
+      "label": "Jardineira Concreto Longa Suculentas",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 1
+      }
+    },
+    {
+      "id": "env-industrial-jardineira_metal_dupla_palmeiras",
+      "path": "componentes/jardineira_metal_dupla_palmeiras.png",
+      "category": "furniture",
+      "label": "Jardineira Metal Dupla Palmeiras",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 4,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-jardineira_metal_horizontal_agaves",
+      "path": "componentes/jardineira_metal_horizontal_agaves.png",
+      "category": "furniture",
+      "label": "Jardineira Metal Horizontal Agaves",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 5,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-industrial-jardineira_metal_horizontal_longa",
+      "path": "componentes/jardineira_metal_horizontal_longa.png",
+      "category": "furniture",
+      "label": "Jardineira Metal Horizontal Longa",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 6,
+        "h": 2
+      }
+    },
+    {
+      "id": "env-industrial-jardineira_metal_vertical_alta",
+      "path": "componentes/jardineira_metal_vertical_alta.png",
+      "category": "furniture",
+      "label": "Jardineira Metal Vertical Alta",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-industrial-jardineira_metal_vertical_estreita",
+      "path": "componentes/jardineira_metal_vertical_estreita.png",
+      "category": "furniture",
+      "label": "Jardineira Metal Vertical Estreita",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-industrial-jardineira_palmeiras_dupla_01",
+      "path": "componentes/jardineira_palmeiras_dupla_01.png",
+      "category": "furniture",
+      "label": "Jardineira Palmeiras Dupla 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-jardineira_palmeiras_dupla_02",
+      "path": "componentes/jardineira_palmeiras_dupla_02.png",
+      "category": "furniture",
+      "label": "Jardineira Palmeiras Dupla 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 5
+      }
+    },
+    {
+      "id": "env-industrial-pedestal_concreto_estreito",
+      "path": "componentes/pedestal_concreto_estreito.png",
+      "category": "furniture",
+      "label": "Pedestal Concreto Estreito",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-industrial-pedestal_concreto_retangular",
+      "path": "componentes/pedestal_concreto_retangular.png",
+      "category": "furniture",
+      "label": "Pedestal Concreto Retangular",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-industrial-tapete_azul_reuniao",
+      "path": "componentes/tapete_azul_reuniao.png",
+      "category": "mat",
+      "label": "Tapete Azul Reuniao",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "size": {
+        "w": 5,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-industrial-tapete_geometrico_olive",
+      "path": "componentes/tapete_geometrico_olive.png",
+      "category": "mat",
+      "label": "Tapete Geometrico Olive",
+      "collision": false,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "size": {
+        "w": 5,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-industrial-vaso_cilindrico_branco_01",
+      "path": "componentes/vaso_cilindrico_branco_01.png",
+      "category": "furniture",
+      "label": "Vaso Cilindrico Branco 01",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-industrial-vaso_cilindrico_branco_02",
+      "path": "componentes/vaso_cilindrico_branco_02.png",
+      "category": "furniture",
+      "label": "Vaso Cilindrico Branco 02",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-industrial-vaso_concreto_redondo_medio",
+      "path": "componentes/vaso_concreto_redondo_medio.png",
+      "category": "furniture",
+      "label": "Vaso Concreto Redondo Medio",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 3
+      }
+    },
+    {
+      "id": "env-industrial-vaso_espada_sao_jorge_branco",
+      "path": "componentes/vaso_espada_sao_jorge_branco.png",
+      "category": "furniture",
+      "label": "Vaso Espada Sao Jorge Branco",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 2,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-industrial-vaso_monstera_preto",
+      "path": "componentes/vaso_monstera_preto.png",
+      "category": "furniture",
+      "label": "Vaso Monstera Preto",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 4
+      }
+    },
+    {
+      "id": "env-industrial-vaso_quadrado_concreto_folhagem",
+      "path": "componentes/vaso_quadrado_concreto_folhagem.png",
+      "category": "furniture",
+      "label": "Vaso Quadrado Concreto Folhagem",
+      "collision": true,
+      "assetRoot": "assets/environment/themes/industrial",
+      "theme": "industrial",
+      "acceptsOverlay": true,
+      "size": {
+        "w": 3,
+        "h": 4
+      }
+    }
   ]
 }

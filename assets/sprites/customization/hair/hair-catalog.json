@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "packs": [
+    {
+      "id": "hair-short-01",
+      "gender": "unisex",
+      "displayName": "Cabelo curto 01",
+      "styles": [
+        {
+          "id": "style-01",
+          "displayName": "Curto castanho",
+          "frames": {
+            "front": "hair/unisex/hair-short-01/style-01/front.png",
+            "back": "hair/unisex/hair-short-01/style-01/back.png",
+            "left": "hair/unisex/hair-short-01/style-01/left.png",
+            "right": "hair/unisex/hair-short-01/style-01/right.png"
+          }
+        }
+      ]
+    }
+  ]
+}

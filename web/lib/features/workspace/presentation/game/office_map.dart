@@ -13,6 +13,10 @@ class OfficeMap {
     required this.interactiveZones,
     required this.collidingTileIds,
     this.passthroughTileIds = const {},
+    this.displayZoom = 2.5,
+    this.avatarScale = 0.5,
+    this.avatarYOffset = 0.0,
+    this.avatarXOffset = 0.0,
   });
 
   final String id;
@@ -25,6 +29,14 @@ class OfficeMap {
   final Set<String> collidingTileIds;
   // Tiles that override wall collision (portals/doors placed on top of walls).
   final Set<String> passthroughTileIds;
+  // Visual zoom applied for all players when entering the map (set by owner).
+  final double displayZoom;
+  // Avatar sprite height as fraction of one tile (set by owner).
+  final double avatarScale;
+  // Vertical shift of avatar anchor in tile fractions (+up, -down).
+  final double avatarYOffset;
+  // Horizontal shift of avatar anchor in tile fractions (+right, -left).
+  final double avatarXOffset;
 
   static Future<OfficeMap> loadDefault(
     Set<String> collidingTileIds, {
@@ -52,6 +64,10 @@ class OfficeMap {
         width: json["width"] as int,
         height: json["height"] as int,
         tileSize: json["tileSize"] as int,
+        displayZoom: (json["displayZoom"] as num?)?.toDouble() ?? 2.5,
+        avatarScale: (json["avatarScale"] as num?)?.toDouble() ?? 0.5,
+        avatarYOffset: (json["avatarYOffset"] as num?)?.toDouble() ?? 0.0,
+        avatarXOffset: (json["avatarXOffset"] as num?)?.toDouble() ?? 0.0,
         spawn: MapSpawn.fromJson(json["spawn"] as Map<String, dynamic>),
         layers: (json["layers"] as List<dynamic>)
             .cast<Map<String, dynamic>>()
@@ -61,6 +77,22 @@ class OfficeMap {
             .cast<Map<String, dynamic>>()
             .map(MapZone.fromJson)
             .toList(growable: false),
+        collidingTileIds: collidingTileIds,
+        passthroughTileIds: passthroughTileIds,
+      );
+
+  OfficeMap withZoom(double zoom) => OfficeMap(
+        id: id,
+        width: width,
+        height: height,
+        tileSize: tileSize,
+        displayZoom: zoom.clamp(1.0, 4.0),
+        avatarScale: avatarScale,
+        avatarYOffset: avatarYOffset,
+        avatarXOffset: avatarXOffset,
+        spawn: spawn,
+        layers: layers,
+        interactiveZones: interactiveZones,
         collidingTileIds: collidingTileIds,
         passthroughTileIds: passthroughTileIds,
       );
@@ -77,13 +109,15 @@ class OfficeMap {
     final tileY = ty.floor();
     if (tileX < 0 || tileY < 0 || tileX >= width || tileY >= height) return false;
 
-    // Feet hitbox in map pixel space. The sprite frame is 16 map-px wide but
-    // the visible body has transparent side padding (catalog hitbox: 20/32 of
-    // the frame ≈ 10 map-px). Box: central 10px wide, bottom 10px of the tile.
-    final axL = tx * tileSize + 11;
-    final axR = tx * tileSize + 21;
-    final ayT = ty * tileSize + 22;
-    final ayB = ty * tileSize + 32;
+    // Hitbox 10×10px at the BASE (feet) of the visual sprite. The sprite is
+    // drawn shifted by avatarXOffset (horizontal) and avatarYOffset (vertical),
+    // bottom-anchored — mirror that so the hitbox sits under the character.
+    final double spriteCenterX = (tx + 0.5 + avatarXOffset) * tileSize;
+    final double spriteBottom = (ty + 1.0 - avatarYOffset) * tileSize;
+    final axL = spriteCenterX - 5;
+    final axR = spriteCenterX + 5;
+    final ayT = spriteBottom - 10;
+    final ayB = spriteBottom;
 
     bool blocked = false;
     bool hasPassthrough = false;

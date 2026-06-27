@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.6.1
   go_router: ^14.2.7
   dio: ^5.7.0
@@ -27,12 +28,27 @@ flutter:
   assets:
     - assets/
     - assets/atlases/
+    - assets/audio/
+    - assets/audio/music/
+    - assets/audio/sfx/
+    - assets/audio/others/
+    - assets/audio/voice/characters/ada/
+    - assets/audio/voice/characters/ashley/
+    - assets/audio/voice/characters/jill/
+    - assets/audio/voice/characters/leon/
+    - assets/audio/voice/characters/zombie/
+    - assets/audio/voice/common/female/
+    - assets/audio/voice/common/male/
+    - assets/audio/voice/female/
+    - assets/audio/voice/male/
     - assets/components/
     - assets/config/
     - assets/furniture/
     - assets/maps/
+    - assets/maps/models/
     - assets/sprites/
     - assets/sprites/bubbles/
+    # Legacy characters (character-01 to character-06)
     - assets/sprites/characters/
     - assets/sprites/characters/character-01/
     - assets/sprites/characters/character-02/
@@ -40,12 +56,82 @@ flutter:
     - assets/sprites/characters/character-04/
     - assets/sprites/characters/character-05/
     - assets/sprites/characters/character-06/
+    - assets/sprites/characters/claude/
+    # Normal characters – man
+    - assets/sprites/characters/normal/man/social/man-social-01/sprites-tight/
+    - assets/sprites/characters/normal/man/social/man-social-01/reactions/
+    - assets/sprites/characters/normal/man/social/man-social-02/sprites-tight/
+    - assets/sprites/characters/normal/man/social/man-social-02/reactions/
+    - assets/sprites/characters/normal/man/biker/man-biker-01/sprites-tight/
+    - assets/sprites/characters/normal/man/biker/man-biker-01/reactions/
+    - assets/sprites/characters/normal/man/sweater/man-sweater-01/sprites-tight/
+    - assets/sprites/characters/normal/man/sweater/man-sweater-01/reactions/
+    - assets/sprites/characters/normal/man/bandit/bandit-01/sprites-tight/
+    - assets/sprites/characters/normal/man/bandit/bandit-01/reactions/
+    - assets/sprites/characters/normal/man/bandit/bandit-normal-01/sprites-tight/
+    - assets/sprites/characters/normal/man/bandit/bandit-normal-01/reactions/
+    - assets/sprites/characters/normal/man/tactical-police/tactical-police-01/sprites-tight/
+    - assets/sprites/characters/normal/man/tactical-police/tactical-police-01/reactions/
+    # Normal characters – woman
+    - assets/sprites/characters/normal/woman/social/woman-social-01/sprites-tight/
+    - assets/sprites/characters/normal/woman/social/woman-social-01/reactions/
+    - assets/sprites/characters/normal/woman/social/woman-social-02/sprites-tight/
+    - assets/sprites/characters/normal/woman/social/woman-social-02/reactions/
+    - assets/sprites/characters/normal/woman/biker/woman-biker-01/sprites-tight/
+    - assets/sprites/characters/normal/woman/biker/woman-biker-01/reactions/
+    - assets/sprites/characters/normal/woman/casual/woman-casual-02/sprites-tight/
+    - assets/sprites/characters/normal/woman/casual/woman-casual-02/reactions/
+    - assets/sprites/characters/normal/woman/sweater/woman-sweater-01/sprites-tight/
+    - assets/sprites/characters/normal/woman/sweater/woman-sweater-01/reactions/
+    - assets/sprites/characters/normal/woman/dress-social/woman-dress-social-01/sprites-tight/
+    - assets/sprites/characters/normal/woman/dress-social/woman-dress-social-01/reactions/
+    - assets/sprites/characters/normal/woman/evening-dress/woman-evening-dress-01/sprites-tight/
+    - assets/sprites/characters/normal/woman/evening-dress/woman-evening-dress-01/reactions/
+    - assets/sprites/characters/normal/woman/bikini/woman-bikini-01/sprites-tight/
+    - assets/sprites/characters/normal/woman/bikini/woman-bikini-01/reactions/
+    # Normal characters – mix
+    - assets/sprites/characters/normal/mix/biker/mix-biker-01/sprites-tight/
+    - assets/sprites/characters/normal/mix/biker/mix-biker-01/reactions/
+    - assets/sprites/characters/normal/mix/smart-casual/mix-smart-casual-01/sprites-tight/
+    - assets/sprites/characters/normal/mix/smart-casual/mix-smart-casual-01/reactions/
+    - assets/sprites/characters/normal/mix/social/mix-social-01/sprites-tight/
+    - assets/sprites/characters/normal/mix/social/mix-social-01/reactions/
+    # Special characters (RE-themed)
+    - assets/sprites/characters/normal/ada/ada-normal-01/sprites-tight/
+    - assets/sprites/characters/normal/ada/ada-normal-01/reactions/
+    - assets/sprites/characters/normal/gill/gill-normal-01/sprites-tight/
+    - assets/sprites/characters/normal/gill/gill-normal-01/reactions/
+    - assets/sprites/characters/normal/lian/lian-normal-01/sprites-tight/
+    - assets/sprites/characters/normal/lian/lian-normal-01/reactions/
+    - assets/sprites/characters/normal/zombie/zombie-normal-03/sprites-tight/
+    - assets/sprites/characters/normal/zombie/zombie-normal-03/reactions/
+    # Hair customization
     - assets/sprites/customization/
     - assets/sprites/customization/accent-colors/
     - assets/sprites/customization/clothing-colors/
     - assets/sprites/customization/hair-colors/
     - assets/sprites/customization/skin-tones/
+    - assets/sprites/customization/hair/
+    - assets/sprites/customization/hair/female/female-hair-pack-11/style-01/
+    - assets/sprites/customization/hair/female/female-hair-pack-11/style-02/
+    - assets/sprites/customization/hair/female/female-hair-pack-11/style-03/
+    - assets/sprites/customization/hair/female/female-hair-pack-11/style-04/
+    - assets/sprites/customization/hair/male/male-hair-pack-02/style-01/
+    - assets/sprites/customization/hair/male/male-hair-pack-02/style-02/
+    - assets/sprites/customization/hair/male/male-hair-pack-02/style-03/
+    - assets/sprites/customization/hair/male/male-hair-pack-02/style-04/
+    - assets/sprites/customization/hair/male/male-hair-pack-03/style-01/
+    - assets/sprites/customization/hair/male/male-hair-pack-03/style-02/
+    - assets/sprites/customization/hair/male/male-hair-pack-03/style-03/
+    - assets/sprites/customization/hair/male/male-hair-pack-03/style-04/
+    # Gestures, reactions
     - assets/sprites/gestures/
     - assets/sprites/reactions/
+    # Environment themes
+    - assets/environment/themes/industrial/componentes/
+    - assets/environment/themes/industrial/construcao/
+    - assets/environment/themes/office/componentes/
+    - assets/environment/themes/office/construcao/
+    # Tilesets
     - assets/tilesets/
     - assets/tilesets/scenary/

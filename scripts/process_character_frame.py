@@ -67,6 +67,15 @@ def normalize_sprite(image: Image.Image) -> Image.Image:
     bbox = image.getchannel("A").getbbox()
     if bbox:
         image = image.crop(bbox)
+    max_w = WORK_CANVAS[0] - 8
+    max_h = WORK_CANVAS[1] - 8
+    scale = min(max_w / image.width, max_h / image.height, 1)
+    if scale < 1:
+        new_size = (
+            max(1, round(image.width * scale)),
+            max(1, round(image.height * scale)),
+        )
+        image = image.resize(new_size, Image.Resampling.LANCZOS)
     canvas = Image.new("RGBA", WORK_CANVAS, (255, 255, 255, 0))
     x = (WORK_CANVAS[0] - image.width) // 2
     y = WORK_CANVAS[1] - image.height - 6

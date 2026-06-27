@@ -1,0 +1,29 @@
+{
+  "id": "hair-male-brown-sidepart-01",
+  "displayName": "Hair Male Brown Sidepart 01",
+  "sourceSheet": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/source/full-sheet-raw.png",
+  "frames": {
+    "idle-front": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/idle-front.png",
+    "walk-down-01": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-down-01.png",
+    "walk-down-02": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-down-02.png",
+    "walk-down-03": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-down-03.png",
+    "idle-left": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/idle-left.png",
+    "walk-left-01": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-left-01.png",
+    "walk-left-02": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-left-02.png",
+    "walk-left-03": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-left-03.png",
+    "idle-right": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/idle-right.png",
+    "walk-right-01": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-right-01.png",
+    "walk-right-02": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-right-02.png",
+    "walk-right-03": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-right-03.png",
+    "idle-back": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/idle-back.png",
+    "walk-up-01": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-up-01.png",
+    "walk-up-02": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-up-02.png",
+    "walk-up-03": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/walk-up-03.png"
+  },
+  "directional": {
+    "front": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/directional/front.png",
+    "back": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/directional/back.png",
+    "left": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/directional/left.png",
+    "right": "assets/sprites/customization/hair-generated/body-office-01/hair-male-brown-sidepart-01/directional/right.png"
+  }
+}

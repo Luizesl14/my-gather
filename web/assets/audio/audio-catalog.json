@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "categories": {
+    "music": {
+      "label": "Trilhas",
+      "tracks": [
+        "audio/music/focus-concentration-01.mp3",
+        "audio/music/horror-theme-01.mp3",
+        "audio/music/incident-alert-01.mp3",
+        "audio/music/incident-investigation-01.mp3"
+      ]
+    },
+    "sfx": {
+      "label": "Efeitos",
+      "tracks": {
+        "footstep": "audio/sfx/footstep-01.mp3",
+        "gunshot": "audio/sfx/gunshot-01.mp3",
+        "gunshot_pistol": "audio/sfx/gunshot-pistol-01.mp3",
+        "horror_sting": "audio/sfx/horror-sting-01.mp3",
+        "notify": "audio/sfx/notify-01.mp3",
+        "attention": "audio/sfx/attention-01.mp3",
+        "zoom": "audio/sfx/zoom-01.mp3"
+      }
+    },
+    "notifications": {
+      "label": "Notificações",
+      "sounds": [
+        "audio/others/ambulance-siren-01.mp3",
+        "audio/others/notify-bell-plun-01.mp3",
+        "audio/others/notify-crystal-01.mp3",
+        "audio/others/notify-double-chime-01.mp3",
+        "audio/others/notify-playful-01.mp3"
+      ]
+    },
+    "voice": {
+      "label": "Vozes",
+      "characters": {
+        "ada": {
+          "catchphrase": "audio/voice/characters/ada/catchphrase-01.mp3"
+        },
+        "jill": {
+          "catchphrase": "audio/voice/characters/jill/catchphrase-01.mp3"
+        },
+        "leon": {
+          "catchphrase": "audio/voice/characters/leon/catchphrase-01.mp3"
+        },
+        "ashley": {
+          "catchphrase": "audio/voice/characters/ashley/catchphrase-01.mp3"
+        },
+        "zombie": {
+          "catchphrase": "audio/voice/characters/zombie/forastero-01.mp3",
+          "roar": "audio/voice/characters/zombie/roar-01.mp3"
+        }
+      },
+      "common": {
+        "female": {
+          "scream": "audio/voice/common/female/scream-ahhh-01.mp3",
+          "scream_shot": "audio/voice/common/female/scream-shot-01.mp3"
+        },
+        "male": {
+          "scream": "audio/voice/common/male/scream-ahhh-01.mp3",
+          "scream_shot": "audio/voice/common/male/scream-shot-01.mp3"
+        }
+      },
+      "reactions": {
+        "female": [
+          "audio/voice/female/oh-my-god-01.mp3",
+          "audio/voice/female/oops-01.mp3",
+          "audio/voice/female/please-01.mp3",
+          "audio/voice/female/shit-01.mp3"
+        ],
+        "male": [
+          "audio/voice/male/oh-my-god-01.mp3",
+          "audio/voice/male/oops-01.mp3",
+          "audio/voice/male/please-01.mp3",
+          "audio/voice/male/shit-01.mp3"
+        ]
+      }
+    }
+  },
+  "bubbles": {
+    "conversation": "sprites/bubbles/source/conversation-bubble-01.png",
+    "roar": "sprites/bubbles/source/roar-bubble-01.png",
+    "shout": "sprites/bubbles/source/shout-bubble-01.png"
+  },
+  "gestures": {
+    "hand_atlas": "sprites/gestures/source/hand-gestures-01.png"
+  }
+}

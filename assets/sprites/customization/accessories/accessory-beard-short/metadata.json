@@ -1,0 +1,24 @@
+{
+  "category": "beard",
+  "bodySheet": "assets/sprites/customization/body/body-office-01/skin-01/source/full-sheet-raw.png",
+  "generatedSheet": "assets/sprites/customization/accessories/accessory-beard-short/source/full-sheet-raw.png",
+  "frames": {
+    "idle-front": "assets/sprites/customization/accessories/accessory-beard-short/idle-front.png",
+    "walk-down-01": "assets/sprites/customization/accessories/accessory-beard-short/walk-down-01.png",
+    "walk-down-02": "assets/sprites/customization/accessories/accessory-beard-short/walk-down-02.png",
+    "walk-down-03": "assets/sprites/customization/accessories/accessory-beard-short/walk-down-03.png",
+    "idle-left": "assets/sprites/customization/accessories/accessory-beard-short/idle-left.png",
+    "walk-left-01": "assets/sprites/customization/accessories/accessory-beard-short/walk-left-01.png",
+    "walk-left-02": "assets/sprites/customization/accessories/accessory-beard-short/walk-left-02.png",
+    "walk-left-03": "assets/sprites/customization/accessories/accessory-beard-short/walk-left-03.png",
+    "idle-right": "assets/sprites/customization/accessories/accessory-beard-short/idle-right.png",
+    "walk-right-01": "assets/sprites/customization/accessories/accessory-beard-short/walk-right-01.png",
+    "walk-right-02": "assets/sprites/customization/accessories/accessory-beard-short/walk-right-02.png",
+    "walk-right-03": "assets/sprites/customization/accessories/accessory-beard-short/walk-right-03.png",
+    "idle-back": "assets/sprites/customization/accessories/accessory-beard-short/idle-back.png",
+    "walk-up-01": "assets/sprites/customization/accessories/accessory-beard-short/walk-up-01.png",
+    "walk-up-02": "assets/sprites/customization/accessories/accessory-beard-short/walk-up-02.png",
+    "walk-up-03": "assets/sprites/customization/accessories/accessory-beard-short/walk-up-03.png"
+  },
+  "preview": "assets/sprites/customization/accessories/accessory-beard-short/preview-on-body.png"
+}

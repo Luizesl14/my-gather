@@ -1,0 +1,3913 @@
+{
+  "version": 1,
+  "theme": "office",
+  "generatedFrom": "scripts/slice_component_atlas.py",
+  "folders": {
+    "construcao": "office/construcao",
+    "componentes": "office/componentes"
+  },
+  "sections": [
+    {
+      "theme": "office",
+      "atlas": "directional",
+      "source": "office-directional-atlas-alpha.png",
+      "count": 28,
+      "entries": [
+        {
+          "index": 1,
+          "name": "balcao_recepcao_l_claro",
+          "category": "componentes",
+          "file": "office/componentes/balcao_recepcao_l_claro.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 540,
+            "top": 50,
+            "right": 661,
+            "bottom": 372
+          },
+          "size": {
+            "w": 121,
+            "h": 322
+          }
+        },
+        {
+          "index": 2,
+          "name": "balcao_recepcao_reto_claro",
+          "category": "componentes",
+          "file": "office/componentes/balcao_recepcao_reto_claro.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1281,
+            "top": 55,
+            "right": 1470,
+            "bottom": 384
+          },
+          "size": {
+            "w": 189,
+            "h": 329
+          }
+        },
+        {
+          "index": 3,
+          "name": "mesa_escritorio_horizontal_madeira",
+          "category": "componentes",
+          "file": "office/componentes/mesa_escritorio_horizontal_madeira.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1619,
+            "top": 73,
+            "right": 1733,
+            "bottom": 228
+          },
+          "size": {
+            "w": 114,
+            "h": 155
+          }
+        },
+        {
+          "index": 4,
+          "name": "mesa_escritorio_horizontal_divisoria_azul",
+          "category": "construcao",
+          "file": "office/construcao/mesa_escritorio_horizontal_divisoria_azul.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1827,
+            "top": 73,
+            "right": 1936,
+            "bottom": 230
+          },
+          "size": {
+            "w": 109,
+            "h": 157
+          }
+        },
+        {
+          "index": 5,
+          "name": "mesa_reuniao_horizontal_6_lugares",
+          "category": "componentes",
+          "file": "office/componentes/mesa_reuniao_horizontal_6_lugares.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 784,
+            "top": 100,
+            "right": 1199,
+            "bottom": 346
+          },
+          "size": {
+            "w": 415,
+            "h": 246
+          }
+        },
+        {
+          "index": 6,
+          "name": "cadeira_escritorio_azul_3_4",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_escritorio_azul_3_4.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 80,
+            "top": 112,
+            "right": 403,
+            "bottom": 301
+          },
+          "size": {
+            "w": 323,
+            "h": 189
+          }
+        },
+        {
+          "index": 7,
+          "name": "sofa_2_lugares_azul",
+          "category": "componentes",
+          "file": "office/componentes/sofa_2_lugares_azul.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1623,
+            "top": 252,
+            "right": 1729,
+            "bottom": 405
+          },
+          "size": {
+            "w": 106,
+            "h": 153
+          }
+        },
+        {
+          "index": 8,
+          "name": "armario_baixo_cinza",
+          "category": "componentes",
+          "file": "office/componentes/armario_baixo_cinza.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1825,
+            "top": 252,
+            "right": 1932,
+            "bottom": 405
+          },
+          "size": {
+            "w": 107,
+            "h": 153
+          }
+        },
+        {
+          "index": 9,
+          "name": "planta_vaso_grande_clara",
+          "category": "componentes",
+          "file": "office/componentes/planta_vaso_grande_clara.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 518,
+            "top": 464,
+            "right": 582,
+            "bottom": 529
+          },
+          "size": {
+            "w": 72,
+            "h": 73
+          }
+        },
+        {
+          "index": 10,
+          "name": "planta_vaso_medio_clara",
+          "category": "componentes",
+          "file": "office/componentes/planta_vaso_medio_clara.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1299,
+            "top": 489,
+            "right": 1459,
+            "bottom": 779
+          },
+          "size": {
+            "w": 160,
+            "h": 290
+          }
+        },
+        {
+          "index": 11,
+          "name": "planta_vaso_suporte_branco",
+          "category": "componentes",
+          "file": "office/componentes/planta_vaso_suporte_branco.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 554,
+            "top": 511,
+            "right": 680,
+            "bottom": 781
+          },
+          "size": {
+            "w": 134,
+            "h": 278
+          }
+        },
+        {
+          "index": 12,
+          "name": "planta_vaso_pequeno_claro",
+          "category": "componentes",
+          "file": "office/componentes/planta_vaso_pequeno_claro.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1571,
+            "top": 514,
+            "right": 1956,
+            "bottom": 763
+          },
+          "size": {
+            "w": 385,
+            "h": 249
+          }
+        },
+        {
+          "index": 13,
+          "name": "suculenta_vaso_claro",
+          "category": "componentes",
+          "file": "office/componentes/suculenta_vaso_claro.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 804,
+            "top": 557,
+            "right": 1161,
+            "bottom": 746
+          },
+          "size": {
+            "w": 357,
+            "h": 189
+          }
+        },
+        {
+          "index": 14,
+          "name": "floreira_linear_madeira",
+          "category": "componentes",
+          "file": "office/componentes/floreira_linear_madeira.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 138,
+            "top": 573,
+            "right": 445,
+            "bottom": 723
+          },
+          "size": {
+            "w": 315,
+            "h": 150
+          }
+        },
+        {
+          "index": 15,
+          "name": "divisoria_vidro_canto",
+          "category": "construcao",
+          "file": "office/construcao/divisoria_vidro_canto.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 57,
+            "top": 579,
+            "right": 134,
+            "bottom": 672
+          },
+          "size": {
+            "w": 85,
+            "h": 101
+          }
+        },
+        {
+          "index": 16,
+          "name": "divisoria_vidro_vertical",
+          "category": "construcao",
+          "file": "office/construcao/divisoria_vidro_vertical.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 390,
+            "top": 901,
+            "right": 558,
+            "bottom": 1081
+          },
+          "size": {
+            "w": 168,
+            "h": 180
+          }
+        },
+        {
+          "index": 17,
+          "name": "porta_madeira_fechada",
+          "category": "componentes",
+          "file": "office/componentes/porta_madeira_fechada.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1850,
+            "top": 902,
+            "right": 1980,
+            "bottom": 1098
+          },
+          "size": {
+            "w": 130,
+            "h": 196
+          }
+        },
+        {
+          "index": 18,
+          "name": "porta_metal_fechada",
+          "category": "componentes",
+          "file": "office/componentes/porta_metal_fechada.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 886,
+            "top": 903,
+            "right": 1036,
+            "bottom": 1084
+          },
+          "size": {
+            "w": 150,
+            "h": 181
+          }
+        },
+        {
+          "index": 19,
+          "name": "portal_madeira_aberto",
+          "category": "componentes",
+          "file": "office/componentes/portal_madeira_aberto.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1387,
+            "top": 916,
+            "right": 1482,
+            "bottom": 1096
+          },
+          "size": {
+            "w": 95,
+            "h": 180
+          }
+        },
+        {
+          "index": 20,
+          "name": "janela_vertical_simples",
+          "category": "construcao",
+          "file": "office/construcao/janela_vertical_simples.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 75,
+            "top": 961,
+            "right": 296,
+            "bottom": 1044
+          },
+          "size": {
+            "w": 221,
+            "h": 83
+          }
+        },
+        {
+          "index": 21,
+          "name": "janela_horizontal_dupla",
+          "category": "construcao",
+          "file": "office/construcao/janela_horizontal_dupla.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1553,
+            "top": 965,
+            "right": 1779,
+            "bottom": 1075
+          },
+          "size": {
+            "w": 226,
+            "h": 110
+          }
+        },
+        {
+          "index": 22,
+          "name": "janela_horizontal_longa",
+          "category": "construcao",
+          "file": "office/construcao/janela_horizontal_longa.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 639,
+            "top": 966,
+            "right": 820,
+            "bottom": 1043
+          },
+          "size": {
+            "w": 181,
+            "h": 77
+          }
+        },
+        {
+          "index": 23,
+          "name": "tapete_azul_retangular",
+          "category": "componentes",
+          "file": "office/componentes/tapete_azul_retangular.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1120,
+            "top": 966,
+            "right": 1289,
+            "bottom": 1075
+          },
+          "size": {
+            "w": 169,
+            "h": 109
+          }
+        },
+        {
+          "index": 24,
+          "name": "tapete_bege_retangular",
+          "category": "componentes",
+          "file": "office/componentes/tapete_bege_retangular.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 652,
+            "top": 1180,
+            "right": 763,
+            "bottom": 1432
+          },
+          "size": {
+            "w": 111,
+            "h": 252
+          }
+        },
+        {
+          "index": 25,
+          "name": "tapete_vermelho_retangular",
+          "category": "componentes",
+          "file": "office/componentes/tapete_vermelho_retangular.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1718,
+            "top": 1193,
+            "right": 1888,
+            "bottom": 1448
+          },
+          "size": {
+            "w": 170,
+            "h": 255
+          }
+        },
+        {
+          "index": 26,
+          "name": "tapete_verde_redondo",
+          "category": "componentes",
+          "file": "office/componentes/tapete_verde_redondo.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 892,
+            "top": 1195,
+            "right": 1163,
+            "bottom": 1447
+          },
+          "size": {
+            "w": 271,
+            "h": 252
+          }
+        },
+        {
+          "index": 27,
+          "name": "reserva_directional_01",
+          "category": "componentes",
+          "file": "office/componentes/reserva_directional_01.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 1275,
+            "top": 1222,
+            "right": 1613,
+            "bottom": 1418
+          },
+          "size": {
+            "w": 338,
+            "h": 196
+          }
+        },
+        {
+          "index": 28,
+          "name": "reserva_directional_02",
+          "category": "componentes",
+          "file": "office/componentes/reserva_directional_02.png",
+          "atlas": "directional",
+          "source": "office-directional-atlas-alpha.png",
+          "bbox": {
+            "left": 86,
+            "top": 1250,
+            "right": 542,
+            "bottom": 1375
+          },
+          "size": {
+            "w": 456,
+            "h": 125
+          }
+        }
+      ]
+    },
+    {
+      "theme": "office",
+      "atlas": "materials",
+      "source": "office-materials-atlas-alpha.png",
+      "count": 25,
+      "entries": [
+        {
+          "index": 1,
+          "name": "piso_claro_quadriculado",
+          "category": "construcao",
+          "file": "office/construcao/piso_claro_quadriculado.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 852,
+            "top": 49,
+            "right": 1207,
+            "bottom": 283
+          },
+          "size": {
+            "w": 355,
+            "h": 234
+          }
+        },
+        {
+          "index": 2,
+          "name": "piso_grafite_quadriculado",
+          "category": "construcao",
+          "file": "office/construcao/piso_grafite_quadriculado.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 460,
+            "top": 51,
+            "right": 817,
+            "bottom": 285
+          },
+          "size": {
+            "w": 357,
+            "h": 234
+          }
+        },
+        {
+          "index": 3,
+          "name": "piso_cinza_azulejo",
+          "category": "construcao",
+          "file": "office/construcao/piso_cinza_azulejo.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 69,
+            "top": 52,
+            "right": 419,
+            "bottom": 285
+          },
+          "size": {
+            "w": 350,
+            "h": 233
+          }
+        },
+        {
+          "index": 4,
+          "name": "piso_madeira_clara",
+          "category": "construcao",
+          "file": "office/construcao/piso_madeira_clara.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1237,
+            "top": 52,
+            "right": 1584,
+            "bottom": 282
+          },
+          "size": {
+            "w": 347,
+            "h": 230
+          }
+        },
+        {
+          "index": 5,
+          "name": "piso_bege_carpete",
+          "category": "construcao",
+          "file": "office/construcao/piso_bege_carpete.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1619,
+            "top": 53,
+            "right": 1977,
+            "bottom": 279
+          },
+          "size": {
+            "w": 358,
+            "h": 226
+          }
+        },
+        {
+          "index": 6,
+          "name": "carpete_azul_quadrado",
+          "category": "componentes",
+          "file": "office/componentes/carpete_azul_quadrado.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 455,
+            "top": 328,
+            "right": 814,
+            "bottom": 568
+          },
+          "size": {
+            "w": 359,
+            "h": 240
+          }
+        },
+        {
+          "index": 7,
+          "name": "carpete_verde_quadrado",
+          "category": "componentes",
+          "file": "office/componentes/carpete_verde_quadrado.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 61,
+            "top": 329,
+            "right": 417,
+            "bottom": 568
+          },
+          "size": {
+            "w": 356,
+            "h": 239
+          }
+        },
+        {
+          "index": 8,
+          "name": "carpete_bege_quadrado",
+          "category": "componentes",
+          "file": "office/componentes/carpete_bege_quadrado.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1240,
+            "top": 329,
+            "right": 1591,
+            "bottom": 567
+          },
+          "size": {
+            "w": 351,
+            "h": 238
+          }
+        },
+        {
+          "index": 9,
+          "name": "carpete_vermelho_quadrado",
+          "category": "componentes",
+          "file": "office/componentes/carpete_vermelho_quadrado.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 853,
+            "top": 330,
+            "right": 1205,
+            "bottom": 568
+          },
+          "size": {
+            "w": 352,
+            "h": 238
+          }
+        },
+        {
+          "index": 10,
+          "name": "tapete_redondo_bege",
+          "category": "componentes",
+          "file": "office/componentes/tapete_redondo_bege.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1643,
+            "top": 351,
+            "right": 1961,
+            "bottom": 553
+          },
+          "size": {
+            "w": 318,
+            "h": 202
+          }
+        },
+        {
+          "index": 11,
+          "name": "tapete_azul_retangular_grande",
+          "category": "componentes",
+          "file": "office/componentes/tapete_azul_retangular_grande.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1588,
+            "top": 627,
+            "right": 1662,
+            "bottom": 804
+          },
+          "size": {
+            "w": 74,
+            "h": 177
+          }
+        },
+        {
+          "index": 12,
+          "name": "tapete_verde_retangular",
+          "category": "componentes",
+          "file": "office/componentes/tapete_verde_retangular.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 520,
+            "top": 633,
+            "right": 720,
+            "bottom": 853
+          },
+          "size": {
+            "w": 200,
+            "h": 220
+          }
+        },
+        {
+          "index": 13,
+          "name": "divisoria_baixa_bicolor_horizontal",
+          "category": "construcao",
+          "file": "office/construcao/divisoria_baixa_bicolor_horizontal.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 788,
+            "top": 636,
+            "right": 1076,
+            "bottom": 848
+          },
+          "size": {
+            "w": 288,
+            "h": 212
+          }
+        },
+        {
+          "index": 14,
+          "name": "coluna_trim_clara",
+          "category": "construcao",
+          "file": "office/construcao/coluna_trim_clara.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1132,
+            "top": 638,
+            "right": 1195,
+            "bottom": 808
+          },
+          "size": {
+            "w": 63,
+            "h": 170
+          }
+        },
+        {
+          "index": 15,
+          "name": "divisoria_madeira_ripada_horizontal",
+          "category": "construcao",
+          "file": "office/construcao/divisoria_madeira_ripada_horizontal.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1267,
+            "top": 657,
+            "right": 1543,
+            "bottom": 845
+          },
+          "size": {
+            "w": 276,
+            "h": 188
+          }
+        },
+        {
+          "index": 16,
+          "name": "pilar_madeira_ripado",
+          "category": "construcao",
+          "file": "office/construcao/pilar_madeira_ripado.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 63,
+            "top": 661,
+            "right": 457,
+            "bottom": 819
+          },
+          "size": {
+            "w": 394,
+            "h": 158
+          }
+        },
+        {
+          "index": 17,
+          "name": "divisoria_vidro_baixa_horizontal",
+          "category": "construcao",
+          "file": "office/construcao/divisoria_vidro_baixa_horizontal.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1711,
+            "top": 663,
+            "right": 1982,
+            "bottom": 866
+          },
+          "size": {
+            "w": 271,
+            "h": 203
+          }
+        },
+        {
+          "index": 18,
+          "name": "floreira_branca_linear_longa",
+          "category": "componentes",
+          "file": "office/componentes/floreira_branca_linear_longa.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1511,
+            "top": 883,
+            "right": 1887,
+            "bottom": 1132
+          },
+          "size": {
+            "w": 376,
+            "h": 249
+          }
+        },
+        {
+          "index": 19,
+          "name": "floreira_branca_linear_curta",
+          "category": "componentes",
+          "file": "office/componentes/floreira_branca_linear_curta.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 688,
+            "top": 910,
+            "right": 882,
+            "bottom": 1123
+          },
+          "size": {
+            "w": 194,
+            "h": 213
+          }
+        },
+        {
+          "index": 20,
+          "name": "floreira_branca_linear_media",
+          "category": "componentes",
+          "file": "office/componentes/floreira_branca_linear_media.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 80,
+            "top": 929,
+            "right": 579,
+            "bottom": 1114
+          },
+          "size": {
+            "w": 499,
+            "h": 185
+          }
+        },
+        {
+          "index": 21,
+          "name": "floreira_branca_canto_l",
+          "category": "componentes",
+          "file": "office/componentes/floreira_branca_canto_l.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1070,
+            "top": 965,
+            "right": 1334,
+            "bottom": 1115
+          },
+          "size": {
+            "w": 264,
+            "h": 150
+          }
+        },
+        {
+          "index": 22,
+          "name": "piso_preto_tecnico",
+          "category": "construcao",
+          "file": "office/construcao/piso_preto_tecnico.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1043,
+            "top": 1169,
+            "right": 1417,
+            "bottom": 1487
+          },
+          "size": {
+            "w": 374,
+            "h": 318
+          }
+        },
+        {
+          "index": 23,
+          "name": "area_reuniao_azul_mesa",
+          "category": "componentes",
+          "file": "office/componentes/area_reuniao_azul_mesa.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 1499,
+            "top": 1189,
+            "right": 1961,
+            "bottom": 1464
+          },
+          "size": {
+            "w": 462,
+            "h": 275
+          }
+        },
+        {
+          "index": 24,
+          "name": "modulo_banheiro_claro",
+          "category": "construcao",
+          "file": "office/construcao/modulo_banheiro_claro.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 448,
+            "top": 1193,
+            "right": 960,
+            "bottom": 1443
+          },
+          "size": {
+            "w": 512,
+            "h": 250
+          }
+        },
+        {
+          "index": 25,
+          "name": "modulo_copa_clara",
+          "category": "construcao",
+          "file": "office/construcao/modulo_copa_clara.png",
+          "atlas": "materials",
+          "source": "office-materials-atlas-alpha.png",
+          "bbox": {
+            "left": 85,
+            "top": 1237,
+            "right": 376,
+            "bottom": 1430
+          },
+          "size": {
+            "w": 291,
+            "h": 193
+          }
+        }
+      ]
+    },
+    {
+      "theme": "office",
+      "atlas": "architecture",
+      "source": "office-architecture-layout-alpha.png",
+      "count": 58,
+      "entries": [
+        {
+          "index": 1,
+          "name": "office_arch_001_parede_superior_longa",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_001_parede_superior_longa.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 61,
+            "top": 56,
+            "right": 549,
+            "bottom": 214
+          },
+          "size": {
+            "w": 488,
+            "h": 158
+          }
+        },
+        {
+          "index": 2,
+          "name": "office_arch_002_parede_superior_canto_direito",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_002_parede_superior_canto_direito.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 605,
+            "top": 56,
+            "right": 831,
+            "bottom": 269
+          },
+          "size": {
+            "w": 226,
+            "h": 213
+          }
+        },
+        {
+          "index": 3,
+          "name": "office_arch_003_parede_superior_divisao_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_003_parede_superior_divisao_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 889,
+            "top": 56,
+            "right": 1146,
+            "bottom": 271
+          },
+          "size": {
+            "w": 257,
+            "h": 215
+          }
+        },
+        {
+          "index": 4,
+          "name": "office_arch_004_parede_superior_divisao_02",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_004_parede_superior_divisao_02.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1205,
+            "top": 56,
+            "right": 1378,
+            "bottom": 232
+          },
+          "size": {
+            "w": 173,
+            "h": 176
+          }
+        },
+        {
+          "index": 5,
+          "name": "office_arch_005_parede_superior_porta_madeira",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_005_parede_superior_porta_madeira.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1433,
+            "top": 56,
+            "right": 1731,
+            "bottom": 214
+          },
+          "size": {
+            "w": 298,
+            "h": 158
+          }
+        },
+        {
+          "index": 6,
+          "name": "office_arch_006_parede_superior_janela_longa",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_006_parede_superior_janela_longa.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1789,
+            "top": 56,
+            "right": 2342,
+            "bottom": 214
+          },
+          "size": {
+            "w": 553,
+            "h": 158
+          }
+        },
+        {
+          "index": 7,
+          "name": "office_arch_007_parede_lateral_fina_esquerda",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_007_parede_lateral_fina_esquerda.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 57,
+            "top": 270,
+            "right": 85,
+            "bottom": 619
+          },
+          "size": {
+            "w": 28,
+            "h": 349
+          }
+        },
+        {
+          "index": 8,
+          "name": "office_arch_008_modulo_sala_pequeno_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_008_modulo_sala_pequeno_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1203,
+            "top": 270,
+            "right": 1368,
+            "bottom": 428
+          },
+          "size": {
+            "w": 165,
+            "h": 158
+          }
+        },
+        {
+          "index": 9,
+          "name": "office_arch_009_modulo_sala_pequeno_02",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_009_modulo_sala_pequeno_02.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1435,
+            "top": 270,
+            "right": 1608,
+            "bottom": 429
+          },
+          "size": {
+            "w": 173,
+            "h": 159
+          }
+        },
+        {
+          "index": 10,
+          "name": "office_arch_010_parede_lateral_fina_direita_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_010_parede_lateral_fina_direita_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1706,
+            "top": 270,
+            "right": 1734,
+            "bottom": 645
+          },
+          "size": {
+            "w": 28,
+            "h": 375
+          }
+        },
+        {
+          "index": 11,
+          "name": "office_arch_011_parede_lateral_fina_direita_02",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_011_parede_lateral_fina_direita_02.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 2318,
+            "top": 270,
+            "right": 2346,
+            "bottom": 645
+          },
+          "size": {
+            "w": 28,
+            "h": 375
+          }
+        },
+        {
+          "index": 12,
+          "name": "office_arch_012_juncao_t_superior",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_012_juncao_t_superior.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 897,
+            "top": 343,
+            "right": 1138,
+            "bottom": 559
+          },
+          "size": {
+            "w": 241,
+            "h": 216
+          }
+        },
+        {
+          "index": 13,
+          "name": "office_arch_013_canto_externo_esquerdo",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_013_canto_externo_esquerdo.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 510,
+            "top": 350,
+            "right": 643,
+            "bottom": 619
+          },
+          "size": {
+            "w": 133,
+            "h": 269
+          }
+        },
+        {
+          "index": 14,
+          "name": "office_arch_014_modulo_sala_pequeno_03",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_014_modulo_sala_pequeno_03.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1203,
+            "top": 488,
+            "right": 1369,
+            "bottom": 692
+          },
+          "size": {
+            "w": 166,
+            "h": 204
+          }
+        },
+        {
+          "index": 15,
+          "name": "office_arch_015_modulo_sala_pequeno_04",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_015_modulo_sala_pequeno_04.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1433,
+            "top": 488,
+            "right": 1598,
+            "bottom": 691
+          },
+          "size": {
+            "w": 165,
+            "h": 203
+          }
+        },
+        {
+          "index": 16,
+          "name": "office_arch_016_vidro_frontal_longo",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_016_vidro_frontal_longo.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 62,
+            "top": 675,
+            "right": 402,
+            "bottom": 764
+          },
+          "size": {
+            "w": 340,
+            "h": 89
+          }
+        },
+        {
+          "index": 17,
+          "name": "office_arch_017_vidro_canto_l_esquerdo",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_017_vidro_canto_l_esquerdo.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 512,
+            "top": 675,
+            "right": 775,
+            "bottom": 937
+          },
+          "size": {
+            "w": 263,
+            "h": 262
+          }
+        },
+        {
+          "index": 18,
+          "name": "office_arch_018_vidro_frontal_t",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_018_vidro_frontal_t.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 833,
+            "top": 675,
+            "right": 1183,
+            "bottom": 937
+          },
+          "size": {
+            "w": 350,
+            "h": 262
+          }
+        },
+        {
+          "index": 19,
+          "name": "office_arch_019_modulo_canto_interno_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_019_modulo_canto_interno_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1228,
+            "top": 722,
+            "right": 1347,
+            "bottom": 932
+          },
+          "size": {
+            "w": 119,
+            "h": 210
+          }
+        },
+        {
+          "index": 20,
+          "name": "office_arch_020_parede_lateral_fina_direita_03",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_020_parede_lateral_fina_direita_03.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1706,
+            "top": 723,
+            "right": 1734,
+            "bottom": 951
+          },
+          "size": {
+            "w": 28,
+            "h": 228
+          }
+        },
+        {
+          "index": 21,
+          "name": "office_arch_021_parede_lateral_fina_direita_04",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_021_parede_lateral_fina_direita_04.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 2318,
+            "top": 723,
+            "right": 2346,
+            "bottom": 951
+          },
+          "size": {
+            "w": 28,
+            "h": 228
+          }
+        },
+        {
+          "index": 22,
+          "name": "office_arch_022_modulo_canto_interno_02",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_022_modulo_canto_interno_02.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1469,
+            "top": 727,
+            "right": 1621,
+            "bottom": 936
+          },
+          "size": {
+            "w": 152,
+            "h": 209
+          }
+        },
+        {
+          "index": 23,
+          "name": "office_arch_023_canto_chanfrado",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_023_canto_chanfrado.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 667,
+            "top": 988,
+            "right": 792,
+            "bottom": 1146
+          },
+          "size": {
+            "w": 125,
+            "h": 158
+          }
+        },
+        {
+          "index": 24,
+          "name": "office_arch_024_parede_baixa_horizontal_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_024_parede_baixa_horizontal_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 59,
+            "top": 1007,
+            "right": 259,
+            "bottom": 1145
+          },
+          "size": {
+            "w": 200,
+            "h": 138
+          }
+        },
+        {
+          "index": 25,
+          "name": "office_arch_025_parede_baixa_horizontal_02",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_025_parede_baixa_horizontal_02.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 362,
+            "top": 1007,
+            "right": 550,
+            "bottom": 1145
+          },
+          "size": {
+            "w": 188,
+            "h": 138
+          }
+        },
+        {
+          "index": 26,
+          "name": "office_arch_026_modulo_sala_pequeno_05",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_026_modulo_sala_pequeno_05.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 887,
+            "top": 1007,
+            "right": 1086,
+            "bottom": 1163
+          },
+          "size": {
+            "w": 199,
+            "h": 156
+          }
+        },
+        {
+          "index": 27,
+          "name": "office_arch_027_porta_madeira_topo_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_027_porta_madeira_topo_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1184,
+            "top": 1007,
+            "right": 1349,
+            "bottom": 1146
+          },
+          "size": {
+            "w": 165,
+            "h": 139
+          }
+        },
+        {
+          "index": 28,
+          "name": "office_arch_028_porta_madeira_topo_02",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_028_porta_madeira_topo_02.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1437,
+            "top": 1007,
+            "right": 1581,
+            "bottom": 1146
+          },
+          "size": {
+            "w": 144,
+            "h": 139
+          }
+        },
+        {
+          "index": 29,
+          "name": "office_arch_029_janela_pequena_quadrada_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_029_janela_pequena_quadrada_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1824,
+            "top": 1007,
+            "right": 1971,
+            "bottom": 1144
+          },
+          "size": {
+            "w": 147,
+            "h": 137
+          }
+        },
+        {
+          "index": 30,
+          "name": "office_arch_030_janela_horizontal_tripla_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_030_janela_horizontal_tripla_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 2012,
+            "top": 1007,
+            "right": 2222,
+            "bottom": 1144
+          },
+          "size": {
+            "w": 210,
+            "h": 137
+          }
+        },
+        {
+          "index": 31,
+          "name": "office_arch_031_janela_vertical_estreita_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_031_janela_vertical_estreita_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 2278,
+            "top": 1007,
+            "right": 2344,
+            "bottom": 1144
+          },
+          "size": {
+            "w": 66,
+            "h": 137
+          }
+        },
+        {
+          "index": 32,
+          "name": "office_arch_032_janela_horizontal_dupla_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_032_janela_horizontal_dupla_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1623,
+            "top": 1008,
+            "right": 1770,
+            "bottom": 1144
+          },
+          "size": {
+            "w": 147,
+            "h": 136
+          }
+        },
+        {
+          "index": 33,
+          "name": "office_arch_033_janela_horizontal_longa_frontal",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_033_janela_horizontal_longa_frontal.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 59,
+            "top": 1213,
+            "right": 550,
+            "bottom": 1350
+          },
+          "size": {
+            "w": 491,
+            "h": 137
+          }
+        },
+        {
+          "index": 34,
+          "name": "office_arch_034_canto_externo_direito",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_034_canto_externo_direito.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 599,
+            "top": 1213,
+            "right": 771,
+            "bottom": 1374
+          },
+          "size": {
+            "w": 172,
+            "h": 161
+          }
+        },
+        {
+          "index": 35,
+          "name": "office_arch_035_parede_pequena_vertical_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_035_parede_pequena_vertical_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 997,
+            "top": 1213,
+            "right": 1079,
+            "bottom": 1350
+          },
+          "size": {
+            "w": 82,
+            "h": 137
+          }
+        },
+        {
+          "index": 36,
+          "name": "office_arch_036_parede_baixa_horizontal_03",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_036_parede_baixa_horizontal_03.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1162,
+            "top": 1213,
+            "right": 1365,
+            "bottom": 1350
+          },
+          "size": {
+            "w": 203,
+            "h": 137
+          }
+        },
+        {
+          "index": 37,
+          "name": "office_arch_037_porta_madeira_vertical_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_037_porta_madeira_vertical_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1437,
+            "top": 1213,
+            "right": 1581,
+            "bottom": 1351
+          },
+          "size": {
+            "w": 144,
+            "h": 138
+          }
+        },
+        {
+          "index": 38,
+          "name": "office_arch_038_janela_vertical_dupla_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_038_janela_vertical_dupla_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1623,
+            "top": 1213,
+            "right": 1759,
+            "bottom": 1350
+          },
+          "size": {
+            "w": 136,
+            "h": 137
+          }
+        },
+        {
+          "index": 39,
+          "name": "office_arch_039_janela_vertical_dupla_02",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_039_janela_vertical_dupla_02.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1824,
+            "top": 1213,
+            "right": 1959,
+            "bottom": 1350
+          },
+          "size": {
+            "w": 135,
+            "h": 137
+          }
+        },
+        {
+          "index": 40,
+          "name": "office_arch_040_janela_vertical_dupla_03",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_040_janela_vertical_dupla_03.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 2077,
+            "top": 1213,
+            "right": 2214,
+            "bottom": 1350
+          },
+          "size": {
+            "w": 137,
+            "h": 137
+          }
+        },
+        {
+          "index": 41,
+          "name": "office_arch_041_janela_vertical_estreita_02",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_041_janela_vertical_estreita_02.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 2278,
+            "top": 1213,
+            "right": 2344,
+            "bottom": 1350
+          },
+          "size": {
+            "w": 66,
+            "h": 137
+          }
+        },
+        {
+          "index": 42,
+          "name": "office_arch_042_janela_vidro_lateral_longa",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_042_janela_vidro_lateral_longa.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 59,
+            "top": 1412,
+            "right": 279,
+            "bottom": 1603
+          },
+          "size": {
+            "w": 220,
+            "h": 191
+          }
+        },
+        {
+          "index": 43,
+          "name": "office_arch_043_janela_vidro_lateral_media",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_043_janela_vidro_lateral_media.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 331,
+            "top": 1412,
+            "right": 551,
+            "bottom": 1603
+          },
+          "size": {
+            "w": 220,
+            "h": 191
+          }
+        },
+        {
+          "index": 44,
+          "name": "office_arch_044_coluna_fina_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_044_coluna_fina_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1181,
+            "top": 1412,
+            "right": 1206,
+            "bottom": 1603
+          },
+          "size": {
+            "w": 25,
+            "h": 191
+          }
+        },
+        {
+          "index": 45,
+          "name": "office_arch_045_coluna_fina_02",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_045_coluna_fina_02.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1305,
+            "top": 1412,
+            "right": 1358,
+            "bottom": 1603
+          },
+          "size": {
+            "w": 53,
+            "h": 191
+          }
+        },
+        {
+          "index": 46,
+          "name": "office_arch_046_coluna_fina_03",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_046_coluna_fina_03.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1459,
+            "top": 1412,
+            "right": 1523,
+            "bottom": 1603
+          },
+          "size": {
+            "w": 64,
+            "h": 191
+          }
+        },
+        {
+          "index": 47,
+          "name": "office_arch_047_coluna_fina_04",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_047_coluna_fina_04.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1634,
+            "top": 1412,
+            "right": 1699,
+            "bottom": 1603
+          },
+          "size": {
+            "w": 65,
+            "h": 191
+          }
+        },
+        {
+          "index": 48,
+          "name": "office_arch_048_coluna_fina_05",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_048_coluna_fina_05.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 2279,
+            "top": 1412,
+            "right": 2344,
+            "bottom": 1603
+          },
+          "size": {
+            "w": 65,
+            "h": 191
+          }
+        },
+        {
+          "index": 49,
+          "name": "office_arch_049_divisoria_bicolor_longa",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_049_divisoria_bicolor_longa.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 599,
+            "top": 1466,
+            "right": 845,
+            "bottom": 1603
+          },
+          "size": {
+            "w": 246,
+            "h": 137
+          }
+        },
+        {
+          "index": 50,
+          "name": "office_arch_050_divisoria_bicolor_media",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_050_divisoria_bicolor_media.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 920,
+            "top": 1466,
+            "right": 1134,
+            "bottom": 1603
+          },
+          "size": {
+            "w": 214,
+            "h": 137
+          }
+        },
+        {
+          "index": 51,
+          "name": "office_arch_051_rodape_horizontal_curto_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_051_rodape_horizontal_curto_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 59,
+            "top": 1684,
+            "right": 279,
+            "bottom": 1731
+          },
+          "size": {
+            "w": 220,
+            "h": 47
+          }
+        },
+        {
+          "index": 52,
+          "name": "office_arch_052_rodape_horizontal_curto_02",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_052_rodape_horizontal_curto_02.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 331,
+            "top": 1684,
+            "right": 551,
+            "bottom": 1731
+          },
+          "size": {
+            "w": 220,
+            "h": 47
+          }
+        },
+        {
+          "index": 53,
+          "name": "office_arch_053_rodape_horizontal_medio_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_053_rodape_horizontal_medio_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 598,
+            "top": 1684,
+            "right": 845,
+            "bottom": 1731
+          },
+          "size": {
+            "w": 247,
+            "h": 47
+          }
+        },
+        {
+          "index": 54,
+          "name": "office_arch_054_rodape_horizontal_longo_01",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_054_rodape_horizontal_longo_01.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 887,
+            "top": 1684,
+            "right": 1167,
+            "bottom": 1731
+          },
+          "size": {
+            "w": 280,
+            "h": 47
+          }
+        },
+        {
+          "index": 55,
+          "name": "office_arch_055_rodape_vertical_fino",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_055_rodape_vertical_fino.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1181,
+            "top": 1684,
+            "right": 1207,
+            "bottom": 1731
+          },
+          "size": {
+            "w": 26,
+            "h": 47
+          }
+        },
+        {
+          "index": 56,
+          "name": "office_arch_056_rodape_vertical_medio",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_056_rodape_vertical_medio.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1296,
+            "top": 1684,
+            "right": 1366,
+            "bottom": 1731
+          },
+          "size": {
+            "w": 70,
+            "h": 47
+          }
+        },
+        {
+          "index": 57,
+          "name": "office_arch_057_rodape_vertical_largo",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_057_rodape_vertical_largo.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1441,
+            "top": 1684,
+            "right": 1543,
+            "bottom": 1731
+          },
+          "size": {
+            "w": 102,
+            "h": 47
+          }
+        },
+        {
+          "index": 58,
+          "name": "office_arch_058_rodape_horizontal_largo",
+          "category": "construcao",
+          "file": "office/construcao/office_arch_058_rodape_horizontal_largo.png",
+          "atlas": "architecture",
+          "source": "office-architecture-layout-alpha.png",
+          "bbox": {
+            "left": 1575,
+            "top": 1684,
+            "right": 1757,
+            "bottom": 1731
+          },
+          "size": {
+            "w": 182,
+            "h": 47
+          }
+        }
+      ]
+    },
+    {
+      "theme": "office",
+      "atlas": "furniture",
+      "source": "office-furniture-layout-alpha.png",
+      "count": 104,
+      "entries": [
+        {
+          "index": 1,
+          "name": "balcao_recepcao_curvo_madeira_grande",
+          "category": "componentes",
+          "file": "office/componentes/balcao_recepcao_curvo_madeira_grande.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2113,
+            "top": 49,
+            "right": 2224,
+            "bottom": 213
+          },
+          "size": {
+            "w": 111,
+            "h": 164
+          }
+        },
+        {
+          "index": 2,
+          "name": "balcao_recepcao_curvo_madeira_medio",
+          "category": "componentes",
+          "file": "office/componentes/balcao_recepcao_curvo_madeira_medio.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1952,
+            "top": 50,
+            "right": 2063,
+            "bottom": 213
+          },
+          "size": {
+            "w": 111,
+            "h": 163
+          }
+        },
+        {
+          "index": 3,
+          "name": "cadeira_escritorio_preta_frente_01",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_escritorio_preta_frente_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1437,
+            "top": 51,
+            "right": 1551,
+            "bottom": 214
+          },
+          "size": {
+            "w": 114,
+            "h": 163
+          }
+        },
+        {
+          "index": 4,
+          "name": "cadeira_escritorio_azul_frente_01",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_escritorio_azul_frente_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1250,
+            "top": 52,
+            "right": 1362,
+            "bottom": 215
+          },
+          "size": {
+            "w": 112,
+            "h": 163
+          }
+        },
+        {
+          "index": 5,
+          "name": "cadeira_escritorio_verde_frente_01",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_escritorio_verde_frente_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1619,
+            "top": 52,
+            "right": 1733,
+            "bottom": 215
+          },
+          "size": {
+            "w": 114,
+            "h": 163
+          }
+        },
+        {
+          "index": 6,
+          "name": "cadeira_escritorio_cinza_frente_01",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_escritorio_cinza_frente_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1789,
+            "top": 52,
+            "right": 1900,
+            "bottom": 214
+          },
+          "size": {
+            "w": 111,
+            "h": 162
+          }
+        },
+        {
+          "index": 7,
+          "name": "cadeira_escritorio_preta_frente_02",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_escritorio_preta_frente_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2266,
+            "top": 52,
+            "right": 2368,
+            "bottom": 212
+          },
+          "size": {
+            "w": 102,
+            "h": 160
+          }
+        },
+        {
+          "index": 8,
+          "name": "balcao_recepcao_curvo_branco_pequeno",
+          "category": "componentes",
+          "file": "office/componentes/balcao_recepcao_curvo_branco_pequeno.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 677,
+            "top": 57,
+            "right": 881,
+            "bottom": 210
+          },
+          "size": {
+            "w": 204,
+            "h": 153
+          }
+        },
+        {
+          "index": 9,
+          "name": "balcao_recepcao_curvo_branco_longo",
+          "category": "componentes",
+          "file": "office/componentes/balcao_recepcao_curvo_branco_longo.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 57,
+            "top": 58,
+            "right": 337,
+            "bottom": 211
+          },
+          "size": {
+            "w": 280,
+            "h": 153
+          }
+        },
+        {
+          "index": 10,
+          "name": "balcao_recepcao_curvo_branco_l",
+          "category": "componentes",
+          "file": "office/componentes/balcao_recepcao_curvo_branco_l.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 379,
+            "top": 68,
+            "right": 607,
+            "bottom": 212
+          },
+          "size": {
+            "w": 228,
+            "h": 144
+          }
+        },
+        {
+          "index": 11,
+          "name": "cadeira_escritorio_marrom_frente_01",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_escritorio_marrom_frente_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 930,
+            "top": 75,
+            "right": 1147,
+            "bottom": 206
+          },
+          "size": {
+            "w": 217,
+            "h": 131
+          }
+        },
+        {
+          "index": 12,
+          "name": "mesa_escritorio_l_madeira_01",
+          "category": "componentes",
+          "file": "office/componentes/mesa_escritorio_l_madeira_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 675,
+            "top": 273,
+            "right": 872,
+            "bottom": 425
+          },
+          "size": {
+            "w": 197,
+            "h": 152
+          }
+        },
+        {
+          "index": 13,
+          "name": "mesa_escritorio_l_madeira_02",
+          "category": "componentes",
+          "file": "office/componentes/mesa_escritorio_l_madeira_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 56,
+            "top": 276,
+            "right": 297,
+            "bottom": 448
+          },
+          "size": {
+            "w": 241,
+            "h": 172
+          }
+        },
+        {
+          "index": 14,
+          "name": "balcao_recepcao_curvo_branco_l_02",
+          "category": "componentes",
+          "file": "office/componentes/balcao_recepcao_curvo_branco_l_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 388,
+            "top": 276,
+            "right": 568,
+            "bottom": 486
+          },
+          "size": {
+            "w": 180,
+            "h": 210
+          }
+        },
+        {
+          "index": 15,
+          "name": "cadeira_espera_azul_01",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_espera_azul_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1804,
+            "top": 280,
+            "right": 1945,
+            "bottom": 423
+          },
+          "size": {
+            "w": 141,
+            "h": 143
+          }
+        },
+        {
+          "index": 16,
+          "name": "balcao_recepcao_curvo_branco_medio",
+          "category": "componentes",
+          "file": "office/componentes/balcao_recepcao_curvo_branco_medio.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 919,
+            "top": 290,
+            "right": 1136,
+            "bottom": 422
+          },
+          "size": {
+            "w": 217,
+            "h": 132
+          }
+        },
+        {
+          "index": 17,
+          "name": "cadeira_espera_preta_01",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_espera_preta_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1405,
+            "top": 292,
+            "right": 1486,
+            "bottom": 403
+          },
+          "size": {
+            "w": 81,
+            "h": 111
+          }
+        },
+        {
+          "index": 18,
+          "name": "cadeira_espera_azul_02",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_espera_azul_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1669,
+            "top": 292,
+            "right": 1751,
+            "bottom": 402
+          },
+          "size": {
+            "w": 82,
+            "h": 110
+          }
+        },
+        {
+          "index": 19,
+          "name": "cadeira_espera_preta_02",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_espera_preta_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1194,
+            "top": 293,
+            "right": 1277,
+            "bottom": 402
+          },
+          "size": {
+            "w": 83,
+            "h": 109
+          }
+        },
+        {
+          "index": 20,
+          "name": "cadeira_espera_verde_01",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_espera_verde_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1299,
+            "top": 293,
+            "right": 1381,
+            "bottom": 403
+          },
+          "size": {
+            "w": 82,
+            "h": 110
+          }
+        },
+        {
+          "index": 21,
+          "name": "cadeira_espera_azul_03",
+          "category": "componentes",
+          "file": "office/componentes/cadeira_espera_azul_03.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1533,
+            "top": 293,
+            "right": 1616,
+            "bottom": 402
+          },
+          "size": {
+            "w": 83,
+            "h": 109
+          }
+        },
+        {
+          "index": 22,
+          "name": "mesa_redonda_madeira_01",
+          "category": "componentes",
+          "file": "office/componentes/mesa_redonda_madeira_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1998,
+            "top": 303,
+            "right": 2092,
+            "bottom": 403
+          },
+          "size": {
+            "w": 94,
+            "h": 100
+          }
+        },
+        {
+          "index": 23,
+          "name": "puff_azul_01",
+          "category": "componentes",
+          "file": "office/componentes/puff_azul_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2137,
+            "top": 305,
+            "right": 2228,
+            "bottom": 403
+          },
+          "size": {
+            "w": 91,
+            "h": 98
+          }
+        },
+        {
+          "index": 24,
+          "name": "puff_azul_02",
+          "category": "componentes",
+          "file": "office/componentes/puff_azul_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2272,
+            "top": 305,
+            "right": 2360,
+            "bottom": 403
+          },
+          "size": {
+            "w": 88,
+            "h": 98
+          }
+        },
+        {
+          "index": 25,
+          "name": "mesa_reuniao_vertical_6_lugares",
+          "category": "componentes",
+          "file": "office/componentes/mesa_reuniao_vertical_6_lugares.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 62,
+            "top": 485,
+            "right": 347,
+            "bottom": 823
+          },
+          "size": {
+            "w": 285,
+            "h": 338
+          }
+        },
+        {
+          "index": 26,
+          "name": "mesa_reuniao_horizontal_8_lugares",
+          "category": "componentes",
+          "file": "office/componentes/mesa_reuniao_horizontal_8_lugares.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 598,
+            "top": 485,
+            "right": 1043,
+            "bottom": 778
+          },
+          "size": {
+            "w": 445,
+            "h": 293
+          }
+        },
+        {
+          "index": 27,
+          "name": "sofa_preto_3_lugares",
+          "category": "componentes",
+          "file": "office/componentes/sofa_preto_3_lugares.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1138,
+            "top": 485,
+            "right": 1381,
+            "bottom": 623
+          },
+          "size": {
+            "w": 243,
+            "h": 138
+          }
+        },
+        {
+          "index": 28,
+          "name": "sofa_azul_3_lugares",
+          "category": "componentes",
+          "file": "office/componentes/sofa_azul_3_lugares.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1433,
+            "top": 485,
+            "right": 1649,
+            "bottom": 623
+          },
+          "size": {
+            "w": 216,
+            "h": 138
+          }
+        },
+        {
+          "index": 29,
+          "name": "sofa_verde_2_lugares",
+          "category": "componentes",
+          "file": "office/componentes/sofa_verde_2_lugares.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1697,
+            "top": 485,
+            "right": 1857,
+            "bottom": 622
+          },
+          "size": {
+            "w": 160,
+            "h": 137
+          }
+        },
+        {
+          "index": 30,
+          "name": "poltrona_preta_01",
+          "category": "componentes",
+          "file": "office/componentes/poltrona_preta_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1903,
+            "top": 492,
+            "right": 2015,
+            "bottom": 621
+          },
+          "size": {
+            "w": 112,
+            "h": 129
+          }
+        },
+        {
+          "index": 31,
+          "name": "mesa_centro_madeira_01",
+          "category": "componentes",
+          "file": "office/componentes/mesa_centro_madeira_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2055,
+            "top": 504,
+            "right": 2181,
+            "bottom": 611
+          },
+          "size": {
+            "w": 126,
+            "h": 107
+          }
+        },
+        {
+          "index": 32,
+          "name": "mesa_centro_vidro_01",
+          "category": "construcao",
+          "file": "office/construcao/mesa_centro_vidro_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2223,
+            "top": 505,
+            "right": 2343,
+            "bottom": 607
+          },
+          "size": {
+            "w": 120,
+            "h": 102
+          }
+        },
+        {
+          "index": 33,
+          "name": "estante_madeira_01",
+          "category": "componentes",
+          "file": "office/componentes/estante_madeira_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1423,
+            "top": 662,
+            "right": 1566,
+            "bottom": 858
+          },
+          "size": {
+            "w": 143,
+            "h": 196
+          }
+        },
+        {
+          "index": 34,
+          "name": "estante_madeira_02",
+          "category": "componentes",
+          "file": "office/componentes/estante_madeira_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1268,
+            "top": 664,
+            "right": 1394,
+            "bottom": 858
+          },
+          "size": {
+            "w": 126,
+            "h": 194
+          }
+        },
+        {
+          "index": 35,
+          "name": "gaveteiro_arquivo_cinza_01",
+          "category": "componentes",
+          "file": "office/componentes/gaveteiro_arquivo_cinza_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1128,
+            "top": 669,
+            "right": 1244,
+            "bottom": 859
+          },
+          "size": {
+            "w": 116,
+            "h": 190
+          }
+        },
+        {
+          "index": 36,
+          "name": "gaveteiro_arquivo_cinza_02",
+          "category": "componentes",
+          "file": "office/componentes/gaveteiro_arquivo_cinza_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1599,
+            "top": 685,
+            "right": 1724,
+            "bottom": 858
+          },
+          "size": {
+            "w": 125,
+            "h": 173
+          }
+        },
+        {
+          "index": 37,
+          "name": "gaveteiro_arquivo_cinza_03",
+          "category": "componentes",
+          "file": "office/componentes/gaveteiro_arquivo_cinza_03.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1979,
+            "top": 695,
+            "right": 2051,
+            "bottom": 862
+          },
+          "size": {
+            "w": 72,
+            "h": 167
+          }
+        },
+        {
+          "index": 38,
+          "name": "armario_alto_cinza_01",
+          "category": "componentes",
+          "file": "office/componentes/armario_alto_cinza_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2081,
+            "top": 695,
+            "right": 2153,
+            "bottom": 862
+          },
+          "size": {
+            "w": 72,
+            "h": 167
+          }
+        },
+        {
+          "index": 39,
+          "name": "armario_alto_azul_01",
+          "category": "componentes",
+          "file": "office/componentes/armario_alto_azul_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2184,
+            "top": 695,
+            "right": 2257,
+            "bottom": 862
+          },
+          "size": {
+            "w": 73,
+            "h": 167
+          }
+        },
+        {
+          "index": 40,
+          "name": "armario_alto_verde_01",
+          "category": "componentes",
+          "file": "office/componentes/armario_alto_verde_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1883,
+            "top": 696,
+            "right": 1954,
+            "bottom": 862
+          },
+          "size": {
+            "w": 71,
+            "h": 166
+          }
+        },
+        {
+          "index": 41,
+          "name": "armario_alto_cinza_02",
+          "category": "componentes",
+          "file": "office/componentes/armario_alto_cinza_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2287,
+            "top": 696,
+            "right": 2360,
+            "bottom": 862
+          },
+          "size": {
+            "w": 73,
+            "h": 166
+          }
+        },
+        {
+          "index": 42,
+          "name": "armario_alto_bege_01",
+          "category": "componentes",
+          "file": "office/componentes/armario_alto_bege_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1761,
+            "top": 719,
+            "right": 1839,
+            "bottom": 859
+          },
+          "size": {
+            "w": 78,
+            "h": 140
+          }
+        },
+        {
+          "index": 43,
+          "name": "monitor_duplo_largo",
+          "category": "componentes",
+          "file": "office/componentes/monitor_duplo_largo.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 457,
+            "top": 832,
+            "right": 513,
+            "bottom": 949
+          },
+          "size": {
+            "w": 56,
+            "h": 117
+          }
+        },
+        {
+          "index": 44,
+          "name": "cpu_torre_preta",
+          "category": "componentes",
+          "file": "office/componentes/cpu_torre_preta.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 62,
+            "top": 838,
+            "right": 194,
+            "bottom": 945
+          },
+          "size": {
+            "w": 132,
+            "h": 107
+          }
+        },
+        {
+          "index": 45,
+          "name": "notebook_prata_aberto",
+          "category": "componentes",
+          "file": "office/componentes/notebook_prata_aberto.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 563,
+            "top": 838,
+            "right": 687,
+            "bottom": 966
+          },
+          "size": {
+            "w": 124,
+            "h": 128
+          }
+        },
+        {
+          "index": 46,
+          "name": "monitor_pequeno_azul",
+          "category": "componentes",
+          "file": "office/componentes/monitor_pequeno_azul.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 212,
+            "top": 841,
+            "right": 421,
+            "bottom": 946
+          },
+          "size": {
+            "w": 209,
+            "h": 105
+          }
+        },
+        {
+          "index": 47,
+          "name": "notebook_preto_aberto",
+          "category": "componentes",
+          "file": "office/componentes/notebook_preto_aberto.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 725,
+            "top": 855,
+            "right": 821,
+            "bottom": 964
+          },
+          "size": {
+            "w": 96,
+            "h": 109
+          }
+        },
+        {
+          "index": 48,
+          "name": "monitor_retro_azul",
+          "category": "componentes",
+          "file": "office/componentes/monitor_retro_azul.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 858,
+            "top": 866,
+            "right": 951,
+            "bottom": 964
+          },
+          "size": {
+            "w": 93,
+            "h": 98
+          }
+        },
+        {
+          "index": 49,
+          "name": "telefone_preto_01",
+          "category": "componentes",
+          "file": "office/componentes/telefone_preto_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 985,
+            "top": 867,
+            "right": 1072,
+            "bottom": 964
+          },
+          "size": {
+            "w": 87,
+            "h": 97
+          }
+        },
+        {
+          "index": 50,
+          "name": "impressora_azul_pequena",
+          "category": "componentes",
+          "file": "office/componentes/impressora_azul_pequena.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1126,
+            "top": 896,
+            "right": 1203,
+            "bottom": 968
+          },
+          "size": {
+            "w": 77,
+            "h": 72
+          }
+        },
+        {
+          "index": 51,
+          "name": "telefone_preto_02",
+          "category": "componentes",
+          "file": "office/componentes/telefone_preto_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1246,
+            "top": 897,
+            "right": 1315,
+            "bottom": 965
+          },
+          "size": {
+            "w": 69,
+            "h": 68
+          }
+        },
+        {
+          "index": 52,
+          "name": "roteador_preto_wifi",
+          "category": "componentes",
+          "file": "office/componentes/roteador_preto_wifi.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1357,
+            "top": 900,
+            "right": 1409,
+            "bottom": 965
+          },
+          "size": {
+            "w": 52,
+            "h": 65
+          }
+        },
+        {
+          "index": 53,
+          "name": "impressora_branca_01",
+          "category": "componentes",
+          "file": "office/componentes/impressora_branca_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1575,
+            "top": 903,
+            "right": 1636,
+            "bottom": 965
+          },
+          "size": {
+            "w": 61,
+            "h": 62
+          }
+        },
+        {
+          "index": 54,
+          "name": "impressora_branca_02",
+          "category": "componentes",
+          "file": "office/componentes/impressora_branca_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1457,
+            "top": 905,
+            "right": 1532,
+            "bottom": 968
+          },
+          "size": {
+            "w": 75,
+            "h": 63
+          }
+        },
+        {
+          "index": 55,
+          "name": "geladeira_branca_01",
+          "category": "componentes",
+          "file": "office/componentes/geladeira_branca_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2243,
+            "top": 928,
+            "right": 2340,
+            "bottom": 1149
+          },
+          "size": {
+            "w": 97,
+            "h": 221
+          }
+        },
+        {
+          "index": 56,
+          "name": "bancada_copa_completa",
+          "category": "componentes",
+          "file": "office/componentes/bancada_copa_completa.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1725,
+            "top": 978,
+            "right": 2215,
+            "bottom": 1148
+          },
+          "size": {
+            "w": 490,
+            "h": 170
+          }
+        },
+        {
+          "index": 57,
+          "name": "quadro_branco",
+          "category": "componentes",
+          "file": "office/componentes/quadro_branco.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 87,
+            "top": 995,
+            "right": 205,
+            "bottom": 1142
+          },
+          "size": {
+            "w": 118,
+            "h": 147
+          }
+        },
+        {
+          "index": 58,
+          "name": "quadro_avisos_cortica",
+          "category": "componentes",
+          "file": "office/componentes/quadro_avisos_cortica.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 389,
+            "top": 1002,
+            "right": 513,
+            "bottom": 1142
+          },
+          "size": {
+            "w": 124,
+            "h": 140
+          }
+        },
+        {
+          "index": 59,
+          "name": "tela_projecao",
+          "category": "componentes",
+          "file": "office/componentes/tela_projecao.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1411,
+            "top": 1002,
+            "right": 1488,
+            "bottom": 1162
+          },
+          "size": {
+            "w": 77,
+            "h": 160
+          }
+        },
+        {
+          "index": 60,
+          "name": "quadro_paisagem",
+          "category": "componentes",
+          "file": "office/componentes/quadro_paisagem.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 251,
+            "top": 1006,
+            "right": 342,
+            "bottom": 1142
+          },
+          "size": {
+            "w": 91,
+            "h": 136
+          }
+        },
+        {
+          "index": 61,
+          "name": "quadro_abstrato",
+          "category": "componentes",
+          "file": "office/componentes/quadro_abstrato.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 577,
+            "top": 1031,
+            "right": 682,
+            "bottom": 1138
+          },
+          "size": {
+            "w": 105,
+            "h": 107
+          }
+        },
+        {
+          "index": 62,
+          "name": "diploma_moldura_01",
+          "category": "componentes",
+          "file": "office/componentes/diploma_moldura_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1543,
+            "top": 1039,
+            "right": 1613,
+            "bottom": 1147
+          },
+          "size": {
+            "w": 70,
+            "h": 108
+          }
+        },
+        {
+          "index": 63,
+          "name": "diploma_moldura_02",
+          "category": "componentes",
+          "file": "office/componentes/diploma_moldura_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 728,
+            "top": 1046,
+            "right": 803,
+            "bottom": 1138
+          },
+          "size": {
+            "w": 75,
+            "h": 92
+          }
+        },
+        {
+          "index": 64,
+          "name": "relogio_parede",
+          "category": "componentes",
+          "file": "office/componentes/relogio_parede.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 968,
+            "top": 1050,
+            "right": 1036,
+            "bottom": 1141
+          },
+          "size": {
+            "w": 68,
+            "h": 91
+          }
+        },
+        {
+          "index": 65,
+          "name": "porta_madeira_interna",
+          "category": "componentes",
+          "file": "office/componentes/porta_madeira_interna.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1186,
+            "top": 1050,
+            "right": 1253,
+            "bottom": 1141
+          },
+          "size": {
+            "w": 67,
+            "h": 91
+          }
+        },
+        {
+          "index": 66,
+          "name": "porta_vidro_interna",
+          "category": "construcao",
+          "file": "office/construcao/porta_vidro_interna.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1295,
+            "top": 1052,
+            "right": 1360,
+            "bottom": 1139
+          },
+          "size": {
+            "w": 65,
+            "h": 87
+          }
+        },
+        {
+          "index": 67,
+          "name": "porta_banheiro",
+          "category": "componentes",
+          "file": "office/componentes/porta_banheiro.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 861,
+            "top": 1055,
+            "right": 926,
+            "bottom": 1139
+          },
+          "size": {
+            "w": 65,
+            "h": 84
+          }
+        },
+        {
+          "index": 68,
+          "name": "porta_automatica_vidro",
+          "category": "componentes",
+          "file": "office/componentes/porta_automatica_vidro.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1083,
+            "top": 1055,
+            "right": 1149,
+            "bottom": 1141
+          },
+          "size": {
+            "w": 66,
+            "h": 86
+          }
+        },
+        {
+          "index": 69,
+          "name": "vaso_pequeno_claro_01",
+          "category": "componentes",
+          "file": "office/componentes/vaso_pequeno_claro_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1651,
+            "top": 1064,
+            "right": 1690,
+            "bottom": 1102
+          },
+          "size": {
+            "w": 39,
+            "h": 46
+          }
+        },
+        {
+          "index": 70,
+          "name": "vaso_pequeno_claro_02",
+          "category": "componentes",
+          "file": "office/componentes/vaso_pequeno_claro_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1651,
+            "top": 1106,
+            "right": 1690,
+            "bottom": 1145
+          },
+          "size": {
+            "w": 39,
+            "h": 47
+          }
+        },
+        {
+          "index": 71,
+          "name": "planta_arvore_vaso_marrom",
+          "category": "componentes",
+          "file": "office/componentes/planta_arvore_vaso_marrom.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 587,
+            "top": 1193,
+            "right": 809,
+            "bottom": 1350
+          },
+          "size": {
+            "w": 222,
+            "h": 165
+          }
+        },
+        {
+          "index": 72,
+          "name": "arbusto_redondo_vaso_preto",
+          "category": "componentes",
+          "file": "office/componentes/arbusto_redondo_vaso_preto.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 340,
+            "top": 1202,
+            "right": 537,
+            "bottom": 1339
+          },
+          "size": {
+            "w": 197,
+            "h": 137
+          }
+        },
+        {
+          "index": 73,
+          "name": "planta_folha_longa_vaso_branco_01",
+          "category": "componentes",
+          "file": "office/componentes/planta_folha_longa_vaso_branco_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 70,
+            "top": 1205,
+            "right": 301,
+            "bottom": 1344
+          },
+          "size": {
+            "w": 231,
+            "h": 139
+          }
+        },
+        {
+          "index": 74,
+          "name": "planta_folha_longa_vaso_branco_02",
+          "category": "componentes",
+          "file": "office/componentes/planta_folha_longa_vaso_branco_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2105,
+            "top": 1213,
+            "right": 2368,
+            "bottom": 1439
+          },
+          "size": {
+            "w": 263,
+            "h": 226
+          }
+        },
+        {
+          "index": 75,
+          "name": "luminaria_mesa_preta_01",
+          "category": "componentes",
+          "file": "office/componentes/luminaria_mesa_preta_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1613,
+            "top": 1215,
+            "right": 1736,
+            "bottom": 1434
+          },
+          "size": {
+            "w": 123,
+            "h": 219
+          }
+        },
+        {
+          "index": 76,
+          "name": "luminaria_piso_verde",
+          "category": "componentes",
+          "file": "office/componentes/luminaria_piso_verde.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1782,
+            "top": 1215,
+            "right": 1905,
+            "bottom": 1434
+          },
+          "size": {
+            "w": 123,
+            "h": 219
+          }
+        },
+        {
+          "index": 77,
+          "name": "luminaria_piso_bege_01",
+          "category": "componentes",
+          "file": "office/componentes/luminaria_piso_bege_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1955,
+            "top": 1215,
+            "right": 2076,
+            "bottom": 1434
+          },
+          "size": {
+            "w": 121,
+            "h": 219
+          }
+        },
+        {
+          "index": 78,
+          "name": "luminaria_piso_bege_02",
+          "category": "componentes",
+          "file": "office/componentes/luminaria_piso_bege_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1043,
+            "top": 1227,
+            "right": 1141,
+            "bottom": 1334
+          },
+          "size": {
+            "w": 98,
+            "h": 107
+          }
+        },
+        {
+          "index": 79,
+          "name": "luminaria_mesa_preta_02",
+          "category": "componentes",
+          "file": "office/componentes/luminaria_mesa_preta_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 865,
+            "top": 1229,
+            "right": 999,
+            "bottom": 1331
+          },
+          "size": {
+            "w": 134,
+            "h": 102
+          }
+        },
+        {
+          "index": 80,
+          "name": "tapete_azul_moldura",
+          "category": "componentes",
+          "file": "office/componentes/tapete_azul_moldura.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1453,
+            "top": 1236,
+            "right": 1543,
+            "bottom": 1326
+          },
+          "size": {
+            "w": 90,
+            "h": 90
+          }
+        },
+        {
+          "index": 81,
+          "name": "tapete_grafite_simples",
+          "category": "componentes",
+          "file": "office/componentes/tapete_grafite_simples.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1181,
+            "top": 1242,
+            "right": 1277,
+            "bottom": 1325
+          },
+          "size": {
+            "w": 96,
+            "h": 83
+          }
+        },
+        {
+          "index": 82,
+          "name": "tapete_verde_classico",
+          "category": "componentes",
+          "file": "office/componentes/tapete_verde_classico.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1313,
+            "top": 1242,
+            "right": 1408,
+            "bottom": 1325
+          },
+          "size": {
+            "w": 95,
+            "h": 83
+          }
+        },
+        {
+          "index": 83,
+          "name": "tapete_bege_classico",
+          "category": "componentes",
+          "file": "office/componentes/tapete_bege_classico.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 693,
+            "top": 1353,
+            "right": 703,
+            "bottom": 1400
+          },
+          "size": {
+            "w": 26,
+            "h": 55
+          }
+        },
+        {
+          "index": 84,
+          "name": "tapete_persa_vermelho",
+          "category": "componentes",
+          "file": "office/componentes/tapete_persa_vermelho.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 359,
+            "top": 1372,
+            "right": 445,
+            "bottom": 1540
+          },
+          "size": {
+            "w": 86,
+            "h": 168
+          }
+        },
+        {
+          "index": 85,
+          "name": "tapete_redondo_azul",
+          "category": "componentes",
+          "file": "office/componentes/tapete_redondo_azul.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 63,
+            "top": 1382,
+            "right": 146,
+            "bottom": 1540
+          },
+          "size": {
+            "w": 83,
+            "h": 158
+          }
+        },
+        {
+          "index": 86,
+          "name": "tapete_azul_textura",
+          "category": "componentes",
+          "file": "office/componentes/tapete_azul_textura.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 508,
+            "top": 1388,
+            "right": 592,
+            "bottom": 1540
+          },
+          "size": {
+            "w": 84,
+            "h": 152
+          }
+        },
+        {
+          "index": 87,
+          "name": "tapete_cinza_textura",
+          "category": "componentes",
+          "file": "office/componentes/tapete_cinza_textura.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1180,
+            "top": 1388,
+            "right": 1249,
+            "bottom": 1540
+          },
+          "size": {
+            "w": 69,
+            "h": 152
+          }
+        },
+        {
+          "index": 88,
+          "name": "tapete_verde_textura",
+          "category": "componentes",
+          "file": "office/componentes/tapete_verde_textura.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1303,
+            "top": 1388,
+            "right": 1370,
+            "bottom": 1540
+          },
+          "size": {
+            "w": 67,
+            "h": 152
+          }
+        },
+        {
+          "index": 89,
+          "name": "tapete_bege_textura",
+          "category": "componentes",
+          "file": "office/componentes/tapete_bege_textura.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1443,
+            "top": 1393,
+            "right": 1544,
+            "bottom": 1535
+          },
+          "size": {
+            "w": 101,
+            "h": 142
+          }
+        },
+        {
+          "index": 90,
+          "name": "decoracao_extra_01",
+          "category": "componentes",
+          "file": "office/componentes/decoracao_extra_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 205,
+            "top": 1396,
+            "right": 293,
+            "bottom": 1533
+          },
+          "size": {
+            "w": 88,
+            "h": 137
+          }
+        },
+        {
+          "index": 91,
+          "name": "decoracao_extra_02",
+          "category": "componentes",
+          "file": "office/componentes/decoracao_extra_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 887,
+            "top": 1406,
+            "right": 975,
+            "bottom": 1536
+          },
+          "size": {
+            "w": 88,
+            "h": 130
+          }
+        },
+        {
+          "index": 92,
+          "name": "decoracao_extra_03",
+          "category": "componentes",
+          "file": "office/componentes/decoracao_extra_03.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1026,
+            "top": 1410,
+            "right": 1087,
+            "bottom": 1535
+          },
+          "size": {
+            "w": 61,
+            "h": 125
+          }
+        },
+        {
+          "index": 93,
+          "name": "decoracao_extra_04",
+          "category": "componentes",
+          "file": "office/componentes/decoracao_extra_04.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 776,
+            "top": 1417,
+            "right": 846,
+            "bottom": 1540
+          },
+          "size": {
+            "w": 70,
+            "h": 123
+          }
+        },
+        {
+          "index": 94,
+          "name": "decoracao_extra_05",
+          "category": "componentes",
+          "file": "office/componentes/decoracao_extra_05.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 661,
+            "top": 1422,
+            "right": 729,
+            "bottom": 1540
+          },
+          "size": {
+            "w": 68,
+            "h": 118
+          }
+        },
+        {
+          "index": 95,
+          "name": "tapete_extra_01",
+          "category": "componentes",
+          "file": "office/componentes/tapete_extra_01.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1880,
+            "top": 1518,
+            "right": 2030,
+            "bottom": 1734
+          },
+          "size": {
+            "w": 150,
+            "h": 216
+          }
+        },
+        {
+          "index": 96,
+          "name": "tapete_extra_02",
+          "category": "componentes",
+          "file": "office/componentes/tapete_extra_02.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 2091,
+            "top": 1518,
+            "right": 2243,
+            "bottom": 1734
+          },
+          "size": {
+            "w": 152,
+            "h": 216
+          }
+        },
+        {
+          "index": 97,
+          "name": "tapete_extra_03",
+          "category": "componentes",
+          "file": "office/componentes/tapete_extra_03.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1461,
+            "top": 1587,
+            "right": 1616,
+            "bottom": 1734
+          },
+          "size": {
+            "w": 155,
+            "h": 147
+          }
+        },
+        {
+          "index": 98,
+          "name": "tapete_extra_04",
+          "category": "componentes",
+          "file": "office/componentes/tapete_extra_04.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1674,
+            "top": 1587,
+            "right": 1823,
+            "bottom": 1734
+          },
+          "size": {
+            "w": 149,
+            "h": 147
+          }
+        },
+        {
+          "index": 99,
+          "name": "tapete_extra_05",
+          "category": "componentes",
+          "file": "office/componentes/tapete_extra_05.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 1234,
+            "top": 1588,
+            "right": 1416,
+            "bottom": 1729
+          },
+          "size": {
+            "w": 182,
+            "h": 141
+          }
+        },
+        {
+          "index": 100,
+          "name": "tapete_extra_06",
+          "category": "componentes",
+          "file": "office/componentes/tapete_extra_06.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 63,
+            "top": 1598,
+            "right": 273,
+            "bottom": 1721
+          },
+          "size": {
+            "w": 210,
+            "h": 123
+          }
+        },
+        {
+          "index": 101,
+          "name": "tapete_extra_07",
+          "category": "componentes",
+          "file": "office/componentes/tapete_extra_07.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 306,
+            "top": 1598,
+            "right": 518,
+            "bottom": 1722
+          },
+          "size": {
+            "w": 212,
+            "h": 124
+          }
+        },
+        {
+          "index": 102,
+          "name": "tapete_extra_08",
+          "category": "componentes",
+          "file": "office/componentes/tapete_extra_08.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 557,
+            "top": 1599,
+            "right": 745,
+            "bottom": 1723
+          },
+          "size": {
+            "w": 188,
+            "h": 124
+          }
+        },
+        {
+          "index": 103,
+          "name": "tapete_extra_09",
+          "category": "componentes",
+          "file": "office/componentes/tapete_extra_09.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 783,
+            "top": 1599,
+            "right": 959,
+            "bottom": 1723
+          },
+          "size": {
+            "w": 176,
+            "h": 124
+          }
+        },
+        {
+          "index": 104,
+          "name": "tapete_extra_10",
+          "category": "componentes",
+          "file": "office/componentes/tapete_extra_10.png",
+          "atlas": "furniture",
+          "source": "office-furniture-layout-alpha.png",
+          "bbox": {
+            "left": 996,
+            "top": 1601,
+            "right": 1190,
+            "bottom": 1721
+          },
+          "size": {
+            "w": 194,
+            "h": 120
+          }
+        }
+      ]
+    }
+  ]
+}

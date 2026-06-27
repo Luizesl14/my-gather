@@ -40,14 +40,12 @@ class MapRenderer extends CustomPainter {
   final Map<String, TileDef> tileById;
   final bool showCollisionDebug;
 
-  // Visual zoom — same approach as the editor's _scale.
-  // At 2× the 30×20 map becomes 1920×1280px, requiring camera-follow.
-  static const double kDisplayZoom = 2.0;
   static const double _cell = 32.0;
 
   // Camera offset in screen-pixel space (accounts for zoom).
-  static Offset cameraOffset(Size viewport, OfficeMap map, double tileX, double tileY) {
-    const scaledCell = _cell * kDisplayZoom;
+  static Offset cameraOffset(Size viewport, OfficeMap map, double tileX, double tileY, {double? zoom}) {
+    final z = zoom ?? map.displayZoom;
+    final scaledCell = _cell * z;
     final mapW = map.width * scaledCell;
     final mapH = map.height * scaledCell;
     final px = (tileX + 0.5) * scaledCell;
@@ -68,16 +66,14 @@ class MapRenderer extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final offset = cameraOffset(size, map, playerX, playerY);
+    final zoom = map.displayZoom;
+    final offset = cameraOffset(size, map, playerX, playerY, zoom: zoom);
 
     canvas.save();
     canvas.clipRect(Offset.zero & size);
 
-    // Translate then scale — identical to the editor's _CanvasPainter.
-    // All tile/object coordinates below are in native 32 px space;
-    // canvas.scale(kDisplayZoom) magnifies them on screen.
     canvas.translate(offset.dx, offset.dy);
-    canvas.scale(kDisplayZoom);
+    canvas.scale(zoom);
 
     // Background
     canvas.drawRect(
@@ -122,79 +118,8 @@ class MapRenderer extends CustomPainter {
     InteractionRenderer(colors).paint(canvas, map.interactiveZones, _cell);
 
     canvas.restore();
-
-    // Debug overlay drawn in screen space (after restore, no clip/transform issues).
-    if (showCollisionDebug) _drawCollisionDebug(canvas, size, offset);
-  }
-
-  void _drawCollisionDebug(Canvas canvas, Size size, Offset camOffset) {
-    const s = kDisplayZoom;
-    final blockPaint = Paint()..color = const Color(0xAAFF2222);
-    final passPaint  = Paint()..color = const Color(0xAA22FF88);
-    final border     = Paint()
-      ..color = const Color(0xFFFFFFFF)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
-
-    // Converts tile-grid coords → screen coords.
-    Rect tileRect(double tx, double ty, double tw, double th) => Rect.fromLTWH(
-          camOffset.dx + tx * _cell * s,
-          camOffset.dy + ty * _cell * s,
-          tw * _cell * s,
-          th * _cell * s,
-        );
-
-    for (final layer in map.layers) {
-      final isFloor = layer.name == "floor";
-      for (final tile in layer.tiles) {
-        final isColliding   = map.collidingTileIds.contains(tile.tile);
-        final isPassthrough = map.passthroughTileIds.contains(tile.tile);
-        final hasColRect    = tile.colRect != null;
-        if (!isColliding && !isPassthrough && !hasColRect) continue;
-
-        final Rect rect;
-        if (tile.colRect != null) {
-          // Exact drawn rect — matches the pixel-precise canOccupy test.
-          final cr = tile.colRect!;
-          rect = tileRect(cr.x / map.tileSize, cr.y / map.tileSize,
-              cr.w / map.tileSize, cr.h / map.tileSize);
-        } else if (isFloor) {
-          rect = tileRect(tile.x.toDouble(), tile.y.toDouble(),
-              tile.w.toDouble(), tile.h.toDouble());
-        } else {
-          // Exact pixel bounds — matches the pixel-precise canOccupy test.
-          rect = tileRect(tile.x / map.tileSize, tile.y / map.tileSize,
-              tile.w / map.tileSize, tile.h / map.tileSize);
-        }
-        canvas.drawRect(rect, isPassthrough ? passPaint : blockPaint);
-        canvas.drawRect(rect, border);
-      }
-
-      for (final obj in layer.objects) {
-        if (!OfficeMap.blockingAssetIds.contains(obj.asset)) continue;
-        final tr = map.objectTileRect(obj);
-        final rect = tileRect(tr.left, tr.top, tr.width, tr.height);
-        canvas.drawRect(rect, blockPaint);
-        canvas.drawRect(rect, border);
-      }
-    }
-
-    // Player feet hitbox (blue) — collision happens when this touches red.
-    // Must mirror OfficeMap.canOccupy: central 10px wide, bottom 10px of tile.
-    final feetBox = Rect.fromLTWH(
-      camOffset.dx + (playerX * _cell + 11) * s,
-      camOffset.dy + (playerY * _cell + 22) * s,
-      10 * s,
-      10 * s,
-    );
-    canvas.drawRect(feetBox, Paint()..color = const Color(0xAA2196F3));
-    canvas.drawRect(feetBox, border);
-
-    // Indicator square — always visible in top-left corner to confirm debug is ON.
-    canvas.drawRect(
-      const Rect.fromLTWH(4, 4, 16, 16),
-      Paint()..color = const Color(0xFFFF0000),
-    );
+    // Collision debug overlay is drawn by CollisionDebugPainter as a top layer
+    // (above avatars) so the player hitbox isn't hidden behind the sprite.
   }
 
   // Identical to _CanvasPainter._drawPlaced from map_editor_page.dart.
@@ -301,5 +226,106 @@ class MapRenderer extends CustomPainter {
         oldDelegate.playerX != playerX ||
         oldDelegate.playerY != playerY ||
         oldDelegate.showCollisionDebug != showCollisionDebug;
+  }
+}
+
+/// Draws the collision overlay (tile colRects + player hitbox) on top of the
+/// scene. Kept separate from [MapRenderer] so it can be layered ABOVE the
+/// avatar foreground painter — otherwise the player hitbox would be hidden
+/// behind the character sprite once it is centered on it.
+class CollisionDebugPainter extends CustomPainter {
+  const CollisionDebugPainter({
+    required this.map,
+    required this.playerX,
+    required this.playerY,
+  });
+
+  final OfficeMap map;
+  final double playerX;
+  final double playerY;
+
+  static const double _cell = 32.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Offset camOffset =
+        MapRenderer.cameraOffset(size, map, playerX, playerY);
+    final s = map.displayZoom;
+    final blockPaint = Paint()..color = const Color(0xAAFF2222);
+    final passPaint  = Paint()..color = const Color(0xAA22FF88);
+    final border     = Paint()
+      ..color = const Color(0xFFFFFFFF)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+
+    // Converts tile-grid coords → screen coords.
+    Rect tileRect(double tx, double ty, double tw, double th) => Rect.fromLTWH(
+          camOffset.dx + tx * _cell * s,
+          camOffset.dy + ty * _cell * s,
+          tw * _cell * s,
+          th * _cell * s,
+        );
+
+    for (final layer in map.layers) {
+      final isFloor = layer.name == "floor";
+      for (final tile in layer.tiles) {
+        final isColliding   = map.collidingTileIds.contains(tile.tile);
+        final isPassthrough = map.passthroughTileIds.contains(tile.tile);
+        final hasColRect    = tile.colRect != null;
+        if (!isColliding && !isPassthrough && !hasColRect) continue;
+
+        final Rect rect;
+        if (tile.colRect != null) {
+          // Exact drawn rect — matches the pixel-precise canOccupy test.
+          final cr = tile.colRect!;
+          rect = tileRect(cr.x / map.tileSize, cr.y / map.tileSize,
+              cr.w / map.tileSize, cr.h / map.tileSize);
+        } else if (isFloor) {
+          rect = tileRect(tile.x.toDouble(), tile.y.toDouble(),
+              tile.w.toDouble(), tile.h.toDouble());
+        } else {
+          // Exact pixel bounds — matches the pixel-precise canOccupy test.
+          rect = tileRect(tile.x / map.tileSize, tile.y / map.tileSize,
+              tile.w / map.tileSize, tile.h / map.tileSize);
+        }
+        canvas.drawRect(rect, isPassthrough ? passPaint : blockPaint);
+        canvas.drawRect(rect, border);
+      }
+
+      for (final obj in layer.objects) {
+        if (!OfficeMap.blockingAssetIds.contains(obj.asset)) continue;
+        final tr = map.objectTileRect(obj);
+        final rect = tileRect(tr.left, tr.top, tr.width, tr.height);
+        canvas.drawRect(rect, blockPaint);
+        canvas.drawRect(rect, border);
+      }
+    }
+
+    // Player hitbox (blue) — mirrors OfficeMap.canOccupy exactly.
+    // At the BASE (feet) of the visual sprite (shifted by avatarXOffset/
+    // avatarYOffset, bottom-anchored).
+    final double spriteCenterX = (playerX + 0.5 + map.avatarXOffset) * _cell;
+    final double spriteBottomY = (playerY + 1.0 - map.avatarYOffset) * _cell;
+    final feetBox = Rect.fromLTWH(
+      camOffset.dx + (spriteCenterX - 5) * s,
+      camOffset.dy + (spriteBottomY - 10) * s,
+      10 * s,
+      10 * s,
+    );
+    canvas.drawRect(feetBox, Paint()..color = const Color(0xAA2196F3));
+    canvas.drawRect(feetBox, border);
+
+    // Indicator square — always visible in top-left corner to confirm debug is ON.
+    canvas.drawRect(
+      const Rect.fromLTWH(4, 4, 16, 16),
+      Paint()..color = const Color(0xFFFF0000),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CollisionDebugPainter oldDelegate) {
+    return oldDelegate.map != map ||
+        oldDelegate.playerX != playerX ||
+        oldDelegate.playerY != playerY;
   }
 }

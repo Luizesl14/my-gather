@@ -76,6 +76,10 @@ class WorkspaceMapData {
     required this.spawn,
     required this.layers,
     required this.interactiveZones,
+    this.displayZoom = 2.5,
+    this.avatarScale = 0.5,
+    this.avatarYOffset = 0.0,
+    this.avatarXOffset = 0.0,
   });
 
   factory WorkspaceMapData.fromJson(Map<String, dynamic> j) => WorkspaceMapData(
@@ -83,6 +87,10 @@ class WorkspaceMapData {
         width: j["width"] as int,
         height: j["height"] as int,
         tileSize: j["tileSize"] as int,
+        displayZoom: (j["displayZoom"] as num?)?.toDouble() ?? 2.5,
+        avatarScale: (j["avatarScale"] as num?)?.toDouble() ?? 0.5,
+        avatarYOffset: (j["avatarYOffset"] as num?)?.toDouble() ?? 0.0,
+        avatarXOffset: (j["avatarXOffset"] as num?)?.toDouble() ?? 0.0,
         assetPackId: j["assetPackId"] as String? ?? "office-default-v1",
         spawn: j["spawn"] as Map<String, dynamic>? ??
             {"x": 1, "y": 1, "direction": "front"},
@@ -100,6 +108,10 @@ class WorkspaceMapData {
   final int width;
   final int height;
   final int tileSize;
+  final double displayZoom;
+  final double avatarScale;
+  final double avatarYOffset;
+  final double avatarXOffset;
   final String assetPackId;
   final Map<String, dynamic> spawn;
   final List<Map<String, dynamic>> layers;
@@ -109,6 +121,10 @@ class WorkspaceMapData {
         "width": width,
         "height": height,
         "tileSize": tileSize,
+        "displayZoom": displayZoom,
+        "avatarScale": avatarScale,
+        "avatarYOffset": avatarYOffset,
+        "avatarXOffset": avatarXOffset,
         "assetPackId": assetPackId,
         "spawn": spawn,
         "layers": layers,

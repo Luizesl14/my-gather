@@ -40,10 +40,10 @@ class RemoteAvatarsRenderer extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (remotes.isEmpty) return;
 
-    const zoom = MapRenderer.kDisplayZoom;
-    const spriteZoom = zoom * 0.5;
+    final zoom = map.displayZoom;
+    final spriteZoom = zoom * map.avatarScale;
     final ts = map.tileSize * zoom;
-    final offset = MapRenderer.cameraOffset(size, map, localPosition.x, localPosition.y);
+    final offset = MapRenderer.cameraOffset(size, map, localPosition.x, localPosition.y, zoom: zoom);
 
     for (final remote in remotes) {
       final pos = remote.viewModel.position;
@@ -53,7 +53,7 @@ class RemoteAvatarsRenderer extends CustomPainter {
       final currentFrame = remote.frameImages[remote.controller.currentFramePath()];
       final sw = (currentFrame?.width.toDouble() ?? map.tileSize.toDouble()) * spriteZoom;
       final sh = (currentFrame?.height.toDouble() ?? map.tileSize.toDouble()) * spriteZoom;
-      final spriteRect = Rect.fromLTWH(screenX - sw / 2 + ts / 2, screenY - sh + ts, sw, sh);
+      final spriteRect = Rect.fromLTWH(screenX - sw / 2 + ts / 2 + ts * map.avatarXOffset, screenY - sh + ts - ts * map.avatarYOffset, sw, sh);
 
       if (currentFrame != null) {
         canvas.drawImageRect(

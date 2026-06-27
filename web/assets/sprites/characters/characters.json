@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "tileSize": 32,
   "spriteSize": {
     "w": 32,
@@ -19,7 +19,9 @@
     {
       "id": "character-01",
       "displayName": "Carla",
-      "description": "Carla",
+      "type": "normal",
+      "category": "man",
+      "supportsHair": false,
       "default": true,
       "frames": {
         "idleFront": "character-01/idle-front.png",
@@ -47,17 +49,25 @@
           "character-01/walk-up-03.png"
         ]
       },
+      "reactions": [],
       "hitbox": {
         "x": 6,
         "y": 22,
         "w": 20,
         "h": 24
+      },
+      "voice": {
+        "voiceGender": "male",
+        "pool": "audio/voice/male",
+        "scream": "audio/voice/common/male/scream-ahhh-01.mp3"
       }
     },
     {
       "id": "character-02",
       "displayName": "Matt",
-      "description": "Matt",
+      "type": "normal",
+      "category": "man",
+      "supportsHair": false,
       "default": false,
       "frames": {
         "idleFront": "character-02/idle-front.png",
@@ -85,17 +95,25 @@
           "character-02/walk-up-03.png"
         ]
       },
+      "reactions": [],
       "hitbox": {
         "x": 6,
         "y": 22,
         "w": 20,
         "h": 24
+      },
+      "voice": {
+        "voiceGender": "male",
+        "pool": "audio/voice/male",
+        "scream": "audio/voice/common/male/scream-ahhh-01.mp3"
       }
     },
     {
       "id": "character-03",
-      "displayName": "Morena",
-      "description": "Morena",
+      "displayName": "Kira",
+      "type": "normal",
+      "category": "man",
+      "supportsHair": false,
       "default": false,
       "frames": {
         "idleFront": "character-03/idle-front.png",
@@ -123,17 +141,25 @@
           "character-03/walk-up-03.png"
         ]
       },
+      "reactions": [],
       "hitbox": {
         "x": 6,
         "y": 22,
         "w": 20,
         "h": 24
+      },
+      "voice": {
+        "voiceGender": "male",
+        "pool": "audio/voice/male",
+        "scream": "audio/voice/common/male/scream-ahhh-01.mp3"
       }
     },
     {
       "id": "character-04",
-      "displayName": "Nakma",
-      "description": "Nakma",
+      "displayName": "Omar",
+      "type": "normal",
+      "category": "man",
+      "supportsHair": false,
       "default": false,
       "frames": {
         "idleFront": "character-04/idle-front.png",
@@ -161,17 +187,25 @@
           "character-04/walk-up-03.png"
         ]
       },
+      "reactions": [],
       "hitbox": {
         "x": 6,
         "y": 22,
         "w": 20,
         "h": 24
+      },
+      "voice": {
+        "voiceGender": "male",
+        "pool": "audio/voice/male",
+        "scream": "audio/voice/common/male/scream-ahhh-01.mp3"
       }
     },
     {
       "id": "character-05",
-      "displayName": "Robbit",
-      "description": "Robbit",
+      "displayName": "Yuki",
+      "type": "normal",
+      "category": "man",
+      "supportsHair": false,
       "default": false,
       "frames": {
         "idleFront": "character-05/idle-front.png",
@@ -199,17 +233,25 @@
           "character-05/walk-up-03.png"
         ]
       },
+      "reactions": [],
       "hitbox": {
         "x": 6,
         "y": 22,
         "w": 20,
         "h": 24
+      },
+      "voice": {
+        "voiceGender": "male",
+        "pool": "audio/voice/male",
+        "scream": "audio/voice/common/male/scream-ahhh-01.mp3"
       }
     },
     {
       "id": "character-06",
-      "displayName": "Young",
-      "description": "Young",
+      "displayName": "Rafa",
+      "type": "normal",
+      "category": "man",
+      "supportsHair": false,
       "default": false,
       "frames": {
         "idleFront": "character-06/idle-front.png",
@@ -237,49 +279,160 @@
           "character-06/walk-up-03.png"
         ]
       },
+      "reactions": [],
       "hitbox": {
         "x": 6,
         "y": 22,
         "w": 20,
         "h": 24
+      },
+      "voice": {
+        "voiceGender": "male",
+        "pool": "audio/voice/male",
+        "scream": "audio/voice/common/male/scream-ahhh-01.mp3"
       }
     },
     {
-      "id": "claude",
-      "displayName": "Claude",
-      "description": "Claude - AI Assistant",
+      "id": "ada-normal-01",
+      "displayName": "Ada Wong",
+      "type": "special",
+      "category": "special",
+      "supportsHair": false,
       "default": false,
       "frames": {
-        "idleFront": "claude/idle-front.png",
-        "idleBack": "claude/idle-back.png",
-        "idleLeft": "claude/idle-left.png",
-        "idleRight": "claude/idle-right.png",
+        "idleFront": "normal/ada/ada-normal-01/sprites-tight/idle-front.png",
+        "idleBack": "normal/ada/ada-normal-01/sprites-tight/idle-back.png",
+        "idleLeft": "normal/ada/ada-normal-01/sprites-tight/idle-left.png",
+        "idleRight": "normal/ada/ada-normal-01/sprites-tight/idle-right.png",
         "walkDown": [
-          "claude/walk-down-01.png",
-          "claude/walk-down-02.png",
-          "claude/walk-down-03.png"
+          "normal/ada/ada-normal-01/sprites-tight/walk-down-01.png",
+          "normal/ada/ada-normal-01/sprites-tight/walk-down-02.png",
+          "normal/ada/ada-normal-01/sprites-tight/walk-down-03.png"
         ],
         "walkLeft": [
-          "claude/walk-left-01.png",
-          "claude/walk-left-02.png",
-          "claude/walk-left-03.png"
+          "normal/ada/ada-normal-01/sprites-tight/walk-left-01.png",
+          "normal/ada/ada-normal-01/sprites-tight/walk-left-02.png",
+          "normal/ada/ada-normal-01/sprites-tight/walk-left-03.png"
         ],
         "walkRight": [
-          "claude/walk-right-01.png",
-          "claude/walk-right-02.png",
-          "claude/walk-right-03.png"
+          "normal/ada/ada-normal-01/sprites-tight/walk-right-01.png",
+          "normal/ada/ada-normal-01/sprites-tight/walk-right-02.png",
+          "normal/ada/ada-normal-01/sprites-tight/walk-right-03.png"
         ],
         "walkUp": [
-          "claude/walk-up-01.png",
-          "claude/walk-up-02.png",
-          "claude/walk-up-03.png"
+          "normal/ada/ada-normal-01/sprites-tight/walk-up-01.png",
+          "normal/ada/ada-normal-01/sprites-tight/walk-up-02.png",
+          "normal/ada/ada-normal-01/sprites-tight/walk-up-03.png"
         ]
       },
+      "reactions": [
+        "normal/ada/ada-normal-01/reactions/ada-reaction-01.png",
+        "normal/ada/ada-normal-01/reactions/ada-reaction-02.png"
+      ],
       "hitbox": {
         "x": 6,
         "y": 22,
         "w": 20,
         "h": 24
+      },
+      "voice": {
+        "catchphrase": "audio/voice/characters/ada/catchphrase-01.mp3",
+        "voiceGender": "female"
+      }
+    },
+    {
+      "id": "gill-normal-01",
+      "displayName": "Jill Valentine",
+      "type": "special",
+      "category": "special",
+      "supportsHair": false,
+      "default": false,
+      "frames": {
+        "idleFront": "normal/gill/gill-normal-01/sprites-tight/idle-front.png",
+        "idleBack": "normal/gill/gill-normal-01/sprites-tight/idle-back.png",
+        "idleLeft": "normal/gill/gill-normal-01/sprites-tight/idle-left.png",
+        "idleRight": "normal/gill/gill-normal-01/sprites-tight/idle-right.png",
+        "walkDown": [
+          "normal/gill/gill-normal-01/sprites-tight/walk-down-01.png",
+          "normal/gill/gill-normal-01/sprites-tight/walk-down-02.png",
+          "normal/gill/gill-normal-01/sprites-tight/walk-down-03.png"
+        ],
+        "walkLeft": [
+          "normal/gill/gill-normal-01/sprites-tight/walk-left-01.png",
+          "normal/gill/gill-normal-01/sprites-tight/walk-left-02.png",
+          "normal/gill/gill-normal-01/sprites-tight/walk-left-03.png"
+        ],
+        "walkRight": [
+          "normal/gill/gill-normal-01/sprites-tight/walk-right-01.png",
+          "normal/gill/gill-normal-01/sprites-tight/walk-right-02.png",
+          "normal/gill/gill-normal-01/sprites-tight/walk-right-03.png"
+        ],
+        "walkUp": [
+          "normal/gill/gill-normal-01/sprites-tight/walk-up-01.png",
+          "normal/gill/gill-normal-01/sprites-tight/walk-up-02.png",
+          "normal/gill/gill-normal-01/sprites-tight/walk-up-03.png"
+        ]
+      },
+      "reactions": [
+        "normal/gill/gill-normal-01/reactions/gill-reaction-01.png"
+      ],
+      "hitbox": {
+        "x": 6,
+        "y": 22,
+        "w": 20,
+        "h": 24
+      },
+      "voice": {
+        "catchphrase": "audio/voice/characters/jill/catchphrase-01.mp3",
+        "voiceGender": "female"
+      }
+    },
+    {
+      "id": "lian-normal-01",
+      "displayName": "Leon Kennedy",
+      "type": "special",
+      "category": "special",
+      "supportsHair": false,
+      "default": false,
+      "frames": {
+        "idleFront": "normal/lian/lian-normal-01/sprites-tight/idle-front.png",
+        "idleBack": "normal/lian/lian-normal-01/sprites-tight/idle-back.png",
+        "idleLeft": "normal/lian/lian-normal-01/sprites-tight/idle-left.png",
+        "idleRight": "normal/lian/lian-normal-01/sprites-tight/idle-right.png",
+        "walkDown": [
+          "normal/lian/lian-normal-01/sprites-tight/walk-down-01.png",
+          "normal/lian/lian-normal-01/sprites-tight/walk-down-02.png",
+          "normal/lian/lian-normal-01/sprites-tight/walk-down-03.png"
+        ],
+        "walkLeft": [
+          "normal/lian/lian-normal-01/sprites-tight/walk-left-01.png",
+          "normal/lian/lian-normal-01/sprites-tight/walk-left-02.png",
+          "normal/lian/lian-normal-01/sprites-tight/walk-left-03.png"
+        ],
+        "walkRight": [
+          "normal/lian/lian-normal-01/sprites-tight/walk-right-01.png",
+          "normal/lian/lian-normal-01/sprites-tight/walk-right-02.png",
+          "normal/lian/lian-normal-01/sprites-tight/walk-right-03.png"
+        ],
+        "walkUp": [
+          "normal/lian/lian-normal-01/sprites-tight/walk-up-01.png",
+          "normal/lian/lian-normal-01/sprites-tight/walk-up-02.png",
+          "normal/lian/lian-normal-01/sprites-tight/walk-up-03.png"
+        ]
+      },
+      "reactions": [
+        "normal/lian/lian-normal-01/reactions/lian-reaction-01.png",
+        "normal/lian/lian-normal-01/reactions/lian-reaction-02.png"
+      ],
+      "hitbox": {
+        "x": 6,
+        "y": 22,
+        "w": 20,
+        "h": 24
+      },
+      "voice": {
+        "catchphrase": "audio/voice/characters/leon/catchphrase-01.mp3",
+        "voiceGender": "male"
       }
     }
   ]

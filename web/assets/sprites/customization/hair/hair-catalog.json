@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "packs": [
+    {
+      "id": "female-hair-pack-11",
+      "gender": "female",
+      "displayName": "Female Hair Pack 11",
+      "styles": [
+        {
+          "id": "style-01",
+          "displayName": "Estilo 01",
+          "frames": {
+            "front": "customization/hair/female/female-hair-pack-11/style-01/front.png",
+            "back": "customization/hair/female/female-hair-pack-11/style-01/back.png",
+            "left": "customization/hair/female/female-hair-pack-11/style-01/left.png",
+            "right": "customization/hair/female/female-hair-pack-11/style-01/right.png"
+          },
+          "nativeW": 178,
+          "nativeH": 218
+        },
+        {
+          "id": "style-02",
+          "displayName": "Estilo 02",
+          "frames": {
+            "front": "customization/hair/female/female-hair-pack-11/style-02/front.png",
+            "back": "customization/hair/female/female-hair-pack-11/style-02/back.png",
+            "left": "customization/hair/female/female-hair-pack-11/style-02/left.png",
+            "right": "customization/hair/female/female-hair-pack-11/style-02/right.png"
+          },
+          "nativeW": 179,
+          "nativeH": 169
+        },
+        {
+          "id": "style-03",
+          "displayName": "Estilo 03",
+          "frames": {
+            "front": "customization/hair/female/female-hair-pack-11/style-03/front.png",
+            "back": "customization/hair/female/female-hair-pack-11/style-03/back.png",
+            "left": "customization/hair/female/female-hair-pack-11/style-03/left.png",
+            "right": "customization/hair/female/female-hair-pack-11/style-03/right.png"
+          },
+          "nativeW": 158,
+          "nativeH": 148
+        },
+        {
+          "id": "style-04",
+          "displayName": "Estilo 04",
+          "frames": {
+            "front": "customization/hair/female/female-hair-pack-11/style-04/front.png",
+            "back": "customization/hair/female/female-hair-pack-11/style-04/back.png",
+            "left": "customization/hair/female/female-hair-pack-11/style-04/left.png",
+            "right": "customization/hair/female/female-hair-pack-11/style-04/right.png"
+          },
+          "nativeW": 194,
+          "nativeH": 195
+        }
+      ]
+    },
+    {
+      "id": "male-hair-pack-02",
+      "gender": "male",
+      "displayName": "Male Hair Pack 02",
+      "styles": [
+        {
+          "id": "style-01",
+          "displayName": "Estilo 01",
+          "frames": {
+            "front": "customization/hair/male/male-hair-pack-02/style-01/front.png",
+            "back": "customization/hair/male/male-hair-pack-02/style-01/back.png",
+            "left": "customization/hair/male/male-hair-pack-02/style-01/left.png",
+            "right": "customization/hair/male/male-hair-pack-02/style-01/right.png"
+          },
+          "nativeW": 200,
+          "nativeH": 149
+        },
+        {
+          "id": "style-02",
+          "displayName": "Estilo 02",
+          "frames": {
+            "front": "customization/hair/male/male-hair-pack-02/style-02/front.png",
+            "back": "customization/hair/male/male-hair-pack-02/style-02/back.png",
+            "left": "customization/hair/male/male-hair-pack-02/style-02/left.png",
+            "right": "customization/hair/male/male-hair-pack-02/style-02/right.png"
+          },
+          "nativeW": 186,
+          "nativeH": 145
+        },
+        {
+          "id": "style-03",
+          "displayName": "Estilo 03",
+          "frames": {
+            "front": "customization/hair/male/male-hair-pack-02/style-03/front.png",
+            "back": "customization/hair/male/male-hair-pack-02/style-03/back.png",
+            "left": "customization/hair/male/male-hair-pack-02/style-03/left.png",
+            "right": "customization/hair/male/male-hair-pack-02/style-03/right.png"
+          },
+          "nativeW": 211,
+          "nativeH": 160
+        },
+        {
+          "id": "style-04",
+          "displayName": "Estilo 04",
+          "frames": {
+            "front": "customization/hair/male/male-hair-pack-02/style-04/front.png",
+            "back": "customization/hair/male/male-hair-pack-02/style-04/back.png",
+            "left": "customization/hair/male/male-hair-pack-02/style-04/left.png",
+            "right": "customization/hair/male/male-hair-pack-02/style-04/right.png"
+          },
+          "nativeW": 185,
+          "nativeH": 150
+        }
+      ]
+    },
+    {
+      "id": "male-hair-pack-03",
+      "gender": "male",
+      "displayName": "Male Hair Pack 03",
+      "styles": [
+        {
+          "id": "style-01",
+          "displayName": "Estilo 01",
+          "frames": {
+            "front": "customization/hair/male/male-hair-pack-03/style-01/front.png",
+            "back": "customization/hair/male/male-hair-pack-03/style-01/back.png",
+            "left": "customization/hair/male/male-hair-pack-03/style-01/left.png",
+            "right": "customization/hair/male/male-hair-pack-03/style-01/right.png"
+          },
+          "nativeW": 200,
+          "nativeH": 149
+        },
+        {
+          "id": "style-02",
+          "displayName": "Estilo 02",
+          "frames": {
+            "front": "customization/hair/male/male-hair-pack-03/style-02/front.png",
+            "back": "customization/hair/male/male-hair-pack-03/style-02/back.png",
+            "left": "customization/hair/male/male-hair-pack-03/style-02/left.png",
+            "right": "customization/hair/male/male-hair-pack-03/style-02/right.png"
+          },
+          "nativeW": 185,
+          "nativeH": 145
+        },
+        {
+          "id": "style-03",
+          "displayName": "Estilo 03",
+          "frames": {
+            "front": "customization/hair/male/male-hair-pack-03/style-03/front.png",
+            "back": "customization/hair/male/male-hair-pack-03/style-03/back.png",
+            "left": "customization/hair/male/male-hair-pack-03/style-03/left.png",
+            "right": "customization/hair/male/male-hair-pack-03/style-03/right.png"
+          },
+          "nativeW": 226,
+          "nativeH": 190
+        },
+        {
+          "id": "style-04",
+          "displayName": "Estilo 04",
+          "frames": {
+            "front": "customization/hair/male/male-hair-pack-03/style-04/front.png",
+            "back": "customization/hair/male/male-hair-pack-03/style-04/back.png",
+            "left": "customization/hair/male/male-hair-pack-03/style-04/left.png",
+            "right": "customization/hair/male/male-hair-pack-03/style-04/right.png"
+          },
+          "nativeW": 159,
+          "nativeH": 165
+        }
+      ]
+    }
+  ]
+}

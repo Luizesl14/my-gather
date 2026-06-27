@@ -39,6 +39,9 @@ class OfficePage extends ConsumerStatefulWidget {
 class _OfficePageState extends ConsumerState<OfficePage> {
   static const _wsUrl = "ws://localhost:3001/ws";
 
+  // Collision debug overlay — toggled from the floating menu (owner/admin).
+  bool _showCollision = false;
+
   @override
   void initState() {
     super.initState();
@@ -106,6 +109,7 @@ class _OfficePageState extends ConsumerState<OfficePage> {
                 workspaceId: widget.workspaceId,
                 token: ref.watch(authProvider).token ?? "",
                 canToggleCollision: canEditMap,
+                showCollision: _showCollision,
                 presenceDotColor: dotColor,
                 statusEmoji: status.emoji,
                 reactionSprite: ref.watch(activeReactionProvider)?.sprite,
@@ -155,6 +159,15 @@ class _OfficePageState extends ConsumerState<OfficePage> {
                                   ),
                         ),
                       ],
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    AppIconButton(
+                      icon: _showCollision ? Icons.grid_on : Icons.grid_off,
+                      tooltip: _showCollision
+                          ? "Ocultar áreas de colisão"
+                          : "Mostrar áreas de colisão",
+                      onPressed: () =>
+                          setState(() => _showCollision = !_showCollision),
                     ),
                   ],
                 ),

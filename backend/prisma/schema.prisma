@@ -105,6 +105,11 @@ model OfficeMap {
   tileSize         Int
   width            Int
   height           Int
+  displayZoom      Float    @default(2.5)
+  avatarScale      Float    @default(0.5)
+  avatarYOffset    Float    @default(0)
+  avatarXOffset    Float    @default(0)
+  spawn            Json?
   layers           Json
   collision        Json
   interactiveZones Json

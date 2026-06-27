@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "accessory-beard-short",
+      "displayName": "Barba curta",
+      "slot": "face",
+      "status": "validation-directional",
+      "frames": {
+        "front": "accessories/accessory-beard-short/front.png",
+        "back": "accessories/accessory-beard-short/back.png",
+        "left": "accessories/accessory-beard-short/left.png",
+        "right": "accessories/accessory-beard-short/right.png"
+      }
+    },
+    {
+      "id": "accessory-glasses-round",
+      "displayName": "Oculos redondo",
+      "slot": "face",
+      "status": "validation-directional",
+      "frames": {
+        "front": "accessories/accessory-glasses-round/front.png",
+        "back": "accessories/accessory-glasses-round/back.png",
+        "left": "accessories/accessory-glasses-round/left.png",
+        "right": "accessories/accessory-glasses-round/right.png"
+      }
+    },
+    {
+      "id": "accessory-badge",
+      "displayName": "Cracha",
+      "slot": "torso",
+      "status": "validation-directional",
+      "frames": {
+        "front": "accessories/accessory-badge/front.png",
+        "back": "accessories/accessory-badge/back.png",
+        "left": "accessories/accessory-badge/left.png",
+        "right": "accessories/accessory-badge/right.png"
+      }
+    }
+  ],
+  "expectedItemShape": {
+    "id": "accessory-badge",
+    "displayName": "Cracha",
+    "slot": "torso",
+    "frames": {
+      "idle": {
+        "front": "accessories/accessory-badge/idle-front.png",
+        "back": "accessories/accessory-badge/idle-back.png",
+        "left": "accessories/accessory-badge/idle-left.png",
+        "right": "accessories/accessory-badge/idle-right.png"
+      }
+    }
+  }
+}

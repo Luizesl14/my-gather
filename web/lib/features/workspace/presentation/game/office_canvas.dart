@@ -2,13 +2,14 @@ import "dart:async";
 import "dart:convert";
 import "dart:ui" as ui;
 
+import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter/scheduler.dart";
 
 import "../../../../core/theme/app_colors.dart";
-import "../../../../core/theme/app_spacing.dart";
 import "../../../avatar/data/avatar_scene_loader.dart";
+import "../../../avatar/data/reaction_audio_service.dart";
 import "../../../avatar/domain/avatar_direction.dart";
 import "../../../avatar/domain/avatar_position.dart";
 import "../../../avatar/domain/avatar_scene.dart";
@@ -44,6 +45,7 @@ class OfficeCanvas extends StatefulWidget {
     required this.workspaceId,
     required this.token,
     this.canToggleCollision = false,
+    this.showCollision = false,
     this.presenceDotColor,
     this.statusEmoji,
     this.reactionSprite,
@@ -60,6 +62,9 @@ class OfficeCanvas extends StatefulWidget {
   final String token;
   // Map owners/admins can toggle the collision overlay; guests never see it.
   final bool canToggleCollision;
+  // Controlled by the parent (office floating menu) — draws the collision debug
+  // overlay when true so the owner can compare with what they drew in the editor.
+  final bool showCollision;
   // Resolved presence color and optional status emoji shown in the name bubble.
   final Color? presenceDotColor;
   final String? statusEmoji;
@@ -90,8 +95,8 @@ class _OfficeCanvasState extends State<OfficeCanvas>
   // game loop
   Ticker? _ticker;
 
-  // Collision overlay (owner/admin only).
-  bool _showCollision = false;
+  // Local zoom override — scroll wheel adjusts the player's view.
+  double? _localZoom;
 
   // key hold tracking
   final _heldKeys = <LogicalKeyboardKey>{};
@@ -99,6 +104,7 @@ class _OfficeCanvasState extends State<OfficeCanvas>
   DateTime? _lastMoveAt;
   static const _moveIntervalMs = 120;
   bool _wasMoving = false;
+  int _stepCount = 0;
 
   // Remote avatar rendering cache — keyed by characterId for frames, userId for controllers.
   final _characterFrames = <String, Map<String, ui.Image>>{};
@@ -173,6 +179,10 @@ class _OfficeCanvasState extends State<OfficeCanvas>
           "width": data.width,
           "height": data.height,
           "tileSize": data.tileSize,
+          "displayZoom": data.displayZoom,
+          "avatarScale": data.avatarScale,
+          "avatarYOffset": data.avatarYOffset,
+          "avatarXOffset": data.avatarXOffset,
           "spawn": data.spawn,
           "layers": data.layers,
           "interactiveZones": data.interactiveZones,
@@ -279,6 +289,8 @@ class _OfficeCanvasState extends State<OfficeCanvas>
       if (moved) {
         _lastMoveAt = now;
         _wasMoving = true;
+        _stepCount++;
+        if (_stepCount % 2 == 0) ReactionAudioService.playSfx("footstep");
         final pos = controller!.avatar.position;
         widget.onAvatarMoved?.call(pos.x, pos.y, dir.name, "walking");
       }
@@ -300,6 +312,19 @@ class _OfficeCanvasState extends State<OfficeCanvas>
     LogicalKeyboardKey.arrowRight || LogicalKeyboardKey.keyD => AvatarDirection.right,
     _ => null,
   };
+
+  void _onPointerSignal(PointerSignalEvent event) {
+    if (event is! PointerScrollEvent) return;
+    final base = _scene?.map.displayZoom ?? 2.5;
+    final current = _localZoom ?? base;
+    final factor = event.scrollDelta.dy > 0 ? 0.9 : 1.1;
+    final next = (current * factor).clamp(1.0, 4.0);
+    if (next == current) return;
+    setState(() => _localZoom = next);
+  }
+
+  OfficeMap _effectiveMap(OfficeMap map) =>
+      _localZoom != null ? map.withZoom(_localZoom!) : map;
 
   @override
   void dispose() {
@@ -338,7 +363,9 @@ class _OfficeCanvasState extends State<OfficeCanvas>
       );
     }
 
-    return Focus(
+    return Listener(
+      onPointerSignal: _onPointerSignal,
+      child: Focus(
       focusNode: _focusNode,
       autofocus: true,
       onKeyEvent: _handleKeyEvent,
@@ -349,21 +376,22 @@ class _OfficeCanvasState extends State<OfficeCanvas>
           builder: (context, constraints) {
             final viewport = Size(constraints.maxWidth, constraints.maxHeight);
             final pos = movementController.avatar.position;
+            final effectiveMap = _effectiveMap(scene.map);
             return Stack(
               children: [
                 RepaintBoundary(
                   child: CustomPaint(
                     painter: MapRenderer(
-                      map: scene.map,
+                      map: effectiveMap,
                       colors: colors,
                       imageCache: scene.imageCache,
                       playerX: pos.x,
                       playerY: pos.y,
                       tileById: scene.tileById,
-                      showCollisionDebug: _showCollision,
+                      showCollisionDebug: widget.showCollision,
                     ),
                     foregroundPainter: AvatarRenderer(
-                      map: scene.map,
+                      map: effectiveMap,
                       colors: colors,
                       frameImages: scene.avatarScene.frameImages,
                       avatarController: scene.avatarScene.avatarController,
@@ -378,7 +406,7 @@ class _OfficeCanvasState extends State<OfficeCanvas>
                 if (widget.remoteAvatars.isNotEmpty)
                   CustomPaint(
                     painter: RemoteAvatarsRenderer(
-                      map: scene.map,
+                      map: effectiveMap,
                       colors: colors,
                       localPosition: pos,
                       remotes: [
@@ -400,30 +428,31 @@ class _OfficeCanvasState extends State<OfficeCanvas>
                     ),
                     child: const SizedBox.expand(),
                   ),
+                // Collision debug overlay — drawn ABOVE avatars so the player
+                // hitbox stays visible when centered on the character sprite.
+                if (widget.showCollision)
+                  CustomPaint(
+                    painter: CollisionDebugPainter(
+                      map: effectiveMap,
+                      playerX: pos.x,
+                      playerY: pos.y,
+                    ),
+                    child: const SizedBox.expand(),
+                  ),
                 if (widget.reactionSprite != null)
                   _ReactionBubble(
                     sprite: widget.reactionSprite!,
                     targetName: widget.reactionTargetName,
-                    map: scene.map,
+                    map: effectiveMap,
                     viewport: viewport,
                     tileX: pos.x,
                     tileY: pos.y,
-                  ),
-                if (widget.canToggleCollision)
-                  Positioned(
-                    top: AppSpacing.xl,
-                    right: AppSpacing.xl,
-                    child: _CollisionToggle(
-                      active: _showCollision,
-                      colors: colors,
-                      onTap: () =>
-                          setState(() => _showCollision = !_showCollision),
-                    ),
                   ),
               ],
             );
           },
         ),
+      ),
       ),
     );
   }
@@ -441,68 +470,6 @@ class _OfficeCanvasState extends State<OfficeCanvas>
       _heldKeys.remove(event.logicalKey);
     }
     return KeyEventResult.handled;
-  }
-}
-
-// Pill toggle for the collision overlay — visible to map owners/admins only.
-class _CollisionToggle extends StatelessWidget {
-  const _CollisionToggle({
-    required this.active,
-    required this.colors,
-    required this.onTap,
-  });
-
-  final bool active;
-  final AppColors colors;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-      message: active ? "Ocultar áreas de colisão" : "Mostrar áreas de colisão",
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(20),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: active
-                  ? colors.brandPrimary
-                  : colors.panel.withValues(alpha: 0.92),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: active ? colors.brandPrimary : colors.border,
-              ),
-              boxShadow: const [
-                BoxShadow(color: Color(0x33000000), blurRadius: 8),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  active ? Icons.grid_on : Icons.grid_off,
-                  size: 15,
-                  color: active ? Colors.white : colors.textSecondary,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  "Colisão",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: active ? Colors.white : colors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
 
@@ -527,9 +494,9 @@ class _ReactionBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const zoom = MapRenderer.kDisplayZoom;
+    final zoom = map.displayZoom;
     final ts = map.tileSize * zoom;
-    final offset = MapRenderer.cameraOffset(viewport, map, tileX, tileY);
+    final offset = MapRenderer.cameraOffset(viewport, map, tileX, tileY, zoom: zoom);
     // Sprites are 32px pixel art: render at native size to keep them crisp.
     const bubbleSize = 44.0;
     const colWidth = 140.0;

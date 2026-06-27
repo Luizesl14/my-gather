@@ -1,0 +1,17 @@
+{
+  "bodyId": "body-office-01",
+  "skinToneId": "skin-01",
+  "hairGender": "male",
+  "hairPackId": "male-hair-pack-02",
+  "hairStyleId": "style-01",
+  "topId": "top-shirt",
+  "topColorId": "cloth-blue",
+  "bottomId": "bottom-pants",
+  "bottomColorId": "cloth-black",
+  "shoesId": "shoes-black",
+  "accessoryIds": [
+    "accessory-beard-short",
+    "accessory-glasses-round",
+    "accessory-badge"
+  ]
+}

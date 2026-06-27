@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "avatars": [
+    {
+      "id": "avatar-office-01",
+      "displayName": "Office Avatar 01",
+      "status": "validation-full-sheet",
+      "profile": "assembled/avatar-office-01/profile.json",
+      "spriteSheet": "assembled/avatar-office-01/sprite-sheet.png",
+      "preview": "assembled/avatar-office-01/sprite-sheet-preview.png",
+      "frames": {
+        "idle": {
+          "front": "assembled/avatar-office-01/idle-front.png",
+          "back": "assembled/avatar-office-01/idle-back.png",
+          "left": "assembled/avatar-office-01/idle-left.png",
+          "right": "assembled/avatar-office-01/idle-right.png"
+        },
+        "walk": {
+          "down": [
+            "assembled/avatar-office-01/walk-down-01.png",
+            "assembled/avatar-office-01/walk-down-02.png",
+            "assembled/avatar-office-01/walk-down-03.png"
+          ],
+          "up": [
+            "assembled/avatar-office-01/walk-up-01.png",
+            "assembled/avatar-office-01/walk-up-02.png",
+            "assembled/avatar-office-01/walk-up-03.png"
+          ],
+          "left": [
+            "assembled/avatar-office-01/walk-left-01.png",
+            "assembled/avatar-office-01/walk-left-02.png",
+            "assembled/avatar-office-01/walk-left-03.png"
+          ],
+          "right": [
+            "assembled/avatar-office-01/walk-right-01.png",
+            "assembled/avatar-office-01/walk-right-02.png",
+            "assembled/avatar-office-01/walk-right-03.png"
+          ]
+        }
+      }
+    }
+  ]
+}

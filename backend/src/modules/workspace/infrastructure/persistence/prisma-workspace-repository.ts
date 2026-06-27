@@ -102,6 +102,10 @@ export class PrismaWorkspaceRepository {
       height: number;
       tileSize: number;
       assetPackId: string;
+      displayZoom: number;
+      avatarScale: number;
+      avatarYOffset: number;
+      avatarXOffset: number;
       spawn: { x: number; y: number; direction: string };
       layers: object[];
       collision: object[];
@@ -123,6 +127,11 @@ export class PrismaWorkspaceRepository {
         tileSize: data.tileSize,
         width: data.width,
         height: data.height,
+        displayZoom: data.displayZoom,
+        avatarScale: data.avatarScale,
+        avatarYOffset: data.avatarYOffset,
+        avatarXOffset: data.avatarXOffset,
+        spawn: data.spawn,
         layers: data.layers,
         collision: data.collision,
         interactiveZones: data.interactiveZones,
@@ -132,6 +141,11 @@ export class PrismaWorkspaceRepository {
         tileSize: data.tileSize,
         width: data.width,
         height: data.height,
+        displayZoom: data.displayZoom,
+        avatarScale: data.avatarScale,
+        avatarYOffset: data.avatarYOffset,
+        avatarXOffset: data.avatarXOffset,
+        spawn: data.spawn,
         layers: data.layers,
         collision: data.collision,
         interactiveZones: data.interactiveZones,
