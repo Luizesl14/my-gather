@@ -1,14 +1,20 @@
 import "dart:async";
+import "dart:js_interop";
 
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:web/web.dart" as web;
 
 import "../../../core/realtime/realtime_provider.dart";
 import "../../../core/theme/app_colors.dart";
 import "../../auth/presentation/auth_provider.dart";
 import "../../avatar/presentation/character_provider.dart";
 import "../../workspace/presentation/remote_avatar_provider.dart";
+import "../data/voice_service.dart";
 import "chat_provider.dart";
+
+// Voice message files are served by the backend at this origin.
+const voiceBaseUrl = "http://localhost:3000";
 
 /// Gather-style side chat: shows messages and gesture/attention notices from
 /// people currently within the proximity bubble, with a text input.
@@ -24,16 +30,66 @@ class _ChatPanelState extends ConsumerState<ChatPanel> {
   final _scroll = ScrollController();
   Timer? _typingTimer;
   bool _typingSent = false;
+  VoiceRecorder? _voice;
+  bool _recording = false;
+  bool _hasText = false;
 
   @override
   void dispose() {
     _typingTimer?.cancel();
+    _voice?.dispose();
     _controller.dispose();
     _scroll.dispose();
     super.dispose();
   }
 
+  Future<void> _toggleRecord() async {
+    final rec = _voice ??=
+        VoiceRecorder(ref.read(authProvider).token ?? "");
+    if (_recording) {
+      setState(() => _recording = false);
+      final result = await rec.stopAndUpload();
+      if (result == null || !mounted) return;
+      final user = ref.read(authProvider).user;
+      ref.read(realtimeSessionProvider.notifier)
+          .sendVoice(result.url, result.durationMs);
+      ref.read(chatProvider.notifier).addVoice(
+            user?.id ?? "me",
+            user?.displayName ?? "Você",
+            result.url,
+            result.durationMs,
+          );
+      _scrollToEnd();
+    } else {
+      final ok = await rec.start();
+      if (!ok) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Permita o microfone para gravar.")),
+          );
+        }
+        return;
+      }
+      setState(() => _recording = true);
+    }
+  }
+
+  Future<void> _cancelRecord() async {
+    await _voice?.cancel();
+    if (mounted) setState(() => _recording = false);
+  }
+
+  void _scrollToEnd() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scroll.hasClients) {
+        _scroll.jumpTo(_scroll.position.maxScrollExtent);
+      }
+    });
+  }
+
   void _onTextChanged(String value) {
+    final has = value.trim().isNotEmpty;
+    if (has != _hasText) setState(() => _hasText = has);
     if (!_typingSent) {
       ref.read(realtimeSessionProvider.notifier).sendTyping(true);
       _typingSent = true;
@@ -63,11 +119,8 @@ class _ChatPanelState extends ConsumerState<ChatPanel> {
           text,
         );
     _controller.clear();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scroll.hasClients) {
-        _scroll.jumpTo(_scroll.position.maxScrollExtent);
-      }
-    });
+    setState(() => _hasText = false);
+    _scrollToEnd();
   }
 
   @override
@@ -143,35 +196,102 @@ class _ChatPanelState extends ConsumerState<ChatPanel> {
             Divider(height: 1, color: colors.border),
             Padding(
               padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      onChanged: _onTextChanged,
-                      onSubmitted: (_) => _send(),
-                      style: TextStyle(color: colors.textPrimary, fontSize: 13),
-                      decoration: InputDecoration(
-                        hintText: "Mensagem...",
-                        isDense: true,
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
+              child: _recording
+                  ? Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.delete_outline, color: colors.red),
+                          tooltip: "Cancelar",
+                          onPressed: _cancelRecord,
                         ),
-                      ),
+                        const _RecordingPulse(),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            "Gravando áudio...",
+                            style: TextStyle(color: colors.textSecondary, fontSize: 13),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.send, size: 18, color: colors.brandPrimary),
+                          tooltip: "Enviar áudio",
+                          onPressed: _toggleRecord,
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _controller,
+                            onChanged: _onTextChanged,
+                            onSubmitted: (_) => _send(),
+                            style: TextStyle(color: colors.textPrimary, fontSize: 13),
+                            decoration: InputDecoration(
+                              hintText: "Mensagem...",
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        _hasText
+                            ? IconButton(
+                                icon: const Icon(Icons.send, size: 18),
+                                color: colors.brandPrimary,
+                                onPressed: _send,
+                              )
+                            : IconButton(
+                                icon: const Icon(Icons.mic, size: 20),
+                                color: colors.brandPrimary,
+                                tooltip: "Gravar áudio",
+                                onPressed: _toggleRecord,
+                              ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(width: 6),
-                  IconButton(
-                    icon: const Icon(Icons.send, size: 18),
-                    color: colors.brandPrimary,
-                    onPressed: _send,
-                  ),
-                ],
-              ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// Small pulsing red dot shown while recording.
+class _RecordingPulse extends StatefulWidget {
+  const _RecordingPulse();
+
+  @override
+  State<_RecordingPulse> createState() => _RecordingPulseState();
+}
+
+class _RecordingPulseState extends State<_RecordingPulse>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 800),
+  )..repeat(reverse: true);
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: Tween<double>(begin: 0.3, end: 1).animate(_c),
+      child: Container(
+        width: 10,
+        height: 10,
+        decoration: const BoxDecoration(
+          color: Color(0xFFE53935),
+          shape: BoxShape.circle,
         ),
       ),
     );
@@ -232,13 +352,20 @@ class _EntryView extends ConsumerWidget {
               color: mine ? colors.brandPrimary : colors.panelMuted,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Text(
-              entry.text,
-              style: TextStyle(
-                color: mine ? colors.textInverse : colors.textPrimary,
-                fontSize: 13,
-              ),
-            ),
+            child: entry.kind == ChatEntryKind.voice
+                ? _VoicePlayer(
+                    url: voiceBaseUrl + (entry.audioUrl ?? ""),
+                    durationMs: entry.durationMs ?? 0,
+                    mine: mine,
+                    colors: colors,
+                  )
+                : Text(
+                    entry.text,
+                    style: TextStyle(
+                      color: mine ? colors.textInverse : colors.textPrimary,
+                      fontSize: 13,
+                    ),
+                  ),
           ),
         ],
       ),
@@ -401,6 +528,82 @@ class _TypingDotsState extends State<_TypingDots>
           }),
         );
       },
+    );
+  }
+}
+
+// Play/pause a voice message via an HTML audio element (web).
+class _VoicePlayer extends StatefulWidget {
+  const _VoicePlayer({
+    required this.url,
+    required this.durationMs,
+    required this.mine,
+    required this.colors,
+  });
+
+  final String url;
+  final int durationMs;
+  final bool mine;
+  final AppColors colors;
+
+  @override
+  State<_VoicePlayer> createState() => _VoicePlayerState();
+}
+
+class _VoicePlayerState extends State<_VoicePlayer> {
+  web.HTMLAudioElement? _audio;
+  bool _playing = false;
+
+  void _toggle() {
+    var a = _audio;
+    if (a == null) {
+      a = web.HTMLAudioElement()..src = widget.url;
+      a.addEventListener(
+        "ended",
+        ((web.Event _) {
+          if (mounted) setState(() => _playing = false);
+        }).toJS,
+      );
+      _audio = a;
+    }
+    if (_playing) {
+      a.pause();
+      setState(() => _playing = false);
+    } else {
+      a.currentTime = 0;
+      a.play();
+      setState(() => _playing = true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _audio?.pause();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final fg = widget.mine ? widget.colors.textInverse : widget.colors.textPrimary;
+    final secs = (widget.durationMs / 1000).ceil();
+    final label = "${secs ~/ 60}:${(secs % 60).toString().padLeft(2, '0')}";
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: _toggle,
+          customBorder: const CircleBorder(),
+          child: Icon(
+            _playing ? Icons.pause_circle : Icons.play_circle,
+            color: fg,
+            size: 28,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Icon(Icons.graphic_eq, size: 16, color: fg.withValues(alpha: 0.7)),
+        const SizedBox(width: 8),
+        Text(label, style: TextStyle(color: fg, fontSize: 12)),
+      ],
     );
   }
 }

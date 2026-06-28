@@ -9,6 +9,7 @@ import Fastify, {
 import { registerIdentityRoutes } from "./modules/identity/presentation/http/identity-routes";
 import { registerLivekitRoutes } from "./modules/workspace/presentation/http/livekit-routes";
 import { registerWorkspaceRoutes } from "./modules/workspace/presentation/http/workspace-routes";
+import { registerUploadRoutes } from "./uploads/upload-routes";
 
 export type BuildAppOptions = {
   jwtSecret?: string;
@@ -42,6 +43,7 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   await registerLivekitRoutes(app, {
     jwtSecret: options.jwtSecret ?? "dev-only-test-secret",
   });
+  await registerUploadRoutes(app);
 
   return app;
 }

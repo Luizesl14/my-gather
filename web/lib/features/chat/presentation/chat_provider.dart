@@ -2,7 +2,7 @@ import "dart:async";
 
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
-enum ChatEntryKind { message, notice }
+enum ChatEntryKind { message, notice, voice }
 
 class ChatEntry {
   ChatEntry({
@@ -11,6 +11,8 @@ class ChatEntry {
     required this.fromName,
     required this.text,
     required this.at,
+    this.audioUrl,
+    this.durationMs,
   });
 
   final ChatEntryKind kind;
@@ -18,6 +20,8 @@ class ChatEntry {
   final String fromName;
   final String text;
   final DateTime at;
+  final String? audioUrl; // for voice messages
+  final int? durationMs;
 }
 
 // Proximity bubble membership (userIds within range of the local player).
@@ -49,6 +53,18 @@ class ChatNotifier extends Notifier<List<ChatEntry>> {
       fromName: fromName,
       text: text,
       at: DateTime.now(),
+    ));
+  }
+
+  void addVoice(String fromUserId, String fromName, String url, int durationMs) {
+    _append(ChatEntry(
+      kind: ChatEntryKind.voice,
+      fromUserId: fromUserId,
+      fromName: fromName,
+      text: "",
+      at: DateTime.now(),
+      audioUrl: url,
+      durationMs: durationMs,
     ));
   }
 

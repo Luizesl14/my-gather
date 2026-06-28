@@ -41,13 +41,14 @@ class ReactionAudioService {
 
   static void playSfx(String sfxKey) {
     const sfxMap = {
-      "footstep":     "audio/sfx/footstep-01.mp3",
+      "footstep":     "audio/sfx/footstep-step.mp3",
       "gunshot":      "audio/sfx/gunshot-01.mp3",
       "horror_sting": "audio/sfx/horror-sting-01.mp3",
       "notify":       "audio/sfx/notify-01.mp3",
       "attention":    "audio/sfx/attention-01.mp3",
       "zoom":         "audio/sfx/zoom-01.mp3",
       "wave":          "audio/others/notify-double-chime-01.mp3",
+      "chat":          "audio/others/notify-crystal-01.mp3",
       "gesture_wave":  "audio/others/notify-double-chime-01.mp3",
       "gesture_bye":   "audio/others/notify-bell-plun-01.mp3",
       "gesture_point": "audio/others/notify-crystal-01.mp3",

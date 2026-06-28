@@ -160,16 +160,20 @@ class _OfficePageState extends ConsumerState<OfficePage> {
 
     return Scaffold(
       backgroundColor: colors.app,
-      body: CallbackShortcuts(
-        bindings: {
-          const SingleActivator(LogicalKeyboardKey.keyZ): () {
-            // Don't steal the key while the user types a custom status.
-            final focused = FocusManager.instance.primaryFocus?.context;
-            if (focused?.findAncestorStateOfType<EditableTextState>() != null) {
-              return;
-            }
-            _wave();
-          },
+      body: Focus(
+        canRequestFocus: false,
+        onKeyEvent: (node, event) {
+          if (event is! KeyDownEvent ||
+              event.logicalKey != LogicalKeyboardKey.keyZ) {
+            return KeyEventResult.ignored;
+          }
+          // While typing (chat/status), let "z" reach the text field.
+          final focused = FocusManager.instance.primaryFocus?.context;
+          if (focused?.findAncestorStateOfType<EditableTextState>() != null) {
+            return KeyEventResult.ignored;
+          }
+          _wave();
+          return KeyEventResult.handled;
         },
         child: Stack(
           children: [

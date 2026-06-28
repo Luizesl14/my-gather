@@ -18,6 +18,7 @@ dependencies:
   emoji_picker_flutter: ^4.4.0
   animated_emoji: ^3.2.1
   livekit_client: ^2.3.0
+  record: ^7.1.0
 
 dev_dependencies:
   flutter_test:

@@ -113,7 +113,8 @@ class _OfficeCanvasState extends State<OfficeCanvas>
   // Footstep audio synced to the leg animation's footfall beat, but only while
   // the avatar is actually translating (silent when standing/blocked).
   AvatarPosition? _lastTickPos;
-  int _lastStepBeat = -2;
+  DateTime? _lastMovedAt;
+  int _lastStepBeat = -1;
 
   // Auto-walk (X → desk / tap-to-walk). A* path of tile coords to follow.
   List<({int x, int y})> _autoPath = const [];
@@ -301,20 +302,23 @@ class _OfficeCanvasState extends State<OfficeCanvas>
   void _maybeFootstep(AvatarPosition pos) {
     final last = _lastTickPos;
     _lastTickPos = pos;
+    // Manual movement advances in discrete 0.25-tile hops every ~120ms, so most
+    // frames show no change — track the last time the avatar actually moved and
+    // treat "moved within the last 220ms" as walking.
+    if (last != null &&
+        ((pos.x - last.x).abs() + (pos.y - last.y).abs()) > 0.0001) {
+      _lastMovedAt = DateTime.now();
+    }
     final anim = _scene?.avatarScene.avatarController;
-    final movingNow = last != null &&
-        ((pos.x - last.x).abs() + (pos.y - last.y).abs()) > 0.0001;
-    if (anim == null || !movingNow) {
-      _lastStepBeat = -2; // reset so we don't double-play on resume
+    final recentlyMoved = _lastMovedAt != null &&
+        DateTime.now().difference(_lastMovedAt!).inMilliseconds < 220;
+    if (anim == null || !recentlyMoved) {
+      _lastStepBeat = -1;
       return;
     }
     final beat = anim.stepBeat;
     if (beat < 0) {
-      _lastStepBeat = -2;
-      return;
-    }
-    if (_lastStepBeat == -2) {
-      _lastStepBeat = beat; // first moving frame — wait for the next beat
+      _lastStepBeat = -1;
       return;
     }
     if (beat != _lastStepBeat) {

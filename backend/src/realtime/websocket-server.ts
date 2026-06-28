@@ -25,6 +25,7 @@ import {
   reactionEventSchema,
   chatEventSchema,
   typingEventSchema,
+  voiceEventSchema,
   callIncomingEvent,
   callAcceptedEvent,
   callDeclinedEvent,
@@ -33,6 +34,7 @@ import {
   peerReactionEvent,
   peerChatEvent,
   peerTypingEvent,
+  peerVoiceEvent,
 } from "./events/room-events";
 import { safeParseJson, serializeJson } from "./serializers/json";
 
@@ -209,6 +211,24 @@ export async function startWebsocketServer(
           conn.info.workspaceId,
           serializeJson(
             peerTypingEvent(conn.info.userId, conn.info.displayName, ev.data.typing),
+          ),
+          connectionId,
+        );
+        return;
+      }
+
+      if (type === "voice") {
+        const ev = voiceEventSchema.safeParse(parsed);
+        if (!ev.success || !conn.info.workspaceId) return;
+        registry.broadcast(
+          conn.info.workspaceId,
+          serializeJson(
+            peerVoiceEvent(
+              conn.info.userId,
+              conn.info.displayName,
+              ev.data.url,
+              ev.data.durationMs,
+            ),
           ),
           connectionId,
         );

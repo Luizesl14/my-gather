@@ -30,6 +30,12 @@ export const typingEventSchema = z.object({
   typing: z.boolean(),
 });
 
+export const voiceEventSchema = z.object({
+  type: z.literal("voice"),
+  url: z.string().min(1).max(500),
+  durationMs: z.number().int().min(0).max(600000),
+});
+
 export const callInviteEventSchema = z.object({
   type: z.literal("call:invite"),
   toUserId: z.string().min(1),
@@ -103,6 +109,15 @@ export function peerChatEvent(
 
 export function peerTypingEvent(fromUserId: string, fromName: string, typing: boolean) {
   return { type: "typing", fromUserId, fromName, typing } as const;
+}
+
+export function peerVoiceEvent(
+  fromUserId: string,
+  fromName: string,
+  url: string,
+  durationMs: number,
+) {
+  return { type: "voice", fromUserId, fromName, url, durationMs } as const;
 }
 
 export function callIncomingEvent(fromUserId: string, fromName: string, mode: "video" | "audio") {
