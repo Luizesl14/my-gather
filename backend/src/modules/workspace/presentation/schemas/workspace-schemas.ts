@@ -33,6 +33,7 @@ const mapTileSchema = z.object({
   frameRows: z.number().int().min(1).optional(),
   overlayId: z.string().optional(),
   colRect: colRectSchema.optional(),
+  colRects: z.array(colRectSchema).optional(),
 });
 
 const mapObjectSchema = z.object({

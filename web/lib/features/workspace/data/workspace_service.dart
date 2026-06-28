@@ -169,6 +169,21 @@ class WorkspaceService {
     );
   }
 
+  /// Creates an invitation for [email] in the organization and returns its
+  /// token (used to build the share link).
+  Future<String> createInvitation(
+    String organizationId, {
+    required String email,
+    required String role,
+  }) async {
+    final res = await _dio.post<Map<String, dynamic>>(
+      "/organizations/$organizationId/invitations",
+      data: {"email": email, "role": role},
+    );
+    final inv = res.data!["invitation"] as Map<String, dynamic>;
+    return inv["token"] as String;
+  }
+
   Future<List<Workspace>> listWorkspaces(String organizationId) async {
     final res = await _dio.get<Map<String, dynamic>>(
       "/organizations/$organizationId/workspaces",

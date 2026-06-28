@@ -3,6 +3,7 @@ import { createHmac } from "node:crypto";
 export type IdentityTokenPayload = {
   sub: string;
   email: string;
+  displayName?: string;
 };
 
 function base64url(value: string): string {

@@ -12,6 +12,7 @@ class OfficeMap {
     required this.layers,
     required this.interactiveZones,
     required this.collidingTileIds,
+    this.desks = const [],
     this.passthroughTileIds = const {},
     this.displayZoom = 2.5,
     this.avatarScale = 0.5,
@@ -26,6 +27,8 @@ class OfficeMap {
   final MapSpawn spawn;
   final List<MapLayer> layers;
   final List<MapZone> interactiveZones;
+  // Desk markers: each has a sit tile + facing direction. Press X to walk there.
+  final List<MapDesk> desks;
   final Set<String> collidingTileIds;
   // Tiles that override wall collision (portals/doors placed on top of walls).
   final Set<String> passthroughTileIds;
@@ -77,6 +80,10 @@ class OfficeMap {
             .cast<Map<String, dynamic>>()
             .map(MapZone.fromJson)
             .toList(growable: false),
+        desks: ((json["desks"] as List<dynamic>?) ?? const [])
+            .cast<Map<String, dynamic>>()
+            .map(MapDesk.fromJson)
+            .toList(growable: false),
         collidingTileIds: collidingTileIds,
         passthroughTileIds: passthroughTileIds,
       );
@@ -93,6 +100,7 @@ class OfficeMap {
         spawn: spawn,
         layers: layers,
         interactiveZones: interactiveZones,
+        desks: desks,
         collidingTileIds: collidingTileIds,
         passthroughTileIds: passthroughTileIds,
       );
@@ -126,11 +134,12 @@ class OfficeMap {
       final isFloorLayer = layer.name == "floor";
       for (final tile in layer.tiles) {
         final bool atPosition;
-        final cr = tile.colRect;
-        if (cr != null) {
-          // Custom collision rect: box-vs-rect overlap, no grid snapping.
-          atPosition = axL < cr.x + cr.w && axR > cr.x &&
-                       ayT < cr.y + cr.h && ayB > cr.y;
+        final hasCustomRects = tile.colRects.isNotEmpty;
+        if (hasCustomRects) {
+          // Custom collision rects: feet box overlaps ANY rect (no grid snap).
+          atPosition = tile.colRects.any((cr) =>
+              axL < cr.x + cr.w && axR > cr.x &&
+              ayT < cr.y + cr.h && ayB > cr.y);
         } else if (isFloorLayer) {
           atPosition = tile.x == tileX && tile.y == tileY;
         } else {
@@ -142,8 +151,8 @@ class OfficeMap {
         if (!atPosition) continue;
         // Passthrough tiles (portals/doors) override wall collision.
         if (passthroughTileIds.contains(tile.tile)) hasPassthrough = true;
-        // Custom colRect always blocks at the drawn rect; otherwise use collidingTileIds.
-        if (cr != null || collidingTileIds.contains(tile.tile)) blocked = true;
+        // Custom colRects always block at the drawn rect; otherwise use collidingTileIds.
+        if (hasCustomRects || collidingTileIds.contains(tile.tile)) blocked = true;
       }
       for (final object in layer.objects) {
         if (blockingAssetIds.contains(object.asset) &&
@@ -262,6 +271,20 @@ class MapColRect {
       MapColRect(x: j["x"] as int, y: j["y"] as int, w: j["w"] as int, h: j["h"] as int);
 }
 
+// Reads collision rects from a saved tile json, accepting both the new
+// `colRects` list and the legacy single `colRect` object for backward compat.
+List<MapColRect> _parseColRects(Map<String, dynamic> json) {
+  final list = json["colRects"] as List<dynamic>?;
+  if (list != null) {
+    return [
+      for (final e in list) MapColRect.fromJson(e as Map<String, dynamic>),
+    ];
+  }
+  final single = json["colRect"] as Map<String, dynamic>?;
+  if (single != null) return [MapColRect.fromJson(single)];
+  return const [];
+}
+
 class MapTile {
   const MapTile({
     required this.tile,
@@ -275,7 +298,7 @@ class MapTile {
     this.frameRow = 0,
     this.frameCols = 1,
     this.frameRows = 1,
-    this.colRect,
+    this.colRects = const [],
   });
 
   final String tile;
@@ -289,8 +312,10 @@ class MapTile {
   final int frameRow;
   final int frameCols;
   final int frameRows;
-  // Custom collision rectangle (pixel coords, absolute on the map canvas).
-  final MapColRect? colRect;
+  // Custom collision rectangles (pixel coords, absolute on the map canvas).
+  // Empty = block at the full tile bounds. Multiple rects allow one object to
+  // carry several separate collision areas.
+  final List<MapColRect> colRects;
 
   factory MapTile.fromJson(Map<String, dynamic> json, {bool isFloorLayer = false}) {
     final rawW = (json["w"] as int?) ?? 1;
@@ -300,7 +325,6 @@ class MapTile {
     // Mirror the editor's detection: non-floor tiles with w < 16 are old grid format.
     final isOldGridCoords = !isFloorLayer && rawW < 16;
     final scale = isOldGridCoords ? 32 : 1;
-    final colRectJson = json["colRect"] as Map<String, dynamic>?;
     return MapTile(
       tile: json["tile"] as String,
       x: (json["x"] as int) * scale,
@@ -313,7 +337,7 @@ class MapTile {
       frameRow: (json["frameRow"] as int?) ?? 0,
       frameCols: (json["frameCols"] as int?) ?? 1,
       frameRows: (json["frameRows"] as int?) ?? 1,
-      colRect: colRectJson != null ? MapColRect.fromJson(colRectJson) : null,
+      colRects: _parseColRects(json),
     );
   }
 }
@@ -368,6 +392,30 @@ class MapZone {
       height: json["h"] as int,
     );
   }
+}
+
+// A desk the player can walk to and sit at. [x, y] is the SIT tile (where the
+// avatar stands) in grid coords; [dir] is the direction the avatar faces while
+// seated ("front"/"back"/"left"/"right").
+class MapDesk {
+  const MapDesk({
+    required this.id,
+    required this.x,
+    required this.y,
+    required this.dir,
+  });
+
+  final String id;
+  final int x;
+  final int y;
+  final String dir;
+
+  factory MapDesk.fromJson(Map<String, dynamic> json) => MapDesk(
+        id: json["id"] as String,
+        x: json["x"] as int,
+        y: json["y"] as int,
+        dir: (json["dir"] as String?) ?? "back",
+      );
 }
 
 class _TileBounds {

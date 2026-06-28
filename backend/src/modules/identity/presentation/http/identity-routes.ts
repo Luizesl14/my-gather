@@ -11,6 +11,7 @@ import { InviteMemberUseCase } from "../../application/use-cases/invite-member-u
 import { LoginUserUseCase } from "../../application/use-cases/login-user-use-case";
 import { RegisterUserUseCase } from "../../application/use-cases/register-user-use-case";
 import { User } from "../../domain/entities/user";
+import { InvitationToken } from "../../domain/value-objects/invitation-token";
 import { PrismaIdentityRepositories } from "../../infrastructure/persistence/prisma-identity-repositories";
 import { NodePasswordHasher } from "../../infrastructure/crypto/node-password-hasher";
 import { NodeTokenService } from "../../infrastructure/crypto/node-token-service";
@@ -106,7 +107,11 @@ export async function registerIdentityRoutes(
     const avatarId = await repositories.getAvatarId(result.value.user.id);
     return {
       user: userDto(result.value.user, avatarId),
-      token: tokenService.sign({ sub: result.value.user.id, email: result.value.user.email.value }),
+      token: tokenService.sign({
+        sub: result.value.user.id,
+        email: result.value.user.email.value,
+        displayName: result.value.user.displayName.value,
+      }),
     };
   });
 
@@ -210,6 +215,25 @@ export async function registerIdentityRoutes(
     return reply.status(201).send({
       invitation: { id: result.value.invitation.id, token: result.value.invitation.token.value },
     });
+  });
+
+  // Public: lets the invite link pre-fill the signup form with the invited
+  // email before the person has an account.
+  app.get("/invitations/:token", async (request, reply) => {
+    const params = parseParams(acceptInvitationParamsSchema, request, reply);
+    if (!params) return reply;
+    const token = InvitationToken.create(params.token);
+    if (Result.isErr(token)) return sendError(reply, 400, token.error);
+    const invitation = await repositories.findByToken(token.value);
+    if (!invitation) return sendError(reply, 404, "identity.invitation.not_found");
+    return {
+      invitation: {
+        email: invitation.email.value,
+        organizationId: invitation.organizationId,
+        accepted: invitation.acceptedAt != null,
+        expired: invitation.expiresAt.getTime() < Date.now(),
+      },
+    };
   });
 
   app.post("/invitations/:token/accept", async (request, reply) => {

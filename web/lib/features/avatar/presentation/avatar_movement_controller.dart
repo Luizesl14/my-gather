@@ -1,3 +1,5 @@
+import "dart:math" as math;
+
 import "../domain/avatar_direction.dart";
 import "../domain/avatar_motion_state.dart";
 import "../domain/avatar_position.dart";
@@ -57,6 +59,43 @@ class AvatarMovementController {
 
   void stop() {
     _avatar = _avatar.copyWith(motionState: AvatarMotionState.idle);
+    _animationController.setMotionState(AvatarMotionState.idle);
+  }
+
+  // Auto-walk: move toward absolute tile center [tx, ty] by up to [maxStep],
+  // updating facing + walking animation. The path is pre-validated against
+  // collision, so this moves freely (no per-step canOccupy check). Returns true
+  // once the target is reached.
+  bool stepToward(double tx, double ty, double maxStep) {
+    final dx = tx - _avatar.position.x;
+    final dy = ty - _avatar.position.y;
+    final dist = math.sqrt(dx * dx + dy * dy);
+    final dir = dx.abs() > dy.abs()
+        ? (dx > 0 ? AvatarDirection.right : AvatarDirection.left)
+        : (dy > 0 ? AvatarDirection.front : AvatarDirection.back);
+
+    final bool arrived = dist <= maxStep || dist == 0;
+    final next = arrived
+        ? AvatarPosition(x: tx, y: ty)
+        : _avatar.position.moveBy(dx / dist * maxStep, dy / dist * maxStep);
+
+    _avatar = _avatar.copyWith(
+      position: next,
+      direction: dir,
+      motionState: AvatarMotionState.walking,
+    );
+    _animationController.setDirection(dir);
+    _animationController.setMotionState(AvatarMotionState.walking);
+    return arrived;
+  }
+
+  // Sit/idle facing a fixed direction (used on arrival at a desk).
+  void faceAndIdle(AvatarDirection dir) {
+    _avatar = _avatar.copyWith(
+      direction: dir,
+      motionState: AvatarMotionState.idle,
+    );
+    _animationController.setDirection(dir);
     _animationController.setMotionState(AvatarMotionState.idle);
   }
 

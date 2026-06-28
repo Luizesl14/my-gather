@@ -34,7 +34,9 @@ final appRouter = GoRouter(
     GoRoute(
       name: AppRouteNames.register,
       path: "/register",
-      builder: (context, state) => const RegisterPage(),
+      builder: (context, state) => RegisterPage(
+        invitationToken: state.uri.queryParameters['token'],
+      ),
     ),
     GoRoute(
       name: AppRouteNames.acceptInvitation,

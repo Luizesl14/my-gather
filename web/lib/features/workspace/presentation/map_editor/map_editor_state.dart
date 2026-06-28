@@ -76,6 +76,20 @@ class ColRect {
   Map<String, dynamic> toJson() => {"x": x, "y": y, "w": w, "h": h};
 }
 
+// Reads collision rects from a saved tile json, accepting both the new
+// `colRects` list and the legacy single `colRect` object for backward compat.
+List<ColRect> _parseColRects(Map<String, dynamic> tile) {
+  final list = tile["colRects"] as List<dynamic>?;
+  if (list != null) {
+    return [
+      for (final e in list) ColRect.fromJson(e as Map<String, dynamic>),
+    ];
+  }
+  final single = tile["colRect"] as Map<String, dynamic>?;
+  if (single != null) return [ColRect.fromJson(single)];
+  return const [];
+}
+
 class PlacedTile {
   const PlacedTile({
     required this.id,
@@ -92,7 +106,7 @@ class PlacedTile {
     this.frameCols = 1,
     this.frameRows = 1,
     this.overlayId,
-    this.colRect,
+    this.colRects = const [],
   });
 
   final String id;
@@ -109,8 +123,10 @@ class PlacedTile {
   final int frameCols;
   final int frameRows;
   final String? overlayId;
-  // Custom collision rectangle (absolute pixel coords). Null = use full tile bounds.
-  final ColRect? colRect;
+  // Custom collision rectangles (absolute pixel coords). Empty = use full tile bounds.
+  // A tile may have several rects so a single object can carry multiple
+  // collision areas (e.g. L-shaped or separated blocking zones).
+  final List<ColRect> colRects;
 
   bool hits(int gx, int gy) =>
       gx >= x && gx < x + w && gy >= y && gy < y + h;
@@ -128,8 +144,7 @@ class PlacedTile {
     int? frameRows,
     String? overlayId,
     bool clearOverlay = false,
-    ColRect? colRect,
-    bool clearColRect = false,
+    List<ColRect>? colRects,
   }) =>
       PlacedTile(
         id: id,
@@ -146,7 +161,7 @@ class PlacedTile {
         frameCols: frameCols ?? this.frameCols,
         frameRows: frameRows ?? this.frameRows,
         overlayId: clearOverlay ? null : (overlayId ?? this.overlayId),
-        colRect: clearColRect ? null : (colRect ?? this.colRect),
+        colRects: colRects ?? this.colRects,
       );
 
   Map<String, dynamic> toJson() {
@@ -160,7 +175,9 @@ class PlacedTile {
     if (frameCols > 1) m["frameCols"] = frameCols;
     if (frameRows > 1) m["frameRows"] = frameRows;
     if (overlayId != null) m["overlayId"] = overlayId;
-    if (colRect != null) m["colRect"] = colRect!.toJson();
+    if (colRects.isNotEmpty) {
+      m["colRects"] = [for (final c in colRects) c.toJson()];
+    }
     return m;
   }
 }
@@ -184,6 +201,8 @@ class MapEditorData {
     this.avatarScale = 0.5,
     this.avatarYOffset = 0.0,
     this.avatarXOffset = 0.0,
+    this.spawnX = 1,
+    this.spawnY = 1,
     this.selectedId,
     this.paletteSelectedId,
   });
@@ -203,6 +222,9 @@ class MapEditorData {
   final double avatarScale;
   final double avatarYOffset;
   final double avatarXOffset;
+  // Tile where players appear when entering the office.
+  final int spawnX;
+  final int spawnY;
   final String? selectedId;
   final String? paletteSelectedId;
 
@@ -225,6 +247,8 @@ class MapEditorData {
     double? avatarScale,
     double? avatarYOffset,
     double? avatarXOffset,
+    int? spawnX,
+    int? spawnY,
     String? selectedId,
     bool clearSelectedId = false,
     String? paletteSelectedId,
@@ -246,6 +270,8 @@ class MapEditorData {
         avatarScale: avatarScale ?? this.avatarScale,
         avatarYOffset: avatarYOffset ?? this.avatarYOffset,
         avatarXOffset: avatarXOffset ?? this.avatarXOffset,
+        spawnX: spawnX ?? this.spawnX,
+        spawnY: spawnY ?? this.spawnY,
         selectedId: clearSelectedId ? null : (selectedId ?? this.selectedId),
         paletteSelectedId: clearPaletteSelected
             ? null
@@ -463,19 +489,17 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
         return t.x < nx + tile.w && t.x + t.w > nx && t.y < ny + tile.h && t.y + t.h > ny;
       });
     }
-    // ColRect is in absolute pixel coords — translate it with the tile.
-    ColRect? newColRect;
-    if (tile.colRect != null) {
+    // ColRects are in absolute pixel coords — translate them all with the tile.
+    List<ColRect>? newColRects;
+    if (tile.colRects.isNotEmpty) {
       final dx = isFloor ? (nx - tile.x) * 32 : nx - tile.x;
       final dy = isFloor ? (ny - tile.y) * 32 : ny - tile.y;
-      newColRect = ColRect(
-        x: tile.colRect!.x + dx,
-        y: tile.colRect!.y + dy,
-        w: tile.colRect!.w,
-        h: tile.colRect!.h,
-      );
+      newColRects = [
+        for (final cr in tile.colRects)
+          ColRect(x: cr.x + dx, y: cr.y + dy, w: cr.w, h: cr.h),
+      ];
     }
-    updated[id] = tile.copyWith(x: nx, y: ny, colRect: newColRect ?? tile.colRect);
+    updated[id] = tile.copyWith(x: nx, y: ny, colRects: newColRects);
     state = state.copyWith(placedTiles: updated, isDirty: true);
   }
 
@@ -549,19 +573,49 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
     state = state.copyWith(placedTiles: updated, isDirty: true);
   }
 
-  void setCollisionRect(String id, int x, int y, int w, int h) {
+  // Sets the spawn tile (where players appear when entering the office).
+  void setSpawn(int x, int y) {
+    final cx = x.clamp(0, state.width - 1);
+    final cy = y.clamp(0, state.height - 1);
+    state = state.copyWith(spawnX: cx, spawnY: cy, isDirty: true);
+  }
+
+  // Appends one collision rect to the tile (supports multiple rects per object).
+  void addCollisionRect(String id, int x, int y, int w, int h) {
     final tile = state.placedTiles[id];
     if (tile == null) return;
     final updated = Map<String, PlacedTile>.from(state.placedTiles);
-    updated[id] = tile.copyWith(colRect: ColRect(x: x, y: y, w: w, h: h));
+    updated[id] = tile.copyWith(
+      colRects: [...tile.colRects, ColRect(x: x, y: y, w: w, h: h)],
+    );
     state = state.copyWith(placedTiles: updated, isDirty: true);
   }
 
-  void clearCollisionRect(String id) {
+  // Replaces all rects with a single full-tile-bounds rect (bucket/paint mode).
+  void setFullCollisionRect(String id, int x, int y, int w, int h) {
     final tile = state.placedTiles[id];
     if (tile == null) return;
     final updated = Map<String, PlacedTile>.from(state.placedTiles);
-    updated[id] = tile.copyWith(clearColRect: true);
+    updated[id] = tile.copyWith(colRects: [ColRect(x: x, y: y, w: w, h: h)]);
+    state = state.copyWith(placedTiles: updated, isDirty: true);
+  }
+
+  // Removes the most recently added rect (undo for the draw-multiple flow).
+  void removeLastCollisionRect(String id) {
+    final tile = state.placedTiles[id];
+    if (tile == null || tile.colRects.isEmpty) return;
+    final updated = Map<String, PlacedTile>.from(state.placedTiles);
+    updated[id] = tile.copyWith(
+      colRects: tile.colRects.sublist(0, tile.colRects.length - 1),
+    );
+    state = state.copyWith(placedTiles: updated, isDirty: true);
+  }
+
+  void clearCollisionRects(String id) {
+    final tile = state.placedTiles[id];
+    if (tile == null) return;
+    final updated = Map<String, PlacedTile>.from(state.placedTiles);
+    updated[id] = tile.copyWith(colRects: const []);
     state = state.copyWith(placedTiles: updated, isDirty: true);
   }
 
@@ -586,15 +640,11 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
       frameCols: tile.frameCols,
       frameRows: tile.frameRows,
       overlayId: tile.overlayId,
-      // colRect is absolute px — shift by the same visual offset (1 cell = 32px).
-      colRect: tile.colRect != null
-          ? ColRect(
-              x: tile.colRect!.x + 32,
-              y: tile.colRect!.y + 32,
-              w: tile.colRect!.w,
-              h: tile.colRect!.h,
-            )
-          : null,
+      // colRects are absolute px — shift by the same visual offset (1 cell = 32px).
+      colRects: [
+        for (final cr in tile.colRects)
+          ColRect(x: cr.x + 32, y: cr.y + 32, w: cr.w, h: cr.h),
+      ],
     );
     state = state.copyWith(placedTiles: updated, selectedId: newId, isDirty: true);
   }
@@ -665,9 +715,7 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
           frameCols: (tile["frameCols"] as int?) ?? 1,
           frameRows: (tile["frameRows"] as int?) ?? 1,
           overlayId: tile["overlayId"] as String?,
-          colRect: tile["colRect"] != null
-              ? ColRect.fromJson(tile["colRect"] as Map<String, dynamic>)
-              : null,
+          colRects: _parseColRects(tile),
         );
       }
     }
@@ -678,6 +726,8 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
       avatarScale: data.avatarScale,
       avatarYOffset: data.avatarYOffset,
       avatarXOffset: data.avatarXOffset,
+      spawnX: (data.spawn["x"] as int?) ?? 1,
+      spawnY: (data.spawn["y"] as int?) ?? 1,
       placedTiles: placed,
       activeLayer: "floor",
       paletteTileW: 1,
@@ -713,7 +763,11 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
           avatarYOffset: state.avatarYOffset,
           avatarXOffset: state.avatarXOffset,
           assetPackId: "office-scenary-v1",
-          spawn: const {"x": 1, "y": 1, "direction": "front"},
+          spawn: {
+            "x": state.spawnX,
+            "y": state.spawnY,
+            "direction": "front",
+          },
           layers: [
             {"name": "floor", "tiles": floorTiles, "objects": <dynamic>[]},
             {"name": "walls", "tiles": wallTiles, "objects": <dynamic>[]},

@@ -8,5 +8,10 @@ export const config = {
   jwtSecret: env.JWT_SECRET,
   apiPort: env.API_PORT,
   wsPort: env.WS_PORT,
+  livekit: {
+    url: env.LIVEKIT_URL,
+    apiKey: env.LIVEKIT_API_KEY,
+    apiSecret: env.LIVEKIT_API_SECRET,
+  },
 } as const;
 

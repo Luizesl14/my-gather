@@ -42,13 +42,27 @@ class AvatarAnimationController {
     }
 
     final elapsedMs = DateTime.now().difference(_startedAt).inMilliseconds;
-    final frames = switch (_direction) {
-      AvatarDirection.front => _character.frames.walkDown,
-      AvatarDirection.back => _character.frames.walkUp,
-      AvatarDirection.left => _character.frames.walkLeft,
-      AvatarDirection.right => _character.frames.walkRight,
-    };
-    final index = ((elapsedMs / 125).floor()) % frames.length;
+    final frames = _walkFrames();
+    final index = ((elapsedMs / _frameMs).floor()) % frames.length;
     return frames[index];
+  }
+
+  static const int _frameMs = 125;
+
+  List<String> _walkFrames() => switch (_direction) {
+        AvatarDirection.front => _character.frames.walkDown,
+        AvatarDirection.back => _character.frames.walkUp,
+        AvatarDirection.left => _character.frames.walkLeft,
+        AvatarDirection.right => _character.frames.walkRight,
+      };
+
+  // Monotonic footfall counter while walking — two footfalls per walk cycle, so
+  // the footstep sound can play in sync with the leg animation. -1 when idle.
+  int get stepBeat {
+    if (_motionState == AvatarMotionState.idle) return -1;
+    final cycleMs = _frameMs * _walkFrames().length;
+    final halfStepMs = (cycleMs / 2).round().clamp(1, cycleMs);
+    final elapsedMs = DateTime.now().difference(_startedAt).inMilliseconds;
+    return elapsedMs ~/ halfStepMs;
   }
 }

@@ -9,7 +9,11 @@ import "auth_provider.dart";
 import "auth_text_field.dart";
 
 class RegisterPage extends ConsumerStatefulWidget {
-  const RegisterPage({super.key});
+  const RegisterPage({this.invitationToken, super.key});
+
+  // When opened from an invite link, the email is pre-filled and the new
+  // account is joined to the inviting office after signup.
+  final String? invitationToken;
 
   @override
   ConsumerState<RegisterPage> createState() => _RegisterPageState();
@@ -21,6 +25,19 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    final token = widget.invitationToken;
+    if (token != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final inv = await ref.read(authServiceProvider).getInvitation(token);
+        if (!mounted || inv == null) return;
+        setState(() => _emailCtrl.text = inv.email);
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -37,9 +54,18 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           password: _passwordCtrl.text,
           displayName: _nameCtrl.text.trim(),
         );
-    if (ok && mounted) {
-      context.goNamed(AppRouteNames.organizationSelection);
+    if (!ok || !mounted) return;
+
+    // Joined via invite link → accept the invitation with the fresh session.
+    final token = widget.invitationToken;
+    if (token != null) {
+      final authToken = ref.read(authProvider).token;
+      await ref
+          .read(authServiceProvider)
+          .acceptInvitation(token, authToken: authToken);
     }
+
+    if (mounted) context.goNamed(AppRouteNames.organizationSelection);
   }
 
   @override

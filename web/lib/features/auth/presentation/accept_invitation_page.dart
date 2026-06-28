@@ -66,7 +66,10 @@ class _AcceptInvitationPageState extends ConsumerState<AcceptInvitationPage> {
   Future<void> _acceptInvitation(AuthUser user) async {
     try {
       final authService = AuthService();
-      final response = await authService.acceptInvitation(widget.token);
+      final response = await authService.acceptInvitation(
+        widget.token,
+        authToken: ref.read(authProvider).token,
+      );
 
       if (!mounted) return;
 

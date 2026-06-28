@@ -2,6 +2,7 @@ import "dart:async";
 
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
+import "../../../features/chat/presentation/chat_provider.dart";
 import "../../../features/workspace/presentation/remote_avatar_provider.dart";
 import "realtime_service.dart";
 
@@ -35,9 +36,7 @@ class RealtimeSessionNotifier extends Notifier<bool> {
     service.connect(wsUrl, token);
 
     _sub?.cancel();
-    _sub = service.stream.listen((event) {
-      ref.read(remoteAvatarsProvider.notifier).handleEvent(event);
-    });
+    _sub = service.stream.listen(_handleEvent);
 
     service.send({
       "type": "workspace:join",
@@ -82,6 +81,58 @@ class RealtimeSessionNotifier extends Notifier<bool> {
       if (emoji != null) "emoji": emoji,
       if (text != null) "text": text,
     });
+  }
+
+  void sendReaction(String sprite, {String? targetUserId}) {
+    ref.read(realtimeServiceProvider).send({
+      "type": "reaction",
+      "sprite": sprite,
+      if (targetUserId != null) "targetUserId": targetUserId,
+    });
+  }
+
+  void sendChat(String text) {
+    ref.read(realtimeServiceProvider).send({"type": "chat", "text": text});
+  }
+
+  void sendTyping(bool typing) {
+    ref.read(realtimeServiceProvider).send({"type": "typing", "typing": typing});
+  }
+
+  // Routes incoming realtime events. Chat/reactions are scoped to people within
+  // the proximity bubble (Gather-style); everything else updates avatars.
+  void _handleEvent(Map<String, dynamic> event) {
+    final type = event["type"];
+    if (type == "chat" || type == "reaction" || type == "typing") {
+      final fromUserId = (event["fromUserId"] as String?) ?? "";
+      final nearby = ref.read(nearbyUserIdsProvider);
+      if (!nearby.contains(fromUserId)) return; // ignore far-away peers
+      if (type == "typing") {
+        ref
+            .read(typingUsersProvider.notifier)
+            .setTyping(fromUserId, event["typing"] == true);
+        return;
+      }
+      final fromName = (event["fromName"] as String?) ?? "Alguém";
+      if (type == "chat") {
+        ref
+            .read(chatProvider.notifier)
+            .addMessage(fromUserId, fromName, (event["text"] as String?) ?? "");
+      } else {
+        ref.read(chatProvider.notifier).addNotice(
+              "$fromName chamou sua atenção 👋",
+              fromUserId: fromUserId,
+              fromName: fromName,
+            );
+        ref.read(peerReactionProvider.notifier).state = PeerReaction(
+          fromUserId: fromUserId,
+          sprite: (event["sprite"] as String?) ?? "",
+          at: DateTime.now(),
+        );
+      }
+      return;
+    }
+    ref.read(remoteAvatarsProvider.notifier).handleEvent(event);
   }
 }
 

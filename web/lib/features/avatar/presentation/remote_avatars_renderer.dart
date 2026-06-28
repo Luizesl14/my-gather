@@ -41,7 +41,6 @@ class RemoteAvatarsRenderer extends CustomPainter {
     if (remotes.isEmpty) return;
 
     final zoom = map.displayZoom;
-    final spriteZoom = zoom * map.avatarScale;
     final ts = map.tileSize * zoom;
     final offset = MapRenderer.cameraOffset(size, map, localPosition.x, localPosition.y, zoom: zoom);
 
@@ -51,8 +50,13 @@ class RemoteAvatarsRenderer extends CustomPainter {
       final screenY = pos.y * ts + offset.dy;
 
       final currentFrame = remote.frameImages[remote.controller.currentFramePath()];
-      final sw = (currentFrame?.width.toDouble() ?? map.tileSize.toDouble()) * spriteZoom;
-      final sh = (currentFrame?.height.toDouble() ?? map.tileSize.toDouble()) * spriteZoom;
+      // Same sizing as the local AvatarRenderer: scale the sprite so its HEIGHT
+      // equals avatarScale tiles, independent of the frame's pixel dimensions.
+      final double targetH = ts * map.avatarScale;
+      final double srcW = currentFrame?.width.toDouble() ?? ts;
+      final double srcH = currentFrame?.height.toDouble() ?? (ts * 1.5);
+      final sw = srcW * (targetH / srcH);
+      final sh = targetH;
       final spriteRect = Rect.fromLTWH(screenX - sw / 2 + ts / 2 + ts * map.avatarXOffset, screenY - sh + ts - ts * map.avatarYOffset, sw, sh);
 
       if (currentFrame != null) {

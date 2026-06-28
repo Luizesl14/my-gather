@@ -70,10 +70,33 @@ class AuthService {
     }
   }
 
-  Future<Map<String, dynamic>> acceptInvitation(String token) async {
+  // Reads the invitation (public) so the signup form can pre-fill the email.
+  Future<({String email, bool accepted, bool expired})?> getInvitation(
+    String token,
+  ) async {
+    try {
+      final res = await _dio.get<Map<String, dynamic>>("/invitations/$token");
+      final inv = res.data!["invitation"] as Map<String, dynamic>;
+      return (
+        email: inv["email"] as String,
+        accepted: inv["accepted"] as bool? ?? false,
+        expired: inv["expired"] as bool? ?? false,
+      );
+    } on DioException {
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>> acceptInvitation(
+    String token, {
+    String? authToken,
+  }) async {
     try {
       final response = await _dio.post<Map<String, dynamic>>(
         "/invitations/$token/accept",
+        options: authToken != null
+            ? Options(headers: {"Authorization": "Bearer $authToken"})
+            : null,
       );
       return response.data ?? {};
     } on DioException catch (e) {

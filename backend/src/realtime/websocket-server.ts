@@ -22,11 +22,17 @@ import {
   callDeclineEventSchema,
   callEndEventSchema,
   rtcSignalEventSchema,
+  reactionEventSchema,
+  chatEventSchema,
+  typingEventSchema,
   callIncomingEvent,
   callAcceptedEvent,
   callDeclinedEvent,
   callEndedEvent,
   rtcSignalRelayEvent,
+  peerReactionEvent,
+  peerChatEvent,
+  peerTypingEvent,
 } from "./events/room-events";
 import { safeParseJson, serializeJson } from "./serializers/json";
 
@@ -162,6 +168,50 @@ export async function startWebsocketServer(
         const { status, emoji = null, text = null } = ev.data;
         conn.info.presenceStatus = status;
         registry.broadcast(conn.info.workspaceId, presenceStatusChangedPayload(conn.info.userId, status, emoji, text), connectionId);
+        return;
+      }
+
+      if (type === "reaction") {
+        const ev = reactionEventSchema.safeParse(parsed);
+        if (!ev.success || !conn.info.workspaceId) return;
+        registry.broadcast(
+          conn.info.workspaceId,
+          serializeJson(
+            peerReactionEvent(
+              conn.info.userId,
+              conn.info.displayName,
+              ev.data.sprite,
+              ev.data.targetUserId ?? null,
+            ),
+          ),
+          connectionId,
+        );
+        return;
+      }
+
+      if (type === "chat") {
+        const ev = chatEventSchema.safeParse(parsed);
+        if (!ev.success || !conn.info.workspaceId) return;
+        registry.broadcast(
+          conn.info.workspaceId,
+          serializeJson(
+            peerChatEvent(conn.info.userId, conn.info.displayName, ev.data.text, Date.now()),
+          ),
+          connectionId,
+        );
+        return;
+      }
+
+      if (type === "typing") {
+        const ev = typingEventSchema.safeParse(parsed);
+        if (!ev.success || !conn.info.workspaceId) return;
+        registry.broadcast(
+          conn.info.workspaceId,
+          serializeJson(
+            peerTypingEvent(conn.info.userId, conn.info.displayName, ev.data.typing),
+          ),
+          connectionId,
+        );
         return;
       }
 

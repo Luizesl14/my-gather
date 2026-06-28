@@ -271,16 +271,22 @@ class CollisionDebugPainter extends CustomPainter {
       for (final tile in layer.tiles) {
         final isColliding   = map.collidingTileIds.contains(tile.tile);
         final isPassthrough = map.passthroughTileIds.contains(tile.tile);
-        final hasColRect    = tile.colRect != null;
-        if (!isColliding && !isPassthrough && !hasColRect) continue;
+        final hasColRects   = tile.colRects.isNotEmpty;
+        if (!isColliding && !isPassthrough && !hasColRects) continue;
+
+        if (hasColRects) {
+          // Exact drawn rects — match the pixel-precise canOccupy test.
+          for (final cr in tile.colRects) {
+            final rect = tileRect(cr.x / map.tileSize, cr.y / map.tileSize,
+                cr.w / map.tileSize, cr.h / map.tileSize);
+            canvas.drawRect(rect, isPassthrough ? passPaint : blockPaint);
+            canvas.drawRect(rect, border);
+          }
+          continue;
+        }
 
         final Rect rect;
-        if (tile.colRect != null) {
-          // Exact drawn rect — matches the pixel-precise canOccupy test.
-          final cr = tile.colRect!;
-          rect = tileRect(cr.x / map.tileSize, cr.y / map.tileSize,
-              cr.w / map.tileSize, cr.h / map.tileSize);
-        } else if (isFloor) {
+        if (isFloor) {
           rect = tileRect(tile.x.toDouble(), tile.y.toDouble(),
               tile.w.toDouble(), tile.h.toDouble());
         } else {

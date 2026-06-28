@@ -15,6 +15,8 @@ import "../../../avatar/domain/avatar_position.dart";
 import "../../../avatar/domain/avatar_scene.dart";
 import "../../../avatar/presentation/avatar_animation_controller.dart";
 import "../../../avatar/presentation/avatar_movement_controller.dart";
+import "../../../avatar/presentation/avatar_pathfinder.dart";
+import "../../../avatar/presentation/gestures.dart";
 import "../../../avatar/presentation/avatar_renderer.dart";
 import "../../../avatar/presentation/remote_avatars_renderer.dart";
 import "../../../avatar/domain/avatar_view_model.dart";
@@ -53,6 +55,7 @@ class OfficeCanvas extends StatefulWidget {
     this.remoteAvatars = const {},
     this.onAvatarMoved,
     this.onAvatarStopped,
+    this.onGesture,
     super.key,
   });
 
@@ -77,6 +80,8 @@ class OfficeCanvas extends StatefulWidget {
   // Called on every position update so the parent can relay to WebSocket.
   final void Function(double x, double y, String direction, String motionState)? onAvatarMoved;
   final void Function(double x, double y, String direction)? onAvatarStopped;
+  // Called when the user picks a gesture aimed at a peer (hover menu).
+  final void Function(String sprite, String targetUserId)? onGesture;
 
   @override
   State<OfficeCanvas> createState() => _OfficeCanvasState();
@@ -104,7 +109,30 @@ class _OfficeCanvasState extends State<OfficeCanvas>
   DateTime? _lastMoveAt;
   static const _moveIntervalMs = 120;
   bool _wasMoving = false;
-  int _stepCount = 0;
+
+  // Footstep audio synced to the leg animation's footfall beat, but only while
+  // the avatar is actually translating (silent when standing/blocked).
+  AvatarPosition? _lastTickPos;
+  int _lastStepBeat = -2;
+
+  // Auto-walk (X → desk / tap-to-walk). A* path of tile coords to follow.
+  List<({int x, int y})> _autoPath = const [];
+  int _autoIndex = 0;
+  String? _arriveDir; // direction to face on arrival (sit); null = just stop
+  bool _isSitting = false;
+  DateTime? _lastAutoAt;
+  static const double _autoTilesPerSec = 4.0;
+  // Last viewport size, captured in the LayoutBuilder for tap → tile math.
+  Size _viewport = Size.zero;
+
+  // Double-tap-to-walk: position captured on the second tap-down.
+  Offset _doubleTapPos = Offset.zero;
+
+  // Hover-over-avatar state (hand cursor + gesture menu on peers).
+  MouseCursor _hoverCursor = MouseCursor.defer;
+  String? _hoveredUserId;
+  Offset? _hoverAnchor; // top-center of the hovered avatar, in canvas coords
+  Timer? _hoverCloseTimer;
 
   // Remote avatar rendering cache — keyed by characterId for frames, userId for controllers.
   final _characterFrames = <String, Map<String, ui.Image>>{};
@@ -211,6 +239,8 @@ class _OfficeCanvasState extends State<OfficeCanvas>
     _ticker = createTicker((_) {
       if (!mounted) return;
       _tickMovement();
+      final c = _movementController;
+      if (c != null) _maybeFootstep(c.avatar.position);
       setState(() {});
     })..start();
 
@@ -266,9 +296,43 @@ class _OfficeCanvasState extends State<OfficeCanvas>
     _remoteControllers.removeWhere((uid, _) => !avatars.containsKey(uid));
   }
 
+  // Plays a footstep on each footfall of the walk animation, but only while the
+  // avatar actually translated this tick (so it's silent when standing/blocked).
+  void _maybeFootstep(AvatarPosition pos) {
+    final last = _lastTickPos;
+    _lastTickPos = pos;
+    final anim = _scene?.avatarScene.avatarController;
+    final movingNow = last != null &&
+        ((pos.x - last.x).abs() + (pos.y - last.y).abs()) > 0.0001;
+    if (anim == null || !movingNow) {
+      _lastStepBeat = -2; // reset so we don't double-play on resume
+      return;
+    }
+    final beat = anim.stepBeat;
+    if (beat < 0) {
+      _lastStepBeat = -2;
+      return;
+    }
+    if (_lastStepBeat == -2) {
+      _lastStepBeat = beat; // first moving frame — wait for the next beat
+      return;
+    }
+    if (beat != _lastStepBeat) {
+      _lastStepBeat = beat;
+      ReactionAudioService.playSfx("footstep");
+    }
+  }
+
   void _tickMovement() {
-    final dir = _currentDirection();
     final controller = _movementController;
+
+    // Auto-walk (X-to-desk / tap-to-walk) takes priority over the keyboard.
+    if (_autoPath.isNotEmpty && controller != null) {
+      _tickAutoWalk(controller);
+      return;
+    }
+
+    final dir = _currentDirection();
 
     if (dir == null) {
       if (_wasMoving && controller != null) {
@@ -289,11 +353,200 @@ class _OfficeCanvasState extends State<OfficeCanvas>
       if (moved) {
         _lastMoveAt = now;
         _wasMoving = true;
-        _stepCount++;
-        if (_stepCount % 2 == 0) ReactionAudioService.playSfx("footstep");
         final pos = controller!.avatar.position;
         widget.onAvatarMoved?.call(pos.x, pos.y, dir.name, "walking");
       }
+    }
+  }
+
+  void _tickAutoWalk(AvatarMovementController controller) {
+    final now = DateTime.now();
+    final dt = _lastAutoAt == null
+        ? 0.016
+        : (now.difference(_lastAutoAt!).inMicroseconds / 1e6).clamp(0.0, 0.05);
+    _lastAutoAt = now;
+
+    final wp = _autoPath[_autoIndex];
+    final arrived =
+        controller.stepToward(wp.x.toDouble(), wp.y.toDouble(), _autoTilesPerSec * dt);
+
+    final pos = controller.avatar.position;
+    widget.onAvatarMoved
+        ?.call(pos.x, pos.y, controller.avatar.direction.name, "walking");
+
+    if (!arrived) return;
+
+    _autoIndex++;
+    if (_autoIndex < _autoPath.length) return;
+
+    // Reached the destination.
+    _autoPath = const [];
+    _autoIndex = 0;
+    _lastAutoAt = null;
+    if (_arriveDir != null) {
+      controller.faceAndIdle(avatarDirectionFromString(_arriveDir!));
+      _isSitting = true;
+    } else {
+      controller.stop();
+    }
+    final p = controller.avatar.position;
+    widget.onAvatarStopped
+        ?.call(p.x, p.y, controller.avatar.direction.name);
+  }
+
+  // Cancels any auto-walk / sitting (called when the user takes manual control).
+  void _cancelAutoWalk() {
+    if (_autoPath.isEmpty && !_isSitting) return;
+    _autoPath = const [];
+    _autoIndex = 0;
+    _arriveDir = null;
+    _isSitting = false;
+    _lastAutoAt = null;
+  }
+
+  // X pressed: walk to the nearest desk and sit, or stand up if already seated.
+  void _toggleSit() {
+    final controller = _movementController;
+    final scene = _scene;
+    if (controller == null || scene == null) return;
+
+    if (_isSitting || _autoPath.isNotEmpty) {
+      setState(_cancelAutoWalk);
+      controller.stop();
+      return;
+    }
+
+    final desks = scene.map.desks;
+    if (desks.isEmpty) return;
+
+    final pos = controller.avatar.position;
+    MapDesk? best;
+    var bestDist = double.infinity;
+    for (final d in desks) {
+      final dd = (d.x - pos.x).abs() + (d.y - pos.y).abs();
+      if (dd < bestDist) {
+        bestDist = dd;
+        best = d;
+      }
+    }
+    final desk = best!;
+
+    if (pos.tileX == desk.x && pos.tileY == desk.y) {
+      controller.faceAndIdle(avatarDirectionFromString(desk.dir));
+      setState(() => _isSitting = true);
+      return;
+    }
+
+    final path = AvatarPathfinder.findPath(
+        scene.map, pos.tileX, pos.tileY, desk.x, desk.y);
+    if (path.isEmpty) return; // unreachable
+
+    setState(() {
+      _autoPath = path;
+      _autoIndex = 0;
+      _arriveDir = desk.dir;
+      _isSitting = false;
+      _lastAutoAt = null;
+    });
+  }
+
+  // Tap a free tile to walk there (A* around obstacles).
+  void _onTapWalk(Offset local) {
+    _focusNode.requestFocus();
+    final controller = _movementController;
+    final scene = _scene;
+    if (controller == null || scene == null || _viewport == Size.zero) return;
+
+    final map = _effectiveMap(scene.map);
+    final zoom = map.displayZoom;
+    final pos = controller.avatar.position;
+    final offset = MapRenderer.cameraOffset(_viewport, map, pos.x, pos.y, zoom: zoom);
+    final cell = map.tileSize * zoom;
+    final tx = ((local.dx - offset.dx) / cell).floor();
+    final ty = ((local.dy - offset.dy) / cell).floor();
+    if (tx < 0 || ty < 0 || tx >= map.width || ty >= map.height) return;
+    if (!map.canOccupyTile(tx, ty)) return;
+
+    final path = AvatarPathfinder.findPath(map, pos.tileX, pos.tileY, tx, ty);
+    if (path.isEmpty) return;
+
+    setState(() {
+      _autoPath = path;
+      _autoIndex = 0;
+      _arriveDir = null;
+      _isSitting = false;
+      _lastAutoAt = null;
+    });
+  }
+
+  // Approximate screen rect of an avatar standing at tile (tx, ty) — mirrors
+  // the renderers closely enough for hover hit-testing.
+  Rect _avatarRect(
+      OfficeMap map, Offset camOffset, double ts, double tx, double ty) {
+    final cx = (tx + 0.5 + map.avatarXOffset) * ts + camOffset.dx;
+    final bottomY = (ty + 1 - map.avatarYOffset) * ts + camOffset.dy;
+    final h = ts * map.avatarScale;
+    final w = ts * 0.8;
+    return Rect.fromLTWH(cx - w / 2, bottomY - h, w, h);
+  }
+
+  void _onHover(Offset local) {
+    final scene = _scene;
+    final controller = _movementController;
+    if (scene == null || controller == null || _viewport == Size.zero) return;
+    final map = _effectiveMap(scene.map);
+    final ts = map.tileSize * map.displayZoom;
+    final localPos = controller.avatar.position;
+    final camOffset = MapRenderer.cameraOffset(
+        _viewport, map, localPos.x, localPos.y,
+        zoom: map.displayZoom);
+
+    String? hitUserId;
+    Rect? hitRect;
+    for (final entry in widget.remoteAvatars.entries) {
+      final r = _avatarRect(
+          map, camOffset, ts, entry.value.position.x, entry.value.position.y);
+      if (r.contains(local)) {
+        hitUserId = entry.key;
+        hitRect = r;
+      }
+    }
+    final overLocal =
+        _avatarRect(map, camOffset, ts, localPos.x, localPos.y).contains(local);
+    final cursor = (hitUserId != null || overLocal)
+        ? SystemMouseCursors.click
+        : MouseCursor.defer;
+
+    if (hitUserId != null) {
+      final r = hitRect!;
+      _hoverCloseTimer?.cancel();
+      if (_hoveredUserId != hitUserId || _hoverCursor != cursor) {
+        setState(() {
+          _hoveredUserId = hitUserId;
+          _hoverAnchor = Offset(r.center.dx, r.top);
+          _hoverCursor = cursor;
+        });
+      }
+    } else {
+      if (_hoverCursor != cursor) setState(() => _hoverCursor = cursor);
+      if (_hoveredUserId != null) _scheduleHoverClose();
+    }
+  }
+
+  void _scheduleHoverClose() {
+    _hoverCloseTimer?.cancel();
+    _hoverCloseTimer = Timer(const Duration(milliseconds: 250), () {
+      if (mounted) setState(() => _hoveredUserId = null);
+    });
+  }
+
+  void _clearHover() {
+    _hoverCloseTimer?.cancel();
+    if (_hoveredUserId != null || _hoverCursor != MouseCursor.defer) {
+      setState(() {
+        _hoveredUserId = null;
+        _hoverCursor = MouseCursor.defer;
+      });
     }
   }
 
@@ -330,6 +583,7 @@ class _OfficeCanvasState extends State<OfficeCanvas>
   void dispose() {
     _ticker?.dispose();
     _walkTimer?.cancel();
+    _hoverCloseTimer?.cancel();
     _focusNode.dispose();
     super.dispose();
   }
@@ -369,12 +623,20 @@ class _OfficeCanvasState extends State<OfficeCanvas>
       focusNode: _focusNode,
       autofocus: true,
       onKeyEvent: _handleKeyEvent,
+      child: MouseRegion(
+        cursor: _hoverCursor,
+        onHover: (e) => _onHover(e.localPosition),
+        onExit: (_) => _clearHover(),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => _focusNode.requestFocus(),
+        // Double-click to walk (single click only focuses).
+        onDoubleTapDown: (d) => _doubleTapPos = d.localPosition,
+        onDoubleTap: () => _onTapWalk(_doubleTapPos),
         child: LayoutBuilder(
           builder: (context, constraints) {
             final viewport = Size(constraints.maxWidth, constraints.maxHeight);
+            _viewport = viewport;
             final pos = movementController.avatar.position;
             final effectiveMap = _effectiveMap(scene.map);
             return Stack(
@@ -448,21 +710,84 @@ class _OfficeCanvasState extends State<OfficeCanvas>
                     tileX: pos.x,
                     tileY: pos.y,
                   ),
+                // Gesture menu shown over a peer's avatar on hover.
+                if (_hoveredUserId != null &&
+                    _hoverAnchor != null &&
+                    widget.onGesture != null)
+                  Positioned(
+                    left: _hoverAnchor!.dx - (kGestures.length * 38) / 2,
+                    top: _hoverAnchor!.dy - 56,
+                    child: MouseRegion(
+                      onEnter: (_) => _hoverCloseTimer?.cancel(),
+                      onExit: (_) => _scheduleHoverClose(),
+                      child: _buildPeerGestureMenu(_hoveredUserId!),
+                    ),
+                  ),
               ],
             );
           },
         ),
       ),
       ),
+      ),
+    );
+  }
+
+  Widget _buildPeerGestureMenu(String userId) {
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xF21A1E2B),
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: const [BoxShadow(color: Color(0x55000000), blurRadius: 10)],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final g in kGestures)
+              Tooltip(
+                message: g.label,
+                child: InkWell(
+                  onTap: () {
+                    widget.onGesture?.call(g.sprite, userId);
+                    _clearHover();
+                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: Image.asset(
+                        "assets/${g.sprite}",
+                        filterQuality: FilterQuality.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 
   KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
+    // X → walk to nearest desk and sit (or stand up).
+    if (event.logicalKey == LogicalKeyboardKey.keyX) {
+      if (event is KeyDownEvent) _toggleSit();
+      return KeyEventResult.handled;
+    }
+
     final isMovementKey = _directionFor(event.logicalKey) != null;
     if (!isMovementKey) return KeyEventResult.ignored;
 
     if (event is KeyDownEvent) {
       if (!_heldKeys.contains(event.logicalKey)) {
+        // Taking manual control cancels any auto-walk / sitting.
+        if (_autoPath.isNotEmpty || _isSitting) setState(_cancelAutoWalk);
         _heldKeys.add(event.logicalKey);
         _lastMoveAt = null; // move immediately on first press
       }
@@ -532,10 +857,7 @@ class _ReactionBubble extends StatelessWidget {
                     BoxShadow(color: Color(0x55000000), blurRadius: 8),
                   ],
                 ),
-                child: Image.asset(
-                  "assets/$sprite",
-                  filterQuality: FilterQuality.none,
-                ),
+                child: _WigglingSprite(sprite: sprite),
               ),
               if (targetName != null) ...[
                 const SizedBox(height: 2),
@@ -561,6 +883,45 @@ class _ReactionBubble extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// Pixel-art gesture sprite that gently rocks back and forth (Gather-style wave).
+class _WigglingSprite extends StatefulWidget {
+  const _WigglingSprite({required this.sprite});
+
+  final String sprite;
+
+  @override
+  State<_WigglingSprite> createState() => _WigglingSpriteState();
+}
+
+class _WigglingSpriteState extends State<_WigglingSprite>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 380),
+  )..repeat(reverse: true);
+
+  late final Animation<double> _wiggle = Tween<double>(begin: -0.06, end: 0.06)
+      .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RotationTransition(
+      turns: _wiggle,
+      alignment: Alignment.bottomCenter,
+      child: Image.asset(
+        "assets/${widget.sprite}",
+        filterQuality: FilterQuality.none,
       ),
     );
   }

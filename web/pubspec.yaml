@@ -13,10 +13,11 @@ dependencies:
   flutter_riverpod: ^2.6.1
   go_router: ^14.2.7
   dio: ^5.7.0
-  web_socket_channel: ^2.4.5
+  web_socket_channel: ^3.0.0
   flame: ^1.18.0
-  emoji_picker_flutter: ^2.2.0
+  emoji_picker_flutter: ^4.4.0
   animated_emoji: ^3.2.1
+  livekit_client: ^2.3.0
 
 dev_dependencies:
   flutter_test:

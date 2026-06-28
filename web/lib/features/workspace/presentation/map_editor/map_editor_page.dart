@@ -58,6 +58,7 @@ class MapEditorPage extends ConsumerStatefulWidget {
 class _MapEditorPageState extends ConsumerState<MapEditorPage> {
   bool _showCollision = true;
   bool _paintCollision = false;
+  bool _placingSpawn = false;
   bool _spaceHeld = false;
   bool _showCharOnCanvas = false;
 
@@ -192,6 +193,9 @@ class _MapEditorPageState extends ConsumerState<MapEditorPage> {
                       paintCollision: _paintCollision,
                       onExitPaintCollision: () =>
                           setState(() => _paintCollision = false),
+                      placingSpawn: _placingSpawn,
+                      onExitPlaceSpawn: () =>
+                          setState(() => _placingSpawn = false),
                       spaceHeld: _spaceHeld,
                       showCharOnCanvas: _showCharOnCanvas,
                       onToggleCharOnCanvas: () =>
@@ -232,6 +236,20 @@ class _MapEditorPageState extends ConsumerState<MapEditorPage> {
                           .clearSelection();
                     }
                   },
+                  placingSpawn: _placingSpawn,
+                  onTogglePlaceSpawn: () {
+                    final entering = !_placingSpawn;
+                    setState(() {
+                      _placingSpawn = entering;
+                      if (entering) _paintCollision = false;
+                    });
+                    if (entering) {
+                      ref.read(mapEditorProvider((widget.workspaceId,
+                              ref.read(authProvider).token ?? ""))
+                          .notifier)
+                          .clearSelection();
+                    }
+                  },
                   showCharOnCanvas: _showCharOnCanvas,
                   onToggleCharOnCanvas: () =>
                       setState(() => _showCharOnCanvas = !_showCharOnCanvas),
@@ -262,6 +280,8 @@ class _FloatingToolbar extends StatelessWidget {
     required this.onToggleCollision,
     required this.paintCollision,
     required this.onTogglePaintCollision,
+    required this.placingSpawn,
+    required this.onTogglePlaceSpawn,
     required this.showCharOnCanvas,
     required this.onToggleCharOnCanvas,
     required this.onBack,
@@ -275,6 +295,8 @@ class _FloatingToolbar extends StatelessWidget {
   final VoidCallback onToggleCollision;
   final bool paintCollision;
   final VoidCallback onTogglePaintCollision;
+  final bool placingSpawn;
+  final VoidCallback onTogglePlaceSpawn;
   final bool showCharOnCanvas;
   final VoidCallback onToggleCharOnCanvas;
   final VoidCallback onBack;
@@ -422,6 +444,30 @@ class _FloatingToolbar extends StatelessWidget {
                       : null,
                   side: paintCollision
                       ? const BorderSide(color: Color(0xFFFF9800))
+                      : null,
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+            // ── Ponto de spawn ──
+            Tooltip(
+              message: placingSpawn
+                  ? "Clique no mapa para definir o spawn"
+                  : "Definir onde os personagens nascem",
+              child: OutlinedButton.icon(
+                onPressed: onTogglePlaceSpawn,
+                icon: Icon(
+                  placingSpawn ? Icons.location_on : Icons.location_on_outlined,
+                  size: 15,
+                ),
+                label: const Text("Spawn"),
+                style: OutlinedButton.styleFrom(
+                  padding: _btnPad,
+                  minimumSize: _btnMinSize,
+                  textStyle: _btnStyle,
+                  foregroundColor: placingSpawn ? const Color(0xFF42A5F5) : null,
+                  side: placingSpawn
+                      ? const BorderSide(color: Color(0xFF42A5F5))
                       : null,
                 ),
               ),
@@ -1316,6 +1362,8 @@ class _EditorCanvas extends ConsumerStatefulWidget {
     required this.onToggleCollision,
     required this.paintCollision,
     required this.onExitPaintCollision,
+    required this.placingSpawn,
+    required this.onExitPlaceSpawn,
     required this.spaceHeld,
     required this.showCharOnCanvas,
     required this.onToggleCharOnCanvas,
@@ -1330,6 +1378,8 @@ class _EditorCanvas extends ConsumerStatefulWidget {
   final VoidCallback onToggleCollision;
   final bool paintCollision;
   final VoidCallback onExitPaintCollision;
+  final bool placingSpawn;
+  final VoidCallback onExitPlaceSpawn;
   final bool spaceHeld;
   final bool showCharOnCanvas;
   final VoidCallback onToggleCharOnCanvas;
@@ -1502,12 +1552,12 @@ class _EditorCanvasState extends ConsumerState<_EditorCanvas> {
     _paintedIds.add(tile.id);
 
     // Determine paint/erase on first touch of the stroke.
-    _paintErasing ??= tile.colRect != null;
+    _paintErasing ??= tile.colRects.isNotEmpty;
 
     if (_paintErasing!) {
-      widget.notifier.clearCollisionRect(tile.id);
+      widget.notifier.clearCollisionRects(tile.id);
     } else {
-      widget.notifier.setCollisionRect(
+      widget.notifier.setFullCollisionRect(
           tile.id, tile.x, tile.y, tile.w, tile.h);
     }
   }
@@ -1530,6 +1580,9 @@ class _EditorCanvasState extends ConsumerState<_EditorCanvas> {
     _didPan = false;
 
     _draggingPixel = false;
+
+    // Spawn placement: a tap sets the spawn; never set up tile drag.
+    if (widget.placingSpawn) return;
 
     // In paint mode, never setup tile drag — tap-end will place
     if (details.pointerCount == 1 &&
@@ -1625,10 +1678,11 @@ class _EditorCanvasState extends ConsumerState<_EditorCanvas> {
         final rw = (x2 - x1).abs();
         final rh = (y2 - y1).abs();
         if (rw >= 4 && rh >= 4) {
-          widget.notifier.setCollisionRect(
+          widget.notifier.addCollisionRect(
               _collisionEditId!, rx.round(), ry.round(), rw.round(), rh.round());
+          // Stay in collision draw mode so several rects can be drawn on the
+          // same object — the user exits via the "Concluir" button.
           setState(() {
-            _collisionEditId = null;
             _colDragStart = null;
             _colDragEnd = null;
           });
@@ -1645,8 +1699,14 @@ class _EditorCanvasState extends ConsumerState<_EditorCanvas> {
     if (!_didPan) {
       final canvasPos = _toCanvas(_panStartPointer);
       final (gx, gy) = _toGrid(canvasPos);
-      widget.notifier.tapCanvas(gx, gy,
-          px: canvasPos.dx.round(), py: canvasPos.dy.round());
+      // Spawn placement mode: a tap sets where players appear, then exits.
+      if (widget.placingSpawn) {
+        widget.notifier.setSpawn(gx, gy);
+        widget.onExitPlaceSpawn();
+      } else {
+        widget.notifier.tapCanvas(gx, gy,
+            px: canvasPos.dx.round(), py: canvasPos.dy.round());
+      }
     }
     _draggingId = null;
     _draggingPixel = false;
@@ -1768,9 +1828,37 @@ class _EditorCanvasState extends ConsumerState<_EditorCanvas> {
                 children: [
                   const Icon(Icons.add, size: 14, color: Color(0xFFFF9800)),
                   const SizedBox(width: 6),
-                  const Text("Drag to draw collision area",
-                      style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 12)),
+                  Text("Arraste para desenhar — ${tile.colRects.length} área(s)",
+                      style: const TextStyle(color: Color(0xFFFFFFFF), fontSize: 12)),
                   const SizedBox(width: 12),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => widget.notifier.removeLastCollisionRect(tile.id),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF37474F),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text("Desfazer",
+                          style: TextStyle(color: Colors.white, fontSize: 11)),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => widget.notifier.clearCollisionRects(tile.id),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF5D4037),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text("Limpar",
+                          style: TextStyle(color: Colors.white, fontSize: 11)),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => setState(() {
@@ -1781,10 +1869,10 @@ class _EditorCanvasState extends ConsumerState<_EditorCanvas> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF37474F),
+                        color: const Color(0xFFFF9800),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Text("Cancel",
+                      child: const Text("Concluir",
                           style: TextStyle(color: Colors.white, fontSize: 11)),
                     ),
                   ),
@@ -1806,8 +1894,9 @@ class _EditorCanvasState extends ConsumerState<_EditorCanvas> {
         onTap: () => widget.notifier.rotatePlaced(tile.id)),
       (icon: Icons.content_copy_outlined, label: "Duplicar", color: const Color(0xFF42A5F5),
         onTap: () => widget.notifier.duplicatePlaced(tile.id)),
-      (icon: Icons.crop_free, label: tile.colRect != null ? "Colisão ✓" : "Colisão",
-        color: tile.colRect != null ? const Color(0xFFFF9800) : const Color(0xFF78909C),
+      (icon: Icons.crop_free,
+        label: tile.colRects.isNotEmpty ? "Colisão (${tile.colRects.length})" : "Colisão",
+        color: tile.colRects.isNotEmpty ? const Color(0xFFFF9800) : const Color(0xFF78909C),
         onTap: () => setState(() {
           _collisionEditId = tile.id;
           _colDragStart = null;
@@ -2366,6 +2455,19 @@ class _CanvasPainter extends CustomPainter {
         ..strokeWidth = 2.0 / scale);
     }
 
+    // Spawn point marker — where players appear when entering the office.
+    final spawnRect = Rect.fromLTWH(
+        editorState.spawnX * _cell, editorState.spawnY * _cell, _cell, _cell);
+    canvas.drawRect(spawnRect, Paint()..color = const Color(0x5542A5F5));
+    canvas.drawRect(
+        spawnRect,
+        Paint()
+          ..color = const Color(0xFF42A5F5)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.0 / scale);
+    canvas.drawCircle(
+        spawnRect.center, _cell * 0.18, Paint()..color = const Color(0xFF42A5F5));
+
     // Selection highlight (always on top)
     final sel = editorState.selectedTile;
     if (sel != null) _drawSelection(canvas, sel);
@@ -2394,14 +2496,15 @@ class _CanvasPainter extends CustomPainter {
           ? Rect.fromLTWH(pt.x * _cell, pt.y * _cell, pt.w * _cell, pt.h * _cell)
           : Rect.fromLTWH(pt.x.toDouble(), pt.y.toDouble(), pt.w.toDouble(), pt.h.toDouble());
 
-      // If tile has a custom colRect, show it in orange (overrides default).
-      if (pt.colRect != null) {
-        final cr = pt.colRect!;
-        final crRect = Rect.fromLTWH(
-          cr.x.toDouble(), cr.y.toDouble(), cr.w.toDouble(), cr.h.toDouble());
+      // If tile has custom colRects, show them in orange (overrides default).
+      if (pt.colRects.isNotEmpty) {
         canvas.drawRect(fullRect, Paint()..color = const Color(0x33FF9800));
-        canvas.drawRect(crRect, customPaint);
-        canvas.drawRect(crRect, customBorder);
+        for (final cr in pt.colRects) {
+          final crRect = Rect.fromLTWH(
+            cr.x.toDouble(), cr.y.toDouble(), cr.w.toDouble(), cr.h.toDouble());
+          canvas.drawRect(crRect, customPaint);
+          canvas.drawRect(crRect, customBorder);
+        }
         continue;
       }
 

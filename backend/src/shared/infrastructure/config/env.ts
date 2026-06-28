@@ -6,6 +6,10 @@ export const envSchema = z.object({
   JWT_SECRET: z.string().min(1),
   API_PORT: z.coerce.number().int().positive(),
   WS_PORT: z.coerce.number().int().positive(),
+  // LiveKit (SFU) — optional so the app still boots before they are configured.
+  LIVEKIT_URL: z.string().optional(),
+  LIVEKIT_API_KEY: z.string().optional(),
+  LIVEKIT_API_SECRET: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

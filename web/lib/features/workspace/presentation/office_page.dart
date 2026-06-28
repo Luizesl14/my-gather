@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:animated_emoji/animated_emoji.dart";
 import "package:emoji_picker_flutter/emoji_picker_flutter.dart";
 import "package:flutter/material.dart";
@@ -11,21 +13,23 @@ import "../../../core/theme/app_colors.dart";
 import "../../../core/theme/app_spacing.dart";
 import "../../../shared/design_system/design_system.dart";
 import "../../auth/presentation/auth_provider.dart";
+import "../../avatar/data/reaction_audio_service.dart";
 import "../../avatar/presentation/character_provider.dart";
+import "../../avatar/presentation/gestures.dart";
 import "../../avatar/presentation/presence_provider.dart";
+import "../../call/data/livekit_token_service.dart";
+import "../../call/presentation/call_controller.dart";
+import "../../call/presentation/proximity_call_overlay.dart";
+import "../../chat/presentation/chat_panel.dart";
+import "../../chat/presentation/chat_provider.dart";
 import "../data/workspace_service.dart";
 import "game/office_canvas.dart";
 import "remote_avatar_provider.dart";
 import "workspace_provider.dart";
 
-// Keyboard shortcuts for the reaction hotbar (Gather-style: keys 1..5).
-const _reactionKeys = [
-  LogicalKeyboardKey.digit1,
-  LogicalKeyboardKey.digit2,
-  LogicalKeyboardKey.digit3,
-  LogicalKeyboardKey.digit4,
-  LogicalKeyboardKey.digit5,
-];
+// Collision debug overlay visibility — toggled from the central dock, read by
+// the office canvas (lives in a provider so both widgets can share it).
+final showCollisionProvider = StateProvider<bool>((ref) => false);
 
 class OfficePage extends ConsumerStatefulWidget {
   const OfficePage({required this.workspaceId, super.key});
@@ -39,19 +43,26 @@ class OfficePage extends ConsumerStatefulWidget {
 class _OfficePageState extends ConsumerState<OfficePage> {
   static const _wsUrl = "ws://localhost:3001/ws";
 
-  // Collision debug overlay — toggled from the floating menu (owner/admin).
-  bool _showCollision = false;
+  // Proximity audio/video call (LiveKit SFU).
+  final CallController _call = CallController();
+  double _myX = 0;
+  double _myY = 0;
+  static const double _callRadiusTiles = 3.0;
 
   @override
   void initState() {
     super.initState();
     // Defer connection until the widget tree is mounted so providers are ready.
-    WidgetsBinding.instance.addPostFrameCallback((_) => _connect());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _connect();
+      _initCall();
+    });
   }
 
   @override
   void dispose() {
     ref.read(realtimeSessionProvider.notifier).leave(widget.workspaceId);
+    _call.dispose();
     super.dispose();
   }
 
@@ -67,6 +78,57 @@ class _OfficePageState extends ConsumerState<OfficePage> {
     );
   }
 
+  Future<void> _initCall() async {
+    final token = ref.read(authProvider).token;
+    if (token == null) return;
+    try {
+      final creds =
+          await LivekitTokenService(token).fetch(widget.workspaceId);
+      if (creds == null || !mounted) return; // LiveKit not configured
+      await _call.connect(creds.url, creds.token);
+    } catch (_) {
+      // Calls are best-effort — never block entering the office.
+    }
+  }
+
+  // Re-evaluates which remote users are within the proximity bubble.
+  void _recomputeProximity() {
+    final remotes = ref.read(remoteAvatarsProvider);
+    final inRange = <String>{};
+    for (final entry in remotes.entries) {
+      final dx = entry.value.position.x - _myX;
+      final dy = entry.value.position.y - _myY;
+      if (dx * dx + dy * dy <= _callRadiusTiles * _callRadiusTiles) {
+        inRange.add(entry.key);
+      }
+    }
+    _call.setInRange(inRange);
+    // Share the proximity set so chat/reactions are scoped to nearby people
+    // and the gesture button only shows when someone is close.
+    ref.read(nearbyUserIdsProvider.notifier).state = inRange;
+  }
+
+  // Fires a wave gesture over the local avatar (animated sprite + sound) and
+  // broadcasts it so nearby people see/hear it too.
+  void _wave() {
+    ref.read(activeReactionProvider.notifier).trigger(kWaveSprite);
+    ReactionAudioService.playSfx("wave");
+    ref.read(realtimeSessionProvider.notifier).sendReaction(kWaveSprite);
+  }
+
+  // Gesture aimed at a specific peer (from the on-avatar hover menu).
+  void _gestureAt(String sprite, String targetUserId) {
+    final g = kGestures.firstWhere(
+      (g) => g.sprite == sprite,
+      orElse: () => kGestures.first,
+    );
+    ref.read(activeReactionProvider.notifier).trigger(sprite);
+    ReactionAudioService.playSfx(g.sfx);
+    ref
+        .read(realtimeSessionProvider.notifier)
+        .sendReaction(sprite, targetUserId: targetUserId);
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
@@ -79,26 +141,35 @@ class _OfficePageState extends ConsumerState<OfficePage> {
     final catalog = ref.watch(statusCatalogProvider).valueOrNull;
     final dotColor = presenceColor(
         colors, catalog?.presenceById(status.presenceId)?.colorKey ?? "");
-    final reactions = catalog?.reactions ?? const <ReactionOption>[];
     final remoteAvatars = ref.watch(remoteAvatarsProvider);
     final session = ref.read(realtimeSessionProvider.notifier);
+
+    // Recompute the proximity bubble when remote avatars move (fires after the
+    // frame, so it's safe to notify the call controller).
+    ref.listen(remoteAvatarsProvider, (_, __) => _recomputeProximity());
+
+    // Play a sound when a nearby peer gestures at us.
+    ref.listen(peerReactionProvider, (_, next) {
+      if (next == null) return;
+      final g = kGestures.firstWhere(
+        (g) => g.sprite == next.sprite,
+        orElse: () => kGestures.first,
+      );
+      ReactionAudioService.playSfx(g.sfx);
+    });
 
     return Scaffold(
       backgroundColor: colors.app,
       body: CallbackShortcuts(
         bindings: {
-          for (var i = 0; i < reactions.length && i < _reactionKeys.length; i++)
-            SingleActivator(_reactionKeys[i]): () {
-              // Don't steal digits while the user types a custom status.
-              final focused = FocusManager.instance.primaryFocus?.context;
-              if (focused?.findAncestorStateOfType<EditableTextState>() !=
-                  null) {
-                return;
-              }
-              ref
-                  .read(activeReactionProvider.notifier)
-                  .trigger(reactions[i].sprite);
-            },
+          const SingleActivator(LogicalKeyboardKey.keyZ): () {
+            // Don't steal the key while the user types a custom status.
+            final focused = FocusManager.instance.primaryFocus?.context;
+            if (focused?.findAncestorStateOfType<EditableTextState>() != null) {
+              return;
+            }
+            _wave();
+          },
         },
         child: Stack(
           children: [
@@ -109,17 +180,26 @@ class _OfficePageState extends ConsumerState<OfficePage> {
                 workspaceId: widget.workspaceId,
                 token: ref.watch(authProvider).token ?? "",
                 canToggleCollision: canEditMap,
-                showCollision: _showCollision,
+                showCollision: ref.watch(showCollisionProvider),
                 presenceDotColor: dotColor,
                 statusEmoji: status.emoji,
                 reactionSprite: ref.watch(activeReactionProvider)?.sprite,
                 reactionTargetName:
                     ref.watch(activeReactionProvider)?.targetName,
                 remoteAvatars: remoteAvatars,
-                onAvatarMoved: (x, y, direction, motionState) =>
-                    session.sendMove(x, y, direction, motionState),
-                onAvatarStopped: (x, y, direction) =>
-                    session.sendStop(x, y, direction),
+                onAvatarMoved: (x, y, direction, motionState) {
+                  session.sendMove(x, y, direction, motionState);
+                  _myX = x;
+                  _myY = y;
+                  _recomputeProximity();
+                },
+                onAvatarStopped: (x, y, direction) {
+                  session.sendStop(x, y, direction);
+                  _myX = x;
+                  _myY = y;
+                  _recomputeProximity();
+                },
+                onGesture: _gestureAt,
               ),
             ),
             Positioned(
@@ -133,13 +213,6 @@ class _OfficePageState extends ConsumerState<OfficePage> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AppIconButton(
-                      icon: Icons.arrow_back,
-                      tooltip: "Voltar",
-                      onPressed: () =>
-                          context.goNamed(AppRouteNames.characterSelection),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -160,15 +233,6 @@ class _OfficePageState extends ConsumerState<OfficePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(width: AppSpacing.sm),
-                    AppIconButton(
-                      icon: _showCollision ? Icons.grid_on : Icons.grid_off,
-                      tooltip: _showCollision
-                          ? "Ocultar áreas de colisão"
-                          : "Mostrar áreas de colisão",
-                      onPressed: () =>
-                          setState(() => _showCollision = !_showCollision),
-                    ),
                   ],
                 ),
               ),
@@ -179,6 +243,10 @@ class _OfficePageState extends ConsumerState<OfficePage> {
               right: 0,
               child: Center(child: _BottomDock()),
             ),
+            // Proximity call UI (renders only when someone is within range).
+            ProximityCallOverlay(controller: _call),
+            // Side chat (text + gesture notices), scoped to nearby people.
+            const ChatPanel(),
           ],
         ),
       ),
@@ -204,10 +272,34 @@ class _BottomDockState extends ConsumerState<_BottomDock> {
   ReactionOption? _pickerReaction;
   final _textController = TextEditingController();
 
+  // Hover-revealed gesture menu state.
+  bool _gesturesOpen = false;
+  Timer? _gestureCloseTimer;
+
   @override
   void dispose() {
+    _gestureCloseTimer?.cancel();
     _textController.dispose();
     super.dispose();
+  }
+
+  void _openGestures() {
+    _gestureCloseTimer?.cancel();
+    if (!_gesturesOpen) setState(() => _gesturesOpen = true);
+  }
+
+  // Small grace period so the mouse can travel from the button to the panel.
+  void _scheduleCloseGestures() {
+    _gestureCloseTimer?.cancel();
+    _gestureCloseTimer = Timer(const Duration(milliseconds: 250), () {
+      if (mounted) setState(() => _gesturesOpen = false);
+    });
+  }
+
+  void _playGesture(Gesture g) {
+    ref.read(activeReactionProvider.notifier).trigger(g.sprite);
+    ReactionAudioService.playSfx(g.sfx);
+    ref.read(realtimeSessionProvider.notifier).sendReaction(g.sprite);
   }
 
   void _applyText() {
@@ -246,12 +338,33 @@ class _BottomDockState extends ConsumerState<_BottomDock> {
     );
   }
 
+  void _openInvite() {
+    final orgId = ref.read(orgIdProvider);
+    final token = ref.read(authProvider).token;
+    if (token == null || orgId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Selecione uma organização primeiro.")),
+      );
+      return;
+    }
+    showDialog<void>(
+      context: context,
+      builder: (_) => _InviteDialog(organizationId: orgId, token: token),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final status = ref.watch(userStatusProvider);
     final catalog = ref.watch(statusCatalogProvider).valueOrNull;
     if (catalog == null) return const SizedBox.shrink();
+    final showCollision = ref.watch(showCollisionProvider);
+    // Invite + collision are management tools — owner/admin only (not guests).
+    final role = ref.watch(orgRoleProvider);
+    final canEdit = role == "owner" || role == "admin";
+    // Gesture menu only when someone is within the proximity bubble.
+    final hasNearby = ref.watch(nearbyUserIdsProvider).isNotEmpty;
 
     final currentPresence = catalog.presenceById(status.presenceId);
     final currentColor =
@@ -275,6 +388,19 @@ class _BottomDockState extends ConsumerState<_BottomDock> {
         child: _ReactionTargetPicker(
           reaction: _pickerReaction!,
           onDone: () => setState(() => _pickerReaction = null),
+        ),
+      );
+    } else if (_gesturesOpen && hasNearby) {
+      overlay = Padding(
+        key: const ValueKey("gestures-panel"),
+        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+        child: _GesturePanel(
+          onEnter: _openGestures,
+          onExit: _scheduleCloseGestures,
+          onPick: (g) {
+            _playGesture(g);
+            setState(() => _gesturesOpen = false);
+          },
         ),
       );
     } else {
@@ -401,60 +527,93 @@ class _BottomDockState extends ConsumerState<_BottomDock> {
                   ),
                 ),
 
-                _DockDivider(color: colors.border),
+                // Hand gestures (Gather-style). Only shown when someone else is
+                // in the office. Click = wave; hover reveals the full menu.
+                if (hasNearby) ...[
+                  _DockDivider(color: colors.border),
+                  MouseRegion(
+                    onEnter: (_) => _openGestures(),
+                    onExit: (_) => _scheduleCloseGestures(),
+                    child: _DockReaction(
+                      sprite: kWaveSprite,
+                      label: "Gestos",
+                      shortcut: "Z",
+                      active: _gesturesOpen,
+                      onTap: () => _playGesture(kGestures.first),
+                    ),
+                  ),
+                ],
 
-                // Reaction hotbar. Click opens the target picker when there
-                // are other people in the room; keys 1..5 send to everyone.
-                for (final (i, r) in catalog.reactions.indexed)
-                  _DockReaction(
-                    sprite: r.sprite,
-                    label: r.label,
-                    shortcut: i < _reactionKeys.length ? "${i + 1}" : null,
-                    active: _pickerReaction?.id == r.id,
-                    onTap: () {
-                      final members =
-                          ref.read(orgMembersProvider).valueOrNull ??
-                              const <OrgMember>[];
-                      final myId = ref.read(authProvider).user?.id;
-                      final others =
-                          members.where((m) => m.id != myId).toList();
-                      if (others.isEmpty) {
-                        ref
-                            .read(activeReactionProvider.notifier)
-                            .trigger(r.sprite);
-                        setState(() => _pickerReaction = null);
-                        return;
-                      }
-                      setState(() {
-                        _statusOpen = false;
-                        _pickerReaction =
-                            _pickerReaction?.id == r.id ? null : r;
-                      });
-                    },
+                // Invite + collision are owner/admin tools — hidden for guests.
+                if (canEdit) ...[
+                  _DockDivider(color: colors.border),
+
+                  // Invite a colleague to the office.
+                  Tooltip(
+                    message: "Convidar para o escritório",
+                    child: InkWell(
+                      onTap: _openInvite,
+                      borderRadius: BorderRadius.circular(12),
+                      hoverColor: colors.panelMuted,
+                      child: SizedBox(
+                        width: 44,
+                        height: 48,
+                        child: Center(
+                          child: Icon(
+                            Icons.person_add_alt_1,
+                            size: 21,
+                            color: colors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
 
+                  // Toggle the collision debug overlay.
+                  Tooltip(
+                    message: showCollision
+                        ? "Ocultar áreas de colisão"
+                        : "Mostrar áreas de colisão",
+                    child: InkWell(
+                      onTap: () => ref
+                          .read(showCollisionProvider.notifier)
+                          .update((v) => !v),
+                      borderRadius: BorderRadius.circular(12),
+                      hoverColor: colors.panelMuted,
+                      child: SizedBox(
+                        width: 44,
+                        height: 48,
+                        child: Center(
+                          child: Icon(
+                            showCollision ? Icons.grid_on : Icons.grid_off,
+                            size: 21,
+                            color: colors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+
                 _DockDivider(color: colors.border),
 
-                // Status emoji shortcut.
+                // Leave the office.
                 Tooltip(
-                  message: status.emoji == null
-                      ? "Emoji de status"
-                      : "Trocar emoji de status",
+                  message: "Sair do escritório",
                   child: InkWell(
-                    onTap: () => _pickEmoji(context),
+                    onTap: () =>
+                        context.goNamed(AppRouteNames.characterSelection),
                     borderRadius: BorderRadius.circular(12),
                     hoverColor: colors.panelMuted,
                     child: SizedBox(
                       width: 44,
                       height: 48,
                       child: Center(
-                        child: status.emoji != null
-                            ? _EmojiView(emoji: status.emoji!, size: 24)
-                            : Icon(
-                                Icons.add_reaction_outlined,
-                                size: 21,
-                                color: colors.textSecondary,
-                              ),
+                        child: Icon(
+                          Icons.logout,
+                          size: 21,
+                          color: colors.textSecondary,
+                        ),
                       ),
                     ),
                   ),
@@ -464,6 +623,87 @@ class _BottomDockState extends ConsumerState<_BottomDock> {
           ),
         ),
       ],
+    );
+  }
+}
+
+// Hover-revealed gesture menu shown above the dock.
+class _GesturePanel extends StatelessWidget {
+  const _GesturePanel({
+    required this.onEnter,
+    required this.onExit,
+    required this.onPick,
+  });
+
+  final VoidCallback onEnter;
+  final VoidCallback onExit;
+  final void Function(Gesture) onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return MouseRegion(
+      onEnter: (_) => onEnter(),
+      onExit: (_) => onExit(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.sm,
+        ),
+        decoration: BoxDecoration(
+          color: colors.panel.withValues(alpha: 0.97),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colors.border),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x33000000),
+              blurRadius: 16,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Material(
+          type: MaterialType.transparency,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final g in kGestures)
+                Tooltip(
+                  message: g.label,
+                  child: InkWell(
+                    onTap: () => onPick(g),
+                    borderRadius: BorderRadius.circular(12),
+                    hoverColor: colors.panelMuted,
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 34,
+                            height: 34,
+                            child: Image.asset(
+                              "assets/${g.sprite}",
+                              filterQuality: FilterQuality.none,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            g.label,
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: colors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -1001,6 +1241,155 @@ class _EmojiViewState extends State<_EmojiView> {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ─── Invite dialog ───────────────────────────────────────────────────────────
+// Generates a share link that adds the invitee to this office (organization).
+
+class _InviteDialog extends StatefulWidget {
+  const _InviteDialog({required this.organizationId, required this.token});
+
+  final String organizationId;
+  final String token;
+
+  @override
+  State<_InviteDialog> createState() => _InviteDialogState();
+}
+
+class _InviteDialogState extends State<_InviteDialog> {
+  final _emailController = TextEditingController();
+  String _role = "member";
+  bool _loading = false;
+  String? _error;
+  String? _link;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _generate() async {
+    final email = _emailController.text.trim();
+    if (!email.contains("@")) {
+      setState(() => _error = "Informe um e-mail válido.");
+      return;
+    }
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final token = await WorkspaceService(widget.token).createInvitation(
+        widget.organizationId,
+        email: email,
+        role: _role,
+      );
+      final link = "${Uri.base.origin}/#/register?token=$token";
+      setState(() => _link = link);
+    } catch (e) {
+      setState(() => _error = extractApiError(e));
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return AlertDialog(
+      backgroundColor: colors.panel,
+      title: const Text("Convidar para o escritório"),
+      content: SizedBox(
+        width: 420,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                labelText: "E-mail do colega",
+                hintText: "nome@empresa.com",
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                Text("Papel:", style: TextStyle(color: colors.textSecondary)),
+                const SizedBox(width: AppSpacing.sm),
+                DropdownButton<String>(
+                  value: _role,
+                  items: const [
+                    DropdownMenuItem(value: "member", child: Text("Membro")),
+                    DropdownMenuItem(value: "admin", child: Text("Admin")),
+                  ],
+                  onChanged: _loading
+                      ? null
+                      : (v) => setState(() => _role = v ?? "member"),
+                ),
+              ],
+            ),
+            if (_error != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Text(_error!, style: const TextStyle(color: Colors.redAccent)),
+            ],
+            if (_link != null) ...[
+              const SizedBox(height: AppSpacing.md),
+              Text("Link de convite:",
+                  style: TextStyle(color: colors.textSecondary)),
+              const SizedBox(height: AppSpacing.xs),
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.sm),
+                decoration: BoxDecoration(
+                  color: colors.app,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SelectableText(
+                        _link!,
+                        maxLines: 2,
+                        style: TextStyle(color: colors.textPrimary, fontSize: 12),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.copy, size: 18),
+                      tooltip: "Copiar",
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: _link!));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Link copiado!")),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text("Fechar"),
+        ),
+        FilledButton(
+          onPressed: _loading ? null : _generate,
+          child: _loading
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(_link == null ? "Gerar link" : "Gerar novo"),
+        ),
+      ],
     );
   }
 }

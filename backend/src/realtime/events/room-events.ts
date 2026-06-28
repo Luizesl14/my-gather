@@ -20,6 +20,16 @@ export const reactionEventSchema = z.object({
   targetUserId: z.string().nullable().optional(),
 });
 
+export const chatEventSchema = z.object({
+  type: z.literal("chat"),
+  text: z.string().min(1).max(500),
+});
+
+export const typingEventSchema = z.object({
+  type: z.literal("typing"),
+  typing: z.boolean(),
+});
+
 export const callInviteEventSchema = z.object({
   type: z.literal("call:invite"),
   toUserId: z.string().min(1),
@@ -80,6 +90,19 @@ export function peerReactionEvent(
   targetUserId: string | null,
 ) {
   return { type: "reaction", fromUserId, fromName, sprite, targetUserId } as const;
+}
+
+export function peerChatEvent(
+  fromUserId: string,
+  fromName: string,
+  text: string,
+  at: number,
+) {
+  return { type: "chat", fromUserId, fromName, text, at } as const;
+}
+
+export function peerTypingEvent(fromUserId: string, fromName: string, typing: boolean) {
+  return { type: "typing", fromUserId, fromName, typing } as const;
 }
 
 export function callIncomingEvent(fromUserId: string, fromName: string, mode: "video" | "audio") {

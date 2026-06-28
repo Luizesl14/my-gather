@@ -47,6 +47,11 @@ class ReactionAudioService {
       "notify":       "audio/sfx/notify-01.mp3",
       "attention":    "audio/sfx/attention-01.mp3",
       "zoom":         "audio/sfx/zoom-01.mp3",
+      "wave":          "audio/others/notify-double-chime-01.mp3",
+      "gesture_wave":  "audio/others/notify-double-chime-01.mp3",
+      "gesture_bye":   "audio/others/notify-bell-plun-01.mp3",
+      "gesture_point": "audio/others/notify-crystal-01.mp3",
+      "gesture_like":  "audio/others/notify-playful-01.mp3",
     };
     final path = sfxMap[sfxKey];
     if (path != null) _play(path);
