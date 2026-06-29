@@ -11,11 +11,17 @@ class CallController extends ChangeNotifier {
   bool _connected = false;
   bool _micEnabled = true;
   bool _camEnabled = true;
+  bool _screenSharing = false;
   Set<String> _inRange = const {};
 
   bool get connected => _connected;
-  bool get micEnabled => _micEnabled;
-  bool get camEnabled => _camEnabled;
+  // Reflect the ACTUAL local track state so a server-side (admin) mute also
+  // turns the dock/control icons off — not just our own toggle.
+  bool get micEnabled =>
+      _room?.localParticipant?.isMicrophoneEnabled() ?? _micEnabled;
+  bool get camEnabled =>
+      _room?.localParticipant?.isCameraEnabled() ?? _camEnabled;
+  bool get screenSharing => _screenSharing;
 
   Future<void> connect(String url, String token) async {
     if (_room != null) return;
@@ -28,6 +34,9 @@ class CallController extends ChangeNotifier {
       ..on<TrackPublishedEvent>((_) => _applySubscriptions())
       ..on<TrackSubscribedEvent>((_) => notifyListeners())
       ..on<TrackUnsubscribedEvent>((_) => notifyListeners())
+      ..on<TrackMutedEvent>((_) => notifyListeners())
+      ..on<TrackUnmutedEvent>((_) => notifyListeners())
+      ..on<ActiveSpeakersChangedEvent>((_) => notifyListeners())
       ..on<ParticipantConnectedEvent>((_) {
         _applySubscriptions();
         notifyListeners();
@@ -97,13 +106,45 @@ class CallController extends ChangeNotifier {
         .toList(growable: false);
   }
 
-  VideoTrack? get localVideoTrack => _videoTrackOf(_room?.localParticipant);
+  VideoTrack? get localVideoTrack => _cameraTrackOf(_room?.localParticipant);
+  VideoTrack? videoTrackFor(RemoteParticipant p) => _cameraTrackOf(p);
 
-  VideoTrack? videoTrackFor(RemoteParticipant p) => _videoTrackOf(p);
+  VideoTrack? get localScreenTrack => _screenTrackOf(_room?.localParticipant);
+  VideoTrack? screenTrackFor(RemoteParticipant p) => _screenTrackOf(p);
 
-  VideoTrack? _videoTrackOf(Participant? p) {
+  // The first active screen-share track among local + nearby (for the big tile).
+  VideoTrack? get activeScreenTrack {
+    final local = _screenTrackOf(_room?.localParticipant);
+    if (local != null) return local;
+    for (final p in nearby) {
+      final t = _screenTrackOf(p);
+      if (t != null) return t;
+    }
+    return null;
+  }
+
+  VideoTrack? _cameraTrackOf(Participant? p) {
     if (p == null) return null;
     for (final pub in p.videoTrackPublications) {
+      if (pub.source == TrackSource.screenShareVideo) continue;
+      if (pub.muted) continue; // camera off → show avatar, not a frozen frame
+      final track = pub.track;
+      if (track is VideoTrack) return track;
+    }
+    return null;
+  }
+
+  // True when the remote's microphone is muted (for the tile indicator).
+  bool isMicMuted(Participant p) => p.isMuted;
+
+  // Active-speaker detection (for the speaking outline).
+  bool isSpeaking(Participant p) => p.isSpeaking;
+  bool get localSpeaking => _room?.localParticipant?.isSpeaking ?? false;
+
+  VideoTrack? _screenTrackOf(Participant? p) {
+    if (p == null) return null;
+    for (final pub in p.videoTrackPublications) {
+      if (pub.source != TrackSource.screenShareVideo) continue;
       final track = pub.track;
       if (track is VideoTrack) return track;
     }
@@ -111,14 +152,27 @@ class CallController extends ChangeNotifier {
   }
 
   Future<void> toggleMic() async {
-    _micEnabled = !_micEnabled;
+    _micEnabled = !micEnabled;
     await _room?.localParticipant?.setMicrophoneEnabled(_micEnabled);
     notifyListeners();
   }
 
   Future<void> toggleCam() async {
-    _camEnabled = !_camEnabled;
+    _camEnabled = !camEnabled;
     await _room?.localParticipant?.setCameraEnabled(_camEnabled);
+    notifyListeners();
+  }
+
+  Future<void> toggleScreenShare() async {
+    final next = !_screenSharing;
+    try {
+      await _room?.localParticipant?.setScreenShareEnabled(next);
+      _screenSharing = next;
+    } catch (e) {
+      // User cancelled the screen picker, or it's unsupported.
+      _screenSharing = false;
+      debugPrint("[CALL] screen share failed: $e");
+    }
     notifyListeners();
   }
 

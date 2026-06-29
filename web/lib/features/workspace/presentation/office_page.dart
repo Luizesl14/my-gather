@@ -10,6 +10,7 @@ import "package:go_router/go_router.dart";
 import "../../../core/realtime/realtime_provider.dart";
 import "../../../core/router/app_router.dart";
 import "../../../core/theme/app_colors.dart";
+import "../../../core/util/fullscreen.dart";
 import "../../../core/theme/app_spacing.dart";
 import "../../../shared/design_system/design_system.dart";
 import "../../auth/presentation/auth_provider.dart";
@@ -122,6 +123,21 @@ class _OfficePageState extends ConsumerState<OfficePage> {
     ref.read(activeReactionProvider.notifier).trigger(kWaveSprite);
     ReactionAudioService.playSfx("wave");
     ref.read(realtimeSessionProvider.notifier).sendReaction(kWaveSprite);
+  }
+
+  // Mute/unmute a peer for everyone (server-side via LiveKit).
+  Future<void> _mutePeer(String identity, bool muted) async {
+    final token = ref.read(authProvider).token;
+    if (token == null) return;
+    try {
+      await LivekitTokenService(token).mutePeer(widget.workspaceId, identity, muted);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Não foi possível mutar.")),
+        );
+      }
+    }
   }
 
   // Gesture aimed at a specific peer (from the on-avatar hover menu).
@@ -249,14 +265,16 @@ class _OfficePageState extends ConsumerState<OfficePage> {
                 ),
               ),
             ),
-            const Positioned(
-              bottom: AppSpacing.lg,
-              left: 0,
-              right: 0,
-              child: Center(child: _BottomDock()),
-            ),
+            // Hide the office dock while the call is in the big spotlight view.
+            if (!ref.watch(callSpotlightProvider))
+              Positioned(
+                bottom: AppSpacing.lg,
+                left: 0,
+                right: 0,
+                child: Center(child: _BottomDock(call: _call)),
+              ),
             // Proximity call UI (renders only when someone is within range).
-            ProximityCallOverlay(controller: _call),
+            ProximityCallOverlay(controller: _call, onMutePeer: _mutePeer),
             // Side chat (text + gesture notices), scoped to nearby people.
             const ChatPanel(),
           ],
@@ -272,7 +290,9 @@ class _OfficePageState extends ConsumerState<OfficePage> {
 // The identity section toggles the status panel; reactions fire in one click.
 
 class _BottomDock extends ConsumerStatefulWidget {
-  const _BottomDock();
+  const _BottomDock({required this.call});
+
+  final CallController call;
 
   @override
   ConsumerState<_BottomDock> createState() => _BottomDockState();
@@ -287,6 +307,15 @@ class _BottomDockState extends ConsumerState<_BottomDock> {
   // Hover-revealed gesture menu state.
   bool _gesturesOpen = false;
   Timer? _gestureCloseTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Keep the fullscreen icon in sync when toggled via Esc / F11.
+    onFullscreenChange(() {
+      if (mounted) setState(() {});
+    });
+  }
 
   @override
   void dispose() {
@@ -554,6 +583,32 @@ class _BottomDockState extends ConsumerState<_BottomDock> {
                       onTap: () => _playGesture(kGestures.first),
                     ),
                   ),
+                  // Chat toggle (Meet-style drawer).
+                  Tooltip(
+                    message: ref.watch(chatOpenProvider)
+                        ? "Fechar chat"
+                        : "Abrir chat",
+                    child: InkWell(
+                      onTap: () => ref
+                          .read(chatOpenProvider.notifier)
+                          .update((v) => !v),
+                      borderRadius: BorderRadius.circular(12),
+                      hoverColor: colors.panelMuted,
+                      child: SizedBox(
+                        width: 44,
+                        height: 48,
+                        child: Center(
+                          child: Icon(
+                            Icons.chat_bubble_outline,
+                            size: 21,
+                            color: ref.watch(chatOpenProvider)
+                                ? colors.brandPrimary
+                                : colors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
 
                 // Invite + collision are owner/admin tools — hidden for guests.
@@ -607,7 +662,87 @@ class _BottomDockState extends ConsumerState<_BottomDock> {
                   ),
                 ],
 
+                // Call controls (mic / camera / screen) — shown when in a
+                // proximity call. Live-updates with the call state.
+                AnimatedBuilder(
+                  animation: widget.call,
+                  builder: (context, _) {
+                    final call = widget.call;
+                    if (!(hasNearby && call.connected)) {
+                      return const SizedBox.shrink();
+                    }
+                    Widget btn(IconData icon, bool active, VoidCallback onTap,
+                            String tip) =>
+                        Tooltip(
+                          message: tip,
+                          child: InkWell(
+                            onTap: onTap,
+                            borderRadius: BorderRadius.circular(12),
+                            hoverColor: colors.panelMuted,
+                            child: SizedBox(
+                              width: 44,
+                              height: 48,
+                              child: Center(
+                                child: Icon(
+                                  icon,
+                                  size: 21,
+                                  color: active ? colors.textSecondary : colors.red,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _DockDivider(color: colors.border),
+                        btn(call.micEnabled ? Icons.mic : Icons.mic_off,
+                            call.micEnabled, call.toggleMic,
+                            call.micEnabled ? "Mutar" : "Ativar microfone"),
+                        btn(call.camEnabled ? Icons.videocam : Icons.videocam_off,
+                            call.camEnabled, call.toggleCam,
+                            call.camEnabled ? "Desligar câmera" : "Ligar câmera"),
+                        btn(
+                            call.screenSharing
+                                ? Icons.stop_screen_share
+                                : Icons.screen_share,
+                            !call.screenSharing,
+                            call.toggleScreenShare,
+                            call.screenSharing
+                                ? "Parar compartilhamento"
+                                : "Compartilhar tela"),
+                      ],
+                    );
+                  },
+                ),
+
                 _DockDivider(color: colors.border),
+
+                // Toggle browser fullscreen (F11).
+                Tooltip(
+                  message: isFullscreen() ? "Sair da tela cheia" : "Tela cheia",
+                  child: InkWell(
+                    onTap: () {
+                      toggleFullscreen();
+                      setState(() {});
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    hoverColor: colors.panelMuted,
+                    child: SizedBox(
+                      width: 44,
+                      height: 48,
+                      child: Center(
+                        child: Icon(
+                          isFullscreen()
+                              ? Icons.fullscreen_exit
+                              : Icons.fullscreen,
+                          size: 22,
+                          color: colors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
 
                 // Leave the office.
                 Tooltip(

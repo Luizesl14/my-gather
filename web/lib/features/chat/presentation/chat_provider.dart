@@ -129,3 +129,9 @@ class TypingNotifier extends Notifier<Set<String>> {
 
 final typingUsersProvider =
     NotifierProvider<TypingNotifier, Set<String>>(TypingNotifier.new);
+
+// Whether the chat side panel is open (Meet-style toggle from the dock).
+final chatOpenProvider = StateProvider<bool>((ref) => false);
+
+// Width reserved on the right for the chat drawer when open.
+const chatPanelWidth = 320.0;

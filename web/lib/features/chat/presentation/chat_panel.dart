@@ -127,9 +127,10 @@ class _ChatPanelState extends ConsumerState<ChatPanel> {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final nearby = ref.watch(nearbyUserIdsProvider);
-    // Always return a Positioned child so this never collapses the parent Stack
-    // (a bare non-positioned SizedBox would shrink the whole Stack to zero).
-    if (nearby.isEmpty) {
+    final open = ref.watch(chatOpenProvider);
+    // Drawer is shown only when toggled open AND there is someone nearby.
+    // Always return a Positioned child so this never collapses the parent Stack.
+    if (nearby.isEmpty || !open) {
       return const Positioned(
         left: 0,
         top: 0,
@@ -142,12 +143,14 @@ class _ChatPanelState extends ConsumerState<ChatPanel> {
     final entries = ref.watch(chatProvider);
     final myId = ref.watch(authProvider).user?.id;
 
+    // Meet-style right drawer (full height).
     return Positioned(
-      right: 16,
-      top: 88,
-      bottom: 160,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      width: chatPanelWidth,
       child: Container(
-        width: 300,
+        margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: colors.panel.withValues(alpha: 0.97),
           borderRadius: BorderRadius.circular(14),
@@ -159,18 +162,26 @@ class _ChatPanelState extends ConsumerState<ChatPanel> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
+              padding: const EdgeInsets.fromLTRB(14, 12, 8, 8),
               child: Row(
                 children: [
                   Icon(Icons.chat_bubble_outline, size: 16, color: colors.textSecondary),
                   const SizedBox(width: 8),
-                  Text(
-                    "Conversa (${nearby.length + 1})",
-                    style: TextStyle(
-                      color: colors.textPrimary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
+                  Expanded(
+                    child: Text(
+                      "Conversa (${nearby.length + 1})",
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
                     ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 18),
+                    tooltip: "Fechar chat",
+                    onPressed: () =>
+                        ref.read(chatOpenProvider.notifier).state = false,
                   ),
                 ],
               ),

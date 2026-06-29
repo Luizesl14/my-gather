@@ -15,6 +15,14 @@ class LivekitTokenService {
 
   final Dio _dio;
 
+  /// Mutes/unmutes a participant's microphone for everyone in the room.
+  Future<void> mutePeer(String workspaceId, String identity, bool muted) async {
+    await _dio.post<Map<String, dynamic>>(
+      "/workspaces/$workspaceId/livekit/mute",
+      data: {"identity": identity, "muted": muted},
+    );
+  }
+
   /// Fetches a LiveKit access token for the workspace room. Returns null when
   /// the backend has no LiveKit configured (503) so calls degrade gracefully.
   Future<LivekitCredentials?> fetch(String workspaceId) async {
