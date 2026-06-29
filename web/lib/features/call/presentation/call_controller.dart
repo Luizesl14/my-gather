@@ -43,10 +43,26 @@ class CallController extends ChangeNotifier {
       token,
       connectOptions: const ConnectOptions(autoSubscribe: false),
     );
-    await room.localParticipant?.setMicrophoneEnabled(_micEnabled);
-    await room.localParticipant?.setCameraEnabled(_camEnabled);
+    // Connected to the room — surface the call UI even if mic/cam fail.
     _connected = true;
     _applySubscriptions();
+    notifyListeners();
+    debugPrint("[CALL] connected. remotes=${room.remoteParticipants.length}");
+
+    // Best-effort media: a missing camera or denied permission must not break
+    // the call (you can still see/hear others).
+    try {
+      await room.localParticipant?.setMicrophoneEnabled(_micEnabled);
+    } catch (e) {
+      _micEnabled = false;
+      debugPrint("[CALL] mic failed: $e");
+    }
+    try {
+      await room.localParticipant?.setCameraEnabled(_camEnabled);
+    } catch (e) {
+      _camEnabled = false;
+      debugPrint("[CALL] cam failed: $e");
+    }
     notifyListeners();
   }
 

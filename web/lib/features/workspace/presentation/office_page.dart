@@ -80,14 +80,22 @@ class _OfficePageState extends ConsumerState<OfficePage> {
 
   Future<void> _initCall() async {
     final token = ref.read(authProvider).token;
-    if (token == null) return;
+    if (token == null) {
+      debugPrint("[CALL] no auth token — skipping");
+      return;
+    }
     try {
       final creds =
           await LivekitTokenService(token).fetch(widget.workspaceId);
-      if (creds == null || !mounted) return; // LiveKit not configured
+      if (creds == null) {
+        debugPrint("[CALL] LiveKit not configured (503)");
+        return;
+      }
+      if (!mounted) return;
+      debugPrint("[CALL] got token, connecting to ${creds.url}");
       await _call.connect(creds.url, creds.token);
-    } catch (_) {
-      // Calls are best-effort — never block entering the office.
+    } catch (e, s) {
+      debugPrint("[CALL] init failed: $e\n$s");
     }
   }
 

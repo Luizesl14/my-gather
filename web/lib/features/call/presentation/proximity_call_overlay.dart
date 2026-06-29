@@ -33,36 +33,40 @@ class ProximityCallOverlay extends StatelessWidget {
           );
         }
 
+        // Gather/Meet-style call bar at the TOP: video tiles in a row with the
+        // mic/camera controls underneath.
         return Positioned(
-          right: 16,
-          bottom: 16,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: _tileW * 2 + 8),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  alignment: WrapAlignment.end,
-                  children: [
-                    for (final p in nearby)
+          top: 12,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (final p in nearby) ...[
+                        _Tile(
+                          track: controller.videoTrackFor(p),
+                          label: p.name.isNotEmpty ? p.name : p.identity,
+                        ),
+                        const SizedBox(width: 8),
+                      ],
                       _Tile(
-                        track: controller.videoTrackFor(p),
-                        label: p.name.isNotEmpty ? p.name : p.identity,
+                        track: controller.localVideoTrack,
+                        label: "Você",
+                        muted: !controller.micEnabled,
                       ),
-                    _Tile(
-                      track: controller.localVideoTrack,
-                      label: "Você",
-                      muted: !controller.micEnabled,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              _Controls(controller: controller),
-            ],
+                const SizedBox(height: 8),
+                _Controls(controller: controller),
+              ],
+            ),
           ),
         );
       },
