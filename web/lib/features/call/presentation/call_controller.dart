@@ -12,6 +12,8 @@ class CallController extends ChangeNotifier {
   bool _micEnabled = true;
   bool _camEnabled = true;
   bool _screenSharing = false;
+  bool _deafened = false;
+  bool _micBeforeDeafen = true;
   Set<String> _inRange = const {};
 
   bool get connected => _connected;
@@ -22,6 +24,10 @@ class CallController extends ChangeNotifier {
   bool get camEnabled =>
       _room?.localParticipant?.isCameraEnabled() ?? _camEnabled;
   bool get screenSharing => _screenSharing;
+
+  /// Deafen estilo Discord: você não ouve ninguém e fica mudo. Implementado
+  /// dessinscrevendo apenas os tracks de ÁUDIO dos vizinhos (vídeo continua).
+  bool get deafened => _deafened;
 
   Future<void> connect(String url, String token) async {
     if (_room != null) return;
@@ -87,8 +93,10 @@ class CallController extends ChangeNotifier {
     final room = _room;
     if (room == null) return;
     for (final p in room.remoteParticipants.values) {
-      final want = _inRange.contains(p.identity);
+      final inRange = _inRange.contains(p.identity);
       for (final pub in p.trackPublications.values) {
+        final isAudio = pub.kind == TrackType.AUDIO;
+        final want = inRange && !(_deafened && isAudio);
         if (want && !pub.subscribed) {
           pub.subscribe();
         } else if (!want && pub.subscribed) {
@@ -152,8 +160,33 @@ class CallController extends ChangeNotifier {
   }
 
   Future<void> toggleMic() async {
+    // Como no Discord: reativar o mic enquanto ensurdecido desfaz o deafen.
+    if (_deafened) {
+      await toggleDeafen();
+      if (!micEnabled) {
+        _micEnabled = true;
+        await _room?.localParticipant?.setMicrophoneEnabled(true);
+        notifyListeners();
+      }
+      return;
+    }
     _micEnabled = !micEnabled;
     await _room?.localParticipant?.setMicrophoneEnabled(_micEnabled);
+    notifyListeners();
+  }
+
+  Future<void> toggleDeafen() async {
+    _deafened = !_deafened;
+    if (_deafened) {
+      // Deafen implica mudo; guarda o estado do mic para restaurar depois.
+      _micBeforeDeafen = micEnabled;
+      _micEnabled = false;
+      await _room?.localParticipant?.setMicrophoneEnabled(false);
+    } else {
+      _micEnabled = _micBeforeDeafen;
+      await _room?.localParticipant?.setMicrophoneEnabled(_micEnabled);
+    }
+    _applySubscriptions();
     notifyListeners();
   }
 

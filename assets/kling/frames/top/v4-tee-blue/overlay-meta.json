@@ -1,0 +1,27 @@
+{
+  "region": "top",
+  "band": [
+    22,
+    42
+  ],
+  "threshold": 60,
+  "base": "assets/kling/frames/body/v4-unissex",
+  "pixelsPerFrame": {
+    "idle-front": 649,
+    "walk-down-01": 672,
+    "walk-down-02": 663,
+    "walk-down-03": 670,
+    "idle-left": 432,
+    "walk-left-01": 438,
+    "walk-left-02": 402,
+    "walk-left-03": 445,
+    "idle-right": 429,
+    "walk-right-01": 430,
+    "walk-right-02": 413,
+    "walk-right-03": 443,
+    "idle-back": 658,
+    "walk-up-01": 655,
+    "walk-up-02": 658,
+    "walk-up-03": 681
+  }
+}

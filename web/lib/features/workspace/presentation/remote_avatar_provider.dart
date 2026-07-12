@@ -13,6 +13,8 @@ class RemoteAvatar {
     required this.direction,
     required this.motionState,
     this.presenceStatus = "available",
+    this.role = "",
+    this.team = "",
   });
 
   final String userId;
@@ -22,21 +24,28 @@ class RemoteAvatar {
   final AvatarDirection direction;
   final AvatarMotionState motionState;
   final String presenceStatus;
+  final String role;
+  final String team;
 
   RemoteAvatar copyWith({
     AvatarPosition? position,
     AvatarDirection? direction,
     AvatarMotionState? motionState,
     String? presenceStatus,
+    String? displayName,
+    String? role,
+    String? team,
   }) =>
       RemoteAvatar(
         userId: userId,
-        displayName: displayName,
+        displayName: displayName ?? this.displayName,
         characterId: characterId,
         position: position ?? this.position,
         direction: direction ?? this.direction,
         motionState: motionState ?? this.motionState,
         presenceStatus: presenceStatus ?? this.presenceStatus,
+        role: role ?? this.role,
+        team: team ?? this.team,
       );
 }
 
@@ -83,6 +92,19 @@ class RemoteAvatarsNotifier extends Notifier<Map<String, RemoteAvatar>> {
           ),
         };
 
+      case "presence:profile.changed":
+        final userId = event["userId"] as String? ?? "";
+        final existing = state[userId];
+        if (existing == null) return;
+        state = {
+          ...state,
+          userId: existing.copyWith(
+            displayName: event["displayName"] as String?,
+            role: event["role"] as String? ?? "",
+            team: event["team"] as String? ?? "",
+          ),
+        };
+
       case "presence:status.changed":
         final userId = event["userId"] as String? ?? "";
         final existing = state[userId];
@@ -110,6 +132,8 @@ class RemoteAvatarsNotifier extends Notifier<Map<String, RemoteAvatar>> {
           ? AvatarMotionState.walking
           : AvatarMotionState.idle,
       presenceStatus: m["presenceStatus"] as String? ?? "available",
+      role: m["role"] as String? ?? "",
+      team: m["team"] as String? ?? "",
     );
   }
 }

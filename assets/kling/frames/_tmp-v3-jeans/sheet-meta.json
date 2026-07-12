@@ -1,0 +1,23 @@
+{
+  "source": "v3-jeans.png",
+  "grid": {
+    "cols": 6,
+    "rows": 4
+  },
+  "cell": {
+    "w": 341,
+    "h": 512
+  },
+  "sprite": {
+    "w": 32,
+    "h": 48
+  },
+  "scale": 0.0967741935483871,
+  "idleCol": 0,
+  "walkCols": [
+    2,
+    3,
+    4
+  ],
+  "rightMirroredFromLeft": true
+}

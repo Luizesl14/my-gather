@@ -1,0 +1,27 @@
+{
+  "region": "hair",
+  "band": [
+    0,
+    30
+  ],
+  "threshold": 60,
+  "base": "assets/kling/frames/body/anime-unissex-v3",
+  "pixelsPerFrame": {
+    "idle-front": 358,
+    "walk-down-01": 349,
+    "walk-down-02": 353,
+    "walk-down-03": 362,
+    "idle-left": 365,
+    "walk-left-01": 362,
+    "walk-left-02": 355,
+    "walk-left-03": 348,
+    "idle-right": 365,
+    "walk-right-01": 364,
+    "walk-right-02": 357,
+    "walk-right-03": 341,
+    "idle-back": 442,
+    "walk-up-01": 449,
+    "walk-up-02": 460,
+    "walk-up-03": 448
+  }
+}

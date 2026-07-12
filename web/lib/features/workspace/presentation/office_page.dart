@@ -27,6 +27,7 @@ import "../data/workspace_service.dart";
 import "game/office_canvas.dart";
 import "remote_avatar_provider.dart";
 import "workspace_provider.dart";
+import "../../avatar/presentation/avatar_thumbnail.dart";
 
 // Collision debug overlay visibility — toggled from the central dock, read by
 // the office canvas (lives in a provider so both widgets can share it).
@@ -126,11 +127,13 @@ class _OfficePageState extends ConsumerState<OfficePage> {
   }
 
   // Mute/unmute a peer for everyone (server-side via LiveKit).
-  Future<void> _mutePeer(String identity, bool muted) async {
+  Future<void> _mutePeer(String identity, bool muted,
+      {String kind = "audio"}) async {
     final token = ref.read(authProvider).token;
     if (token == null) return;
     try {
-      await LivekitTokenService(token).mutePeer(widget.workspaceId, identity, muted);
+      await LivekitTokenService(token)
+          .mutePeer(widget.workspaceId, identity, muted, kind: kind);
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -172,6 +175,17 @@ class _OfficePageState extends ConsumerState<OfficePage> {
     // frame, so it's safe to notify the call controller).
     ref.listen(remoteAvatarsProvider, (_, __) => _recomputeProximity());
 
+    // Propaga mudança de status/emoji para os outros usuários (o balãozinho
+    // remoto só atualiza se o servidor receber presence:status.change).
+    ref.listen(userStatusProvider, (prev, next) {
+      if (prev == next) return;
+      ref.read(realtimeSessionProvider.notifier).sendStatusChange(
+            next.presenceId,
+            emoji: next.emoji,
+            text: next.customText,
+          );
+    });
+
     // Play a sound when a nearby peer gestures at us.
     ref.listen(peerReactionProvider, (_, next) {
       if (next == null) return;
@@ -211,6 +225,9 @@ class _OfficePageState extends ConsumerState<OfficePage> {
                 showCollision: ref.watch(showCollisionProvider),
                 presenceDotColor: dotColor,
                 statusEmoji: status.emoji,
+                subtitle: ref.watch(authProvider).user?.subtitle,
+                presenceColorFor: (status) => presenceColor(
+                    colors, catalog?.presenceById(status)?.colorKey ?? ""),
                 reactionSprite: ref.watch(activeReactionProvider)?.sprite,
                 reactionTargetName:
                     ref.watch(activeReactionProvider)?.targetName,
@@ -274,7 +291,12 @@ class _OfficePageState extends ConsumerState<OfficePage> {
                 child: Center(child: _BottomDock(call: _call)),
               ),
             // Proximity call UI (renders only when someone is within range).
-            ProximityCallOverlay(controller: _call, onMutePeer: _mutePeer),
+            ProximityCallOverlay(
+              controller: _call,
+              onMutePeer: _mutePeer,
+              onMuteCameraPeer: (id, muted) =>
+                  _mutePeer(id, muted, kind: "video"),
+            ),
             // Side chat (text + gesture notices), scoped to nearby people.
             const ChatPanel(),
           ],
@@ -563,6 +585,75 @@ class _BottomDockState extends ConsumerState<_BottomDock> {
                             color: colors.textMuted,
                           ),
                         ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Container(width: 1, height: 22, color: colors.border),
+                        const SizedBox(width: 2),
+                        // Mic + fone sempre visíveis, estilo barra de usuário
+                        // do Discord (valem para chamadas atuais e futuras).
+                        AnimatedBuilder(
+                          animation: widget.call,
+                          builder: (_, __) {
+                            // Câmera/compartilhamento só fazem sentido com
+                            // alguém por perto (chamada formada); até lá ficam
+                            // visíveis porém desabilitados. Mic/fone sempre
+                            // funcionam — valem para a próxima chamada.
+                            final inCall = widget.call.connected &&
+                                widget.call.nearby.isNotEmpty;
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _DockAudioButton(
+                                  icon: widget.call.micEnabled
+                                      ? Icons.mic
+                                      : Icons.mic_off,
+                                  active: !widget.call.micEnabled,
+                                  tooltip: widget.call.micEnabled
+                                      ? "Mutar microfone"
+                                      : "Desmutar microfone",
+                                  onTap: widget.call.toggleMic,
+                                  colors: colors,
+                                ),
+                                _DockAudioButton(
+                                  icon: widget.call.deafened
+                                      ? Icons.headset_off
+                                      : Icons.headset,
+                                  active: widget.call.deafened,
+                                  tooltip: widget.call.deafened
+                                      ? "Ativar áudio"
+                                      : "Desativar áudio",
+                                  onTap: widget.call.toggleDeafen,
+                                  colors: colors,
+                                ),
+                                _DockAudioButton(
+                                  icon: widget.call.camEnabled
+                                      ? Icons.videocam
+                                      : Icons.videocam_off,
+                                  active: inCall && !widget.call.camEnabled,
+                                  enabled: inCall,
+                                  tooltip: inCall
+                                      ? (widget.call.camEnabled
+                                          ? "Desligar câmera"
+                                          : "Ligar câmera")
+                                      : "Aproxime-se de alguém para usar a câmera",
+                                  onTap: widget.call.toggleCam,
+                                  colors: colors,
+                                ),
+                                _DockAudioButton(
+                                  icon: Icons.screen_share,
+                                  active: widget.call.screenSharing,
+                                  enabled: inCall,
+                                  tooltip: inCall
+                                      ? (widget.call.screenSharing
+                                          ? "Parar compartilhamento"
+                                          : "Compartilhar tela")
+                                      : "Aproxime-se de alguém para compartilhar",
+                                  onTap: widget.call.toggleScreenShare,
+                                  colors: colors,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -662,60 +753,9 @@ class _BottomDockState extends ConsumerState<_BottomDock> {
                   ),
                 ],
 
-                // Call controls (mic / camera / screen) — shown when in a
-                // proximity call. Live-updates with the call state.
-                AnimatedBuilder(
-                  animation: widget.call,
-                  builder: (context, _) {
-                    final call = widget.call;
-                    if (!(hasNearby && call.connected)) {
-                      return const SizedBox.shrink();
-                    }
-                    Widget btn(IconData icon, bool active, VoidCallback onTap,
-                            String tip) =>
-                        Tooltip(
-                          message: tip,
-                          child: InkWell(
-                            onTap: onTap,
-                            borderRadius: BorderRadius.circular(12),
-                            hoverColor: colors.panelMuted,
-                            child: SizedBox(
-                              width: 44,
-                              height: 48,
-                              child: Center(
-                                child: Icon(
-                                  icon,
-                                  size: 21,
-                                  color: active ? colors.textSecondary : colors.red,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _DockDivider(color: colors.border),
-                        btn(call.micEnabled ? Icons.mic : Icons.mic_off,
-                            call.micEnabled, call.toggleMic,
-                            call.micEnabled ? "Mutar" : "Ativar microfone"),
-                        btn(call.camEnabled ? Icons.videocam : Icons.videocam_off,
-                            call.camEnabled, call.toggleCam,
-                            call.camEnabled ? "Desligar câmera" : "Ligar câmera"),
-                        btn(
-                            call.screenSharing
-                                ? Icons.stop_screen_share
-                                : Icons.screen_share,
-                            !call.screenSharing,
-                            call.toggleScreenShare,
-                            call.screenSharing
-                                ? "Parar compartilhamento"
-                                : "Compartilhar tela"),
-                      ],
-                    );
-                  },
-                ),
-
+                // Controles de mic/câmera/compartilhar vivem fixos no cartão
+                // do usuário (estilo Discord) — nada extra aparece aqui quando
+                // alguém se aproxima.
                 _DockDivider(color: colors.border),
 
                 // Toggle browser fullscreen (F11).
@@ -871,6 +911,51 @@ class _DockDivider extends StatelessWidget {
   }
 }
 
+// Botão compacto de áudio do dock (mic/fone). Fica vermelho quando "ativo"
+// (mutado/ensurdecido), como no Discord.
+class _DockAudioButton extends StatelessWidget {
+  const _DockAudioButton({
+    required this.icon,
+    required this.active,
+    required this.tooltip,
+    required this.onTap,
+    required this.colors,
+    this.enabled = true,
+  });
+
+  final IconData icon;
+  final bool active;
+  final String tooltip;
+  final VoidCallback onTap;
+  final AppColors colors;
+
+  /// false = visível porém inerte (ex.: câmera sem ninguém por perto).
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: enabled ? onTap : null,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(6),
+          child: Icon(
+            icon,
+            size: 18,
+            color: !enabled
+                ? colors.textMuted.withValues(alpha: 0.35)
+                : active
+                    ? Colors.redAccent
+                    : colors.textMuted,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 // Avatar preview with the presence dot, shared by the dock and the panel.
 class _AvatarBadge extends StatelessWidget {
   const _AvatarBadge({
@@ -898,13 +983,7 @@ class _AvatarBadge extends StatelessWidget {
             border: Border.all(color: colors.border),
           ),
           child: ClipOval(
-            child: Image.asset(
-              "assets/sprites/characters/$characterId/preview.png",
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.none,
-              errorBuilder: (_, __, ___) => Icon(Icons.person,
-                  size: size * 0.55, color: colors.textMuted),
-            ),
+            child: AvatarThumbnail(characterId: characterId),
           ),
         ),
         Positioned(
@@ -945,6 +1024,8 @@ class _DockReaction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    // Mesmas dimensões e alinhamento dos demais botões do dock; o atalho
+    // aparece apenas no tooltip ("Gestos · Z") ao passar o mouse.
     return Tooltip(
       message: shortcut == null ? label : "$label  ·  $shortcut",
       child: InkWell(
@@ -952,33 +1033,20 @@ class _DockReaction extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         hoverColor: colors.panelMuted,
         child: Container(
-          width: 50,
-          height: 56,
+          width: 44,
+          height: 48,
           decoration: BoxDecoration(
             color: active
                 ? colors.brandPrimary.withValues(alpha: 0.12)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                "assets/$sprite",
-                width: 32,
-                height: 32,
-                filterQuality: FilterQuality.none,
-              ),
-              const SizedBox(height: 1),
-              Text(
-                shortcut ?? "",
-                style: TextStyle(
-                  fontSize: 9,
-                  fontWeight: FontWeight.w600,
-                  color: active ? colors.brandPrimary : colors.textMuted,
-                ),
-              ),
-            ],
+          child: Center(
+            child: Icon(
+              Icons.waving_hand_outlined,
+              size: 21,
+              color: active ? colors.brandPrimary : colors.textSecondary,
+            ),
           ),
         ),
       ),
@@ -1116,7 +1184,7 @@ class _TargetRow extends StatelessWidget {
 
 // ─── Status panel ─────────────────────────────────────────────────────────────
 
-class _StatusPanel extends ConsumerWidget {
+class _StatusPanel extends ConsumerStatefulWidget {
   const _StatusPanel({
     required this.textController,
     required this.onApplyText,
@@ -1128,7 +1196,14 @@ class _StatusPanel extends ConsumerWidget {
   final VoidCallback onPickEmoji;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_StatusPanel> createState() => _StatusPanelState();
+}
+
+class _StatusPanelState extends ConsumerState<_StatusPanel> {
+  final _profileKey = GlobalKey<_ProfileSectionState>();
+
+  @override
+  Widget build(BuildContext context) {
     final colors = context.appColors;
     final status = ref.watch(userStatusProvider);
     final notifier = ref.read(userStatusProvider.notifier);
@@ -1227,7 +1302,7 @@ class _StatusPanel extends ConsumerWidget {
                   Tooltip(
                     message: "Emoji de status",
                     child: InkWell(
-                      onTap: onPickEmoji,
+                      onTap: widget.onPickEmoji,
                       borderRadius: const BorderRadius.horizontal(
                           left: Radius.circular(12)),
                       hoverColor: colors.canvas,
@@ -1248,8 +1323,8 @@ class _StatusPanel extends ConsumerWidget {
                   ),
                   Expanded(
                     child: TextField(
-                      controller: textController,
-                      onSubmitted: (_) => onApplyText(),
+                      controller: widget.textController,
+                      onSubmitted: (_) => widget.onApplyText(),
                       style:
                           TextStyle(fontSize: 13, color: colors.textPrimary),
                       decoration: InputDecoration(
@@ -1268,7 +1343,7 @@ class _StatusPanel extends ConsumerWidget {
                       message: "Limpar status",
                       child: InkWell(
                         onTap: () {
-                          textController.clear();
+                          widget.textController.clear();
                           notifier.update((s) =>
                               s.copyWith(clearEmoji: true, clearText: true));
                         },
@@ -1286,26 +1361,157 @@ class _StatusPanel extends ConsumerWidget {
             ),
 
             const SizedBox(height: AppSpacing.lg),
-            Align(
-              alignment: Alignment.centerRight,
-              child: FilledButton(
-                onPressed: onApplyText,
-                style: FilledButton.styleFrom(
-                  backgroundColor: colors.brandPrimary,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
-                  minimumSize: const Size(0, 40),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  textStyle: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.w600),
+            _SectionLabel("Perfil", color: colors.textMuted),
+            const SizedBox(height: AppSpacing.sm),
+            _ProfileSection(key: _profileKey),
+
+            const SizedBox(height: AppSpacing.lg),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                FilledButton(
+                  onPressed: () => _profileKey.currentState?._save(),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: colors.brandPrimary,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xxl),
+                    minimumSize: const Size(0, 40),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    textStyle: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w600),
+                  ),
+                  child: const Text("Salvar perfil"),
                 ),
-                child: const Text("Salvar"),
-              ),
+                FilledButton(
+                  onPressed: widget.onApplyText,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: colors.brandPrimary,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xxl),
+                    minimumSize: const Size(0, 40),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    textStyle: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w600),
+                  ),
+                  child: const Text("Salvar"),
+                ),
+              ],
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+// Edição de nome/função/equipe dentro do painel de status. Persiste no
+// backend (PUT /auth/me/profile) e atualiza o usuário local; função | equipe
+// aparecem na etiqueta sobre o avatar.
+class _ProfileSection extends ConsumerStatefulWidget {
+  const _ProfileSection({super.key});
+
+  @override
+  ConsumerState<_ProfileSection> createState() => _ProfileSectionState();
+}
+
+class _ProfileSectionState extends ConsumerState<_ProfileSection> {
+  late final TextEditingController _name;
+  late final TextEditingController _role;
+  late final TextEditingController _team;
+  bool _saving = false;
+  bool _saved = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final user = ref.read(authProvider).user;
+    _name = TextEditingController(text: user?.displayName ?? "");
+    _role = TextEditingController(text: user?.role ?? "");
+    _team = TextEditingController(text: user?.team ?? "");
+  }
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _role.dispose();
+    _team.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (_saving || _name.text.trim().isEmpty) return;
+    setState(() {
+      _saving = true;
+      _saved = false;
+    });
+    final ok = await ref.read(authProvider.notifier).updateProfile(
+          displayName: _name.text.trim(),
+          role: _role.text.trim(),
+          team: _team.text.trim(),
+        );
+    if (ok) {
+      // Propaga na hora para quem está na sala (balão/crachá remotos).
+      ref.read(realtimeSessionProvider.notifier).sendProfileChange(
+            _name.text.trim(),
+            _role.text.trim(),
+            _team.text.trim(),
+          );
+    }
+    if (mounted) {
+      setState(() {
+        _saving = false;
+        _saved = ok;
+      });
+    }
+  }
+
+  Widget _field(
+    AppColors colors,
+    TextEditingController controller,
+    String hint,
+  ) {
+    return Container(
+      height: 38,
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      decoration: BoxDecoration(
+        color: colors.panelMuted,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: colors.border),
+      ),
+      child: Center(
+        child: TextField(
+          controller: controller,
+          onSubmitted: (_) => _save(),
+          style: TextStyle(fontSize: 13, color: colors.textPrimary),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(fontSize: 13, color: colors.textMuted),
+            isCollapsed: true,
+            border: InputBorder.none,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _field(colors, _name, "Nome de exibição"),
+        _field(colors, _role, "Função (ex.: Dev Backend)"),
+        _field(colors, _team, "Equipe (ex.: Plataforma)"),
+        if (_saved)
+          Text(
+            "Perfil salvo",
+            style: TextStyle(fontSize: 11, color: colors.textMuted),
+          ),
+      ],
     );
   }
 }

@@ -109,6 +109,26 @@ flutter:
     - assets/sprites/characters/normal/zombie/zombie-normal-03/reactions/
     # Hair customization
     - assets/sprites/customization/
+    - assets/sprites/customization/modular/
+    - assets/sprites/customization/modular/body/anime-unissex/
+    - assets/sprites/customization/modular/hair/anime-hair-01/
+    - assets/sprites/customization/modular/hair/anime-hair-02/
+    - assets/sprites/customization/modular/hair/hair-buzz/
+    - assets/sprites/customization/modular/hair/hair-pompadour/
+    - assets/sprites/customization/modular/hair/hair-afro/
+    - assets/sprites/customization/modular/hair/hair-bob/
+    - assets/sprites/customization/modular/hair/hair-ponytail/
+    - assets/sprites/customization/modular/hair/hair-braids/
+    - assets/sprites/customization/modular/hair/hair-sidepart/
+    - assets/sprites/customization/modular/hair/hair-straight/
+    - assets/sprites/customization/modular/hair/hair-slickback/
+    - assets/sprites/customization/modular/top/anime-top-01/
+    - assets/sprites/customization/modular/top/social-white/
+    - assets/sprites/customization/modular/top/hoodie-orange/
+    - assets/sprites/customization/modular/bottom/jeans/
+    - assets/sprites/customization/modular/bottom/pants-social/
+    - assets/sprites/customization/modular/shoes/sneakers/
+    - assets/sprites/customization/modular/beard/beard-01/
     - assets/sprites/customization/accent-colors/
     - assets/sprites/customization/clothing-colors/
     - assets/sprites/customization/hair-colors/

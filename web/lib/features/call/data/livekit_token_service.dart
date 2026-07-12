@@ -15,11 +15,17 @@ class LivekitTokenService {
 
   final Dio _dio;
 
-  /// Mutes/unmutes a participant's microphone for everyone in the room.
-  Future<void> mutePeer(String workspaceId, String identity, bool muted) async {
+  /// Muta/desmuta um track do participante para todos na sala.
+  /// kind: "audio" (microfone) ou "video" (câmera; screen share fica de fora).
+  Future<void> mutePeer(
+    String workspaceId,
+    String identity,
+    bool muted, {
+    String kind = "audio",
+  }) async {
     await _dio.post<Map<String, dynamic>>(
       "/workspaces/$workspaceId/livekit/mute",
-      data: {"identity": identity, "muted": muted},
+      data: {"identity": identity, "muted": muted, "kind": kind},
     );
   }
 

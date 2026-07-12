@@ -602,34 +602,18 @@ class _CharacterConfigDialog extends StatefulWidget {
 }
 
 class _CharacterConfigDialogState extends State<_CharacterConfigDialog> {
-  // Original values to revert on cancel
+  // Valor original para reverter no cancelar
   late double _origScale;
-  late double _origYOffset;
-  late double _origXOffset;
-
   late double _scale;
-  late double _yOffset;
-  late double _xOffset;
 
   @override
   void initState() {
     super.initState();
     _origScale = widget.editorState.avatarScale;
-    _origYOffset = widget.editorState.avatarYOffset;
-    _origXOffset = widget.editorState.avatarXOffset;
     _scale = _origScale;
-    _yOffset = _origYOffset;
-    _xOffset = _origXOffset;
   }
 
-  void _apply() {
-    widget.notifier.setAvatarScale(_scale);
-    widget.notifier.setAvatarYOffset(_yOffset);
-    widget.notifier.setAvatarXOffset(_xOffset);
-  }
-
-  String _fmtOffset(double v) =>
-      v == 0 ? "Padrão" : v > 0 ? "+${(v * 100).round()}%" : "${(v * 100).round()}%";
+  void _apply() => widget.notifier.setAvatarScale(_scale);
 
   @override
   Widget build(BuildContext context) {
@@ -665,8 +649,8 @@ class _CharacterConfigDialogState extends State<_CharacterConfigDialog> {
                 child: Slider(
                   value: _scale,
                   min: 0.25,
-                  max: 1.2,
-                  divisions: 19,
+                  max: 2.5,
+                  divisions: 45,
                   label: "${(_scale * 100).round()}%",
                   onChanged: (v) {
                     setState(() => _scale = v);
@@ -676,50 +660,6 @@ class _CharacterConfigDialogState extends State<_CharacterConfigDialog> {
               ),
               Text("+", style: TextStyle(fontSize: 14, color: colors.textMuted)),
             ]),
-            const SizedBox(height: 12),
-            // ── Vertical ──
-            Text("Vertical  ${_fmtOffset(_yOffset)}",
-                style: TextStyle(fontWeight: FontWeight.w600, color: colors.textPrimary)),
-            const SizedBox(height: 2),
-            Row(children: [
-              Text("↓", style: TextStyle(fontSize: 14, color: colors.textMuted)),
-              Expanded(
-                child: Slider(
-                  value: _yOffset,
-                  min: -0.6,
-                  max: 0.6,
-                  divisions: 24,
-                  label: _fmtOffset(_yOffset),
-                  onChanged: (v) {
-                    setState(() => _yOffset = v);
-                    _apply();
-                  },
-                ),
-              ),
-              Text("↑", style: TextStyle(fontSize: 14, color: colors.textMuted)),
-            ]),
-            const SizedBox(height: 12),
-            // ── Horizontal ──
-            Text("Horizontal  ${_fmtOffset(_xOffset)}",
-                style: TextStyle(fontWeight: FontWeight.w600, color: colors.textPrimary)),
-            const SizedBox(height: 2),
-            Row(children: [
-              Text("←", style: TextStyle(fontSize: 14, color: colors.textMuted)),
-              Expanded(
-                child: Slider(
-                  value: _xOffset,
-                  min: -0.6,
-                  max: 0.6,
-                  divisions: 24,
-                  label: _fmtOffset(_xOffset),
-                  onChanged: (v) {
-                    setState(() => _xOffset = v);
-                    _apply();
-                  },
-                ),
-              ),
-              Text("→", style: TextStyle(fontSize: 14, color: colors.textMuted)),
-            ]),
           ],
         ),
       ),
@@ -727,19 +667,13 @@ class _CharacterConfigDialogState extends State<_CharacterConfigDialog> {
         TextButton(
           onPressed: () {
             widget.notifier.setAvatarScale(_origScale);
-            widget.notifier.setAvatarYOffset(_origYOffset);
-            widget.notifier.setAvatarXOffset(_origXOffset);
             Navigator.of(context).pop();
           },
           child: const Text("Cancelar"),
         ),
         TextButton(
           onPressed: () {
-            setState(() {
-              _scale = 0.5;
-              _yOffset = 0.0;
-              _xOffset = 0.0;
-            });
+            setState(() => _scale = 0.5);
             _apply();
           },
           child: const Text("Resetar"),
@@ -1999,8 +1933,10 @@ class _EditorCanvasState extends ConsumerState<_EditorCanvas> {
     if (catalog != null) _loadCharImage(charId, catalog);
 
     final ts = _baseCell * _scale;
-    final screenX = 1 * ts + _offset.dx;
-    final screenY = 1 * ts + _offset.dy;
+    // O preview fica no spawn do mapa: é onde o personagem realmente nasce,
+    // então o ajuste de tamanho é avaliado no contexto certo.
+    final screenX = widget.editorState.spawnX * ts + _offset.dx;
+    final screenY = widget.editorState.spawnY * ts + _offset.dy;
 
     final avatarScale = widget.editorState.avatarScale;
     final avatarYOffset = widget.editorState.avatarYOffset;

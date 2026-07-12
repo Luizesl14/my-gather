@@ -17,6 +17,7 @@ class AvatarRenderer extends CustomPainter {
     required this.avatar,
     this.presenceDotColor,
     this.statusEmoji,
+    this.subtitle,
   });
 
   final OfficeMap map;
@@ -27,6 +28,8 @@ class AvatarRenderer extends CustomPainter {
   // Presence dot color resolved from the status catalog; falls back to available.
   final Color? presenceDotColor;
   final String? statusEmoji;
+  // Segunda linha da etiqueta ("função | equipe"); omitida quando vazia.
+  final String? subtitle;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -49,7 +52,8 @@ class AvatarRenderer extends CustomPainter {
     );
 
     if (currentFrame != null) {
-      final paint = Paint()..filterQuality = FilterQuality.medium;
+      // Pixel art: interpolação borra os sprites; nearest mantém o pixel duro.
+      final paint = Paint()..filterQuality = FilterQuality.none;
       canvas.drawImageRect(
         currentFrame,
         Rect.fromLTWH(
@@ -76,19 +80,38 @@ class AvatarRenderer extends CustomPainter {
         text: bubbleText,
         style: TextStyle(
           color: colors.textPrimary,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
         ),
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,
       ellipsis: "…",
-    )..layout(maxWidth: 140);
+    )..layout(maxWidth: 150);
 
-    // Layout: [10px pad][dot Ø7][6px gap][name][10px pad]
+    // Segunda linha opcional: "função | equipe", menor e discreta.
+    final sub = (subtitle != null && subtitle!.trim().isNotEmpty)
+        ? (TextPainter(
+            text: TextSpan(
+              text: subtitle,
+              style: TextStyle(
+                color: colors.textMuted,
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            textDirection: TextDirection.ltr,
+            maxLines: 1,
+            ellipsis: "…",
+          )..layout(maxWidth: 150))
+        : null;
+
+    // Layout: [10px pad][dot Ø7][6px gap][texto][10px pad]
     const dotRadius = 3.5;
-    final bubbleWidth = label.width + 10 + dotRadius * 2 + 6 + 10;
-    final bubbleHeight = label.height + 10;
+    final textWidth =
+        sub == null ? label.width : (label.width > sub.width ? label.width : sub.width);
+    final bubbleWidth = textWidth + 10 + dotRadius * 2 + 6 + 10;
+    final bubbleHeight = label.height + (sub?.height ?? 0) + 10;
     final bubbleRect = RRect.fromRectAndRadius(
       Rect.fromCenter(
         center: Offset(
@@ -98,7 +121,7 @@ class AvatarRenderer extends CustomPainter {
         width: bubbleWidth,
         height: bubbleHeight,
       ),
-      Radius.circular(bubbleHeight / 2),
+      Radius.circular(sub == null ? bubbleHeight / 2 : 10),
     );
 
     canvas.drawRRect(
@@ -116,18 +139,14 @@ class AvatarRenderer extends CustomPainter {
     final statusDot = Paint()
       ..color = presenceDotColor ?? colors.presenceAvailable;
     canvas.drawCircle(
-      Offset(bubbleRect.left + 10 + dotRadius, bubbleRect.center.dy),
+      Offset(bubbleRect.left + 10 + dotRadius, bubbleRect.top + 5 + label.height / 2),
       dotRadius,
       statusDot,
     );
 
-    label.paint(
-      canvas,
-      Offset(
-        bubbleRect.left + 10 + dotRadius * 2 + 6,
-        bubbleRect.top + 5,
-      ),
-    );
+    final textLeft = bubbleRect.left + 10 + dotRadius * 2 + 6;
+    label.paint(canvas, Offset(textLeft, bubbleRect.top + 5));
+    sub?.paint(canvas, Offset(textLeft, bubbleRect.top + 5 + label.height));
   }
 
   @override
@@ -142,7 +161,8 @@ class AvatarRenderer extends CustomPainter {
         oldDelegate.map != map ||
         oldDelegate.colors != colors ||
         oldDelegate.presenceDotColor != presenceDotColor ||
-        oldDelegate.statusEmoji != statusEmoji;
+        oldDelegate.statusEmoji != statusEmoji ||
+        oldDelegate.subtitle != subtitle;
   }
 
 }

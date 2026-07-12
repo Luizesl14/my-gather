@@ -50,12 +50,14 @@ class OfficeCanvas extends StatefulWidget {
     this.showCollision = false,
     this.presenceDotColor,
     this.statusEmoji,
+    this.subtitle,
     this.reactionSprite,
     this.reactionTargetName,
     this.remoteAvatars = const {},
     this.onAvatarMoved,
     this.onAvatarStopped,
     this.onGesture,
+    this.presenceColorFor,
     super.key,
   });
 
@@ -71,6 +73,8 @@ class OfficeCanvas extends StatefulWidget {
   // Resolved presence color and optional status emoji shown in the name bubble.
   final Color? presenceDotColor;
   final String? statusEmoji;
+  // Segunda linha da etiqueta do avatar ("função | equipe"), opcional.
+  final String? subtitle;
   // Transient reaction bubble sprite (asset path relative to assets/) and the
   // optional name of who the gesture is aimed at ("wave at Maria").
   final String? reactionSprite;
@@ -82,6 +86,8 @@ class OfficeCanvas extends StatefulWidget {
   final void Function(double x, double y, String direction)? onAvatarStopped;
   // Called when the user picks a gesture aimed at a peer (hover menu).
   final void Function(String sprite, String targetUserId)? onGesture;
+  // Resolve a cor da bolinha de presença de um status remoto (via catálogo).
+  final Color Function(String presenceStatus)? presenceColorFor;
 
   @override
   State<OfficeCanvas> createState() => _OfficeCanvasState();
@@ -132,6 +138,8 @@ class _OfficeCanvasState extends State<OfficeCanvas>
   // Hover-over-avatar state (hand cursor + gesture menu on peers).
   MouseCursor _hoverCursor = MouseCursor.defer;
   String? _hoveredUserId;
+  // Usuário com o cartão de crachá aberto (Nome/Função/Equipe).
+  String? _badgeUserId;
   Offset? _hoverAnchor; // top-center of the hovered avatar, in canvas coords
   Timer? _hoverCloseTimer;
 
@@ -219,7 +227,10 @@ class _OfficeCanvasState extends State<OfficeCanvas>
         const <String>{},
         passthroughTileIds: const <String>{},
       );
-    } catch (_) {
+    } catch (e) {
+      // Fallback silencioso esconde bugs reais (ex.: spawn/escala salvos no
+      // editor sendo ignorados). Loga o motivo para o problema ser visível.
+      debugPrint("[MAP] falha ao carregar mapa de ${widget.workspaceId}: $e — usando mapa default");
       return OfficeMap.loadDefault(collidingIds, passthroughTileIds: passthroughIds);
     }
   }
@@ -268,10 +279,8 @@ class _OfficeCanvasState extends State<OfficeCanvas>
       final userId = entry.key;
       final remote = entry.value;
 
-      final character = catalog.characters.firstWhere(
-        (c) => c.id == remote.characterId,
-        orElse: () => catalog.defaultCharacter,
-      );
+      final character =
+          AvatarSceneLoader.resolveCharacter(catalog, remote.characterId);
 
       if (_remoteControllers.containsKey(userId)) {
         _remoteControllers[userId]!
@@ -540,7 +549,11 @@ class _OfficeCanvasState extends State<OfficeCanvas>
   void _scheduleHoverClose() {
     _hoverCloseTimer?.cancel();
     _hoverCloseTimer = Timer(const Duration(milliseconds: 250), () {
-      if (mounted) setState(() => _hoveredUserId = null);
+      // Com o crachá aberto o cartão fica fixo até fechar no X — sem isso,
+      // o mouse "sai" do menu ao trocar para o cartão e tudo some na hora.
+      if (mounted && _badgeUserId == null) {
+        setState(() => _hoveredUserId = null);
+      }
     });
   }
 
@@ -661,9 +674,13 @@ class _OfficeCanvasState extends State<OfficeCanvas>
                       colors: colors,
                       frameImages: scene.avatarScene.frameImages,
                       avatarController: scene.avatarScene.avatarController,
-                      avatar: movementController.avatar,
+                      // displayName vem do widget (authProvider): editar o
+                      // perfil atualiza o balão sem recarregar a cena.
+                      avatar: movementController.avatar
+                          .copyWith(displayName: widget.displayName),
                       presenceDotColor: widget.presenceDotColor,
                       statusEmoji: widget.statusEmoji,
+                      subtitle: widget.subtitle,
                     ),
                     child: const SizedBox.expand(),
                   ),
@@ -689,6 +706,11 @@ class _OfficeCanvasState extends State<OfficeCanvas>
                                 motionState: entry.value.motionState,
                                 presenceLabel: entry.value.presenceStatus,
                               ),
+                              subtitle: [entry.value.role, entry.value.team]
+                                  .where((s) => s.trim().isNotEmpty)
+                                  .join(" | "),
+                              dotColor: widget.presenceColorFor
+                                  ?.call(entry.value.presenceStatus),
                             ),
                       ],
                     ),
@@ -738,6 +760,12 @@ class _OfficeCanvasState extends State<OfficeCanvas>
   }
 
   Widget _buildPeerGestureMenu(String userId) {
+    // Crachá aberto: mostra o cartão com Nome / Função / Equipe no lugar dos
+    // gestos (fechar volta para o menu).
+    if (_badgeUserId == userId) {
+      final remote = widget.remoteAvatars[userId];
+      return _buildPeerBadgeCard(remote);
+    }
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -772,6 +800,86 @@ class _OfficeCanvasState extends State<OfficeCanvas>
                   ),
                 ),
               ),
+            Tooltip(
+              message: "Crachá",
+              child: InkWell(
+                onTap: () => setState(() => _badgeUserId = userId),
+                borderRadius: BorderRadius.circular(8),
+                child: const Padding(
+                  padding: EdgeInsets.all(4),
+                  child: SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Icon(Icons.badge_outlined,
+                        size: 22, color: Colors.white70),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPeerBadgeCard(RemoteAvatar? remote) {
+    Widget line(String label, String value) => Padding(
+          padding: const EdgeInsets.only(top: 3),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("$label  ",
+                  style: const TextStyle(
+                      color: Colors.white38,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600)),
+              Text(value.isEmpty ? "—" : value,
+                  style:
+                      const TextStyle(color: Colors.white, fontSize: 12)),
+            ],
+          ),
+        );
+
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(14, 10, 10, 12),
+        decoration: BoxDecoration(
+          color: const Color(0xF21A1E2B),
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: const [BoxShadow(color: Color(0x55000000), blurRadius: 10)],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  remote?.displayName ?? "—",
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(width: 8),
+                InkWell(
+                  onTap: () => setState(() {
+                    _badgeUserId = null;
+                    _hoveredUserId = null;
+                  }),
+                  borderRadius: BorderRadius.circular(8),
+                  child: const Padding(
+                    padding: EdgeInsets.all(2),
+                    child:
+                        Icon(Icons.close, size: 14, color: Colors.white54),
+                  ),
+                ),
+              ],
+            ),
+            line("FUNÇÃO", remote?.role ?? ""),
+            line("EQUIPE", remote?.team ?? ""),
           ],
         ),
       ),

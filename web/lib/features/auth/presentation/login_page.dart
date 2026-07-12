@@ -5,6 +5,9 @@ import "package:go_router/go_router.dart";
 import "../../../core/router/app_router.dart";
 import "../../../core/theme/app_colors.dart";
 import "../../../core/theme/app_spacing.dart";
+import "../../avatar/domain/avatar_loadout.dart";
+import "../../avatar/presentation/avatar_loadout_provider.dart";
+import "../../avatar/presentation/character_provider.dart";
 import "auth_provider.dart";
 import "auth_text_field.dart";
 
@@ -40,6 +43,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           password: _passwordCtrl.text,
         );
     if (ok && mounted) {
+      // Restaura o avatar salvo no perfil (preset ou loadout "custom:...").
+      final savedAvatar = ref.read(authProvider).user?.defaultAvatarId;
+      if (savedAvatar != null && savedAvatar.isNotEmpty) {
+        ref.read(characterProvider.notifier).state = savedAvatar;
+        ref.read(avatarLoadoutProvider.notifier).state =
+            AvatarLoadout.decode(savedAvatar);
+      }
       final extra = widget.extra;
       if (extra != null && extra['redirectTo'] == '/accept-invitation') {
         final token = extra['token'] as String?;

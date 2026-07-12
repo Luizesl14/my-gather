@@ -227,10 +227,13 @@ class MapSpawn {
   final String direction;
 
   factory MapSpawn.fromJson(Map<String, dynamic> json) {
+    // num em vez de int: o spawn atravessa JSON de ida e volta (editor ->
+    // backend -> office) e um 3 pode voltar como 3.0; um cast duro derruba o
+    // parse do mapa inteiro e o office cai no default sem o spawn salvo.
     return MapSpawn(
-      x: json["x"] as int,
-      y: json["y"] as int,
-      direction: json["direction"] as String,
+      x: (json["x"] as num?)?.toInt() ?? 1,
+      y: (json["y"] as num?)?.toInt() ?? 1,
+      direction: json["direction"] as String? ?? "front",
     );
   }
 }

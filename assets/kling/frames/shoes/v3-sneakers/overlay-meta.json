@@ -1,0 +1,27 @@
+{
+  "region": "shoes",
+  "band": [
+    40,
+    47
+  ],
+  "threshold": 60,
+  "base": "assets/kling/frames/body/anime-unissex-v3",
+  "pixelsPerFrame": {
+    "idle-front": 35,
+    "walk-down-01": 23,
+    "walk-down-02": 24,
+    "walk-down-03": 31,
+    "idle-left": 28,
+    "walk-left-01": 32,
+    "walk-left-02": 37,
+    "walk-left-03": 29,
+    "idle-right": 19,
+    "walk-right-01": 35,
+    "walk-right-02": 34,
+    "walk-right-03": 24,
+    "idle-back": 43,
+    "walk-up-01": 40,
+    "walk-up-02": 37,
+    "walk-up-03": 43
+  }
+}

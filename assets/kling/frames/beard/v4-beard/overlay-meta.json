@@ -1,0 +1,27 @@
+{
+  "region": "beard",
+  "band": [
+    14,
+    32
+  ],
+  "threshold": 60,
+  "base": "assets/kling/frames/body/v4-unissex",
+  "pixelsPerFrame": {
+    "idle-front": 4682,
+    "walk-down-01": 4617,
+    "walk-down-02": 4624,
+    "walk-down-03": 4627,
+    "idle-left": 4809,
+    "walk-left-01": 4827,
+    "walk-left-02": 4794,
+    "walk-left-03": 4851,
+    "idle-right": 4814,
+    "walk-right-01": 4803,
+    "walk-right-02": 4780,
+    "walk-right-03": 4846,
+    "idle-back": 4407,
+    "walk-up-01": 4384,
+    "walk-up-02": 4399,
+    "walk-up-03": 4359
+  }
+}

@@ -75,6 +75,15 @@ class RealtimeSessionNotifier extends Notifier<bool> {
     });
   }
 
+  void sendProfileChange(String displayName, String role, String team) {
+    ref.read(realtimeServiceProvider).send({
+      "type": "presence:profile.change",
+      "displayName": displayName,
+      "role": role,
+      "team": team,
+    });
+  }
+
   void sendStatusChange(String status, {String? emoji, String? text}) {
     ref.read(realtimeServiceProvider).send({
       "type": "presence:status.change",

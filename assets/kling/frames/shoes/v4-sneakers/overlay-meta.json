@@ -1,0 +1,27 @@
+{
+  "region": "shoes",
+  "band": [
+    40,
+    47
+  ],
+  "threshold": 60,
+  "base": "assets/kling/frames/body/v4-unissex",
+  "pixelsPerFrame": {
+    "idle-front": 87,
+    "walk-down-01": 66,
+    "walk-down-02": 106,
+    "walk-down-03": 68,
+    "idle-left": 112,
+    "walk-left-01": 135,
+    "walk-left-02": 117,
+    "walk-left-03": 147,
+    "idle-right": 110,
+    "walk-right-01": 134,
+    "walk-right-02": 116,
+    "walk-right-03": 148,
+    "idle-back": 122,
+    "walk-up-01": 174,
+    "walk-up-02": 119,
+    "walk-up-03": 173
+  }
+}

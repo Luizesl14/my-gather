@@ -7,6 +7,7 @@ import "../../avatar/presentation/character_provider.dart";
 import "../../chat/presentation/chat_provider.dart";
 import "../../workspace/presentation/remote_avatar_provider.dart";
 import "call_controller.dart";
+import "../../avatar/presentation/avatar_thumbnail.dart";
 
 const _screenId = "__screen__";
 // Docker-blue outline shown around the active speaker (Gather-style).
@@ -41,11 +42,13 @@ class ProximityCallOverlay extends ConsumerStatefulWidget {
   const ProximityCallOverlay({
     required this.controller,
     required this.onMutePeer,
+    required this.onMuteCameraPeer,
     super.key,
   });
 
   final CallController controller;
   final void Function(String identity, bool muted) onMutePeer;
+  final void Function(String identity, bool muted) onMuteCameraPeer;
 
   @override
   ConsumerState<ProximityCallOverlay> createState() =>
@@ -271,6 +274,9 @@ class _ProximityCallOverlayState extends ConsumerState<ProximityCallOverlay> {
         onTap: () => setState(() => _pinned = _pinned == vm.id ? null : vm.id),
         onToggleMute:
             vm.isLocal ? null : () => widget.onMutePeer(vm.id, !vm.micMuted),
+        onToggleCamera: vm.isLocal
+            ? null
+            : () => widget.onMuteCameraPeer(vm.id, vm.cam != null),
       );
 }
 
@@ -378,6 +384,7 @@ class _Tile extends StatefulWidget {
     required this.pinned,
     required this.onTap,
     required this.onToggleMute,
+    required this.onToggleCamera,
     super.key,
   });
 
@@ -387,6 +394,7 @@ class _Tile extends StatefulWidget {
   final bool pinned;
   final VoidCallback onTap;
   final VoidCallback? onToggleMute;
+  final VoidCallback? onToggleCamera;
 
   @override
   State<_Tile> createState() => _TileState();
@@ -467,15 +475,32 @@ class _TileState extends State<_Tile> {
                     left: 6, top: 6,
                     child: Icon(Icons.push_pin, size: 14, color: Colors.white),
                   ),
-                // Hover: mute/unmute toggle (mic on by default, red when muted).
+                // Hover: mic e câmera do colega (desligam para todos).
                 if (_hover && widget.onToggleMute != null)
                   Positioned(
                     right: 6, top: 6,
-                    child: _MiniButton(
-                      icon: vm.micMuted ? Icons.mic_off : Icons.mic,
-                      muted: vm.micMuted,
-                      tooltip: vm.micMuted ? "Reativar microfone" : "Mutar para todos",
-                      onTap: widget.onToggleMute!,
+                    child: Column(
+                      children: [
+                        _MiniButton(
+                          icon: vm.micMuted ? Icons.mic_off : Icons.mic,
+                          muted: vm.micMuted,
+                          tooltip: vm.micMuted ? "Reativar microfone" : "Mutar para todos",
+                          onTap: widget.onToggleMute!,
+                        ),
+                        if (widget.onToggleCamera != null) ...[
+                          const SizedBox(height: 4),
+                          _MiniButton(
+                            icon: vm.cam != null
+                                ? Icons.videocam
+                                : Icons.videocam_off,
+                            muted: vm.cam == null,
+                            tooltip: vm.cam != null
+                                ? "Desligar câmera para todos"
+                                : "Reativar câmera",
+                            onTap: widget.onToggleCamera!,
+                          ),
+                        ],
+                      ],
                     ),
                   ),
               ],
@@ -507,13 +532,7 @@ class _AvatarFill extends StatelessWidget {
           border: Border.all(color: Colors.white24),
         ),
         clipBehavior: Clip.antiAlias,
-        child: Image.asset(
-          "assets/sprites/characters/$characterId/preview.png",
-          fit: BoxFit.cover,
-          filterQuality: FilterQuality.none,
-          errorBuilder: (_, __, ___) =>
-              Icon(Icons.person, color: Colors.white54, size: d * 0.55),
-        ),
+        child: AvatarThumbnail(characterId: characterId),
       ),
     );
   }

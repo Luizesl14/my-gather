@@ -1,0 +1,170 @@
+{
+  "version": 2,
+  "spriteSize": {
+    "w": 128,
+    "h": 128
+  },
+  "frames": [
+    "idle-front",
+    "idle-back",
+    "idle-left",
+    "idle-right",
+    "walk-down-01",
+    "walk-down-02",
+    "walk-down-03",
+    "walk-left-01",
+    "walk-left-02",
+    "walk-left-03",
+    "walk-right-01",
+    "walk-right-02",
+    "walk-right-03",
+    "walk-up-01",
+    "walk-up-02",
+    "walk-up-03"
+  ],
+  "slots": [
+    {
+      "id": "body",
+      "displayName": "Corpo",
+      "required": true,
+      "zIndex": 0,
+      "items": [
+        {
+          "id": "anime-unissex",
+          "displayName": "Base",
+          "path": "customization/modular/body/anime-unissex"
+        }
+      ]
+    },
+    {
+      "id": "bottom",
+      "displayName": "Calça",
+      "required": false,
+      "zIndex": 1,
+      "items": [
+        {
+          "id": "jeans",
+          "displayName": "Jeans",
+          "path": "customization/modular/bottom/jeans"
+        },
+        {
+          "id": "pants-social",
+          "displayName": "Calça social",
+          "path": "customization/modular/bottom/pants-social"
+        }
+      ]
+    },
+    {
+      "id": "shoes",
+      "displayName": "Sapato",
+      "required": false,
+      "zIndex": 2,
+      "items": [
+        {
+          "id": "sneakers",
+          "displayName": "Tênis",
+          "path": "customization/modular/shoes/sneakers"
+        }
+      ]
+    },
+    {
+      "id": "top",
+      "displayName": "Roupa",
+      "required": false,
+      "zIndex": 3,
+      "items": [
+        {
+          "id": "anime-top-01",
+          "displayName": "Camiseta azul",
+          "path": "customization/modular/top/anime-top-01"
+        },
+        {
+          "id": "social-white",
+          "displayName": "Camisa social",
+          "path": "customization/modular/top/social-white"
+        },
+        {
+          "id": "hoodie-orange",
+          "displayName": "Moletom laranja",
+          "path": "customization/modular/top/hoodie-orange"
+        }
+      ]
+    },
+    {
+      "id": "beard",
+      "displayName": "Barba",
+      "required": false,
+      "zIndex": 4,
+      "items": [
+        {
+          "id": "beard-01",
+          "displayName": "Barba cheia",
+          "path": "customization/modular/beard/beard-01"
+        }
+      ]
+    },
+    {
+      "id": "hair",
+      "displayName": "Cabelo",
+      "required": false,
+      "zIndex": 5,
+      "items": [
+        {
+          "id": "anime-hair-01",
+          "displayName": "Curto bagunçado",
+          "path": "customization/modular/hair/anime-hair-01"
+        },
+        {
+          "id": "anime-hair-02",
+          "displayName": "Longo com franja",
+          "path": "customization/modular/hair/anime-hair-02"
+        },
+        {
+          "id": "hair-buzz",
+          "displayName": "Corte baixo",
+          "path": "customization/modular/hair/hair-buzz"
+        },
+        {
+          "id": "hair-pompadour",
+          "displayName": "Topete",
+          "path": "customization/modular/hair/hair-pompadour"
+        },
+        {
+          "id": "hair-afro",
+          "displayName": "Afro cacheado",
+          "path": "customization/modular/hair/hair-afro"
+        },
+        {
+          "id": "hair-bob",
+          "displayName": "Chanel (bob)",
+          "path": "customization/modular/hair/hair-bob"
+        },
+        {
+          "id": "hair-ponytail",
+          "displayName": "Rabo de cavalo",
+          "path": "customization/modular/hair/hair-ponytail"
+        },
+        {
+          "id": "hair-braids",
+          "displayName": "Tranças",
+          "path": "customization/modular/hair/hair-braids"
+        },
+        {
+          "id": "hair-sidepart",
+          "displayName": "Risca lateral",
+          "path": "customization/modular/hair/hair-sidepart"
+        },
+        {
+          "id": "hair-straight",
+          "displayName": "Liso longo",
+          "path": "customization/modular/hair/hair-straight"
+        },
+        {
+          "id": "hair-slickback",
+          "displayName": "Gel para trás",
+          "path": "customization/modular/hair/hair-slickback"
+        }
+      ]
+    }
+  ]
+}

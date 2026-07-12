@@ -346,7 +346,7 @@ class MapEditorNotifier extends StateNotifier<MapEditorData> {
   }
 
   void setAvatarScale(double scale) {
-    final s = scale.clamp(0.3, 1.5);
+    final s = scale.clamp(0.25, 2.5);
     if (s == state.avatarScale) return;
     state = state.copyWith(avatarScale: s, isDirty: true);
   }

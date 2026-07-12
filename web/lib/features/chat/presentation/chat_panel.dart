@@ -12,6 +12,7 @@ import "../../avatar/presentation/character_provider.dart";
 import "../../workspace/presentation/remote_avatar_provider.dart";
 import "../data/voice_service.dart";
 import "chat_provider.dart";
+import "../../avatar/presentation/avatar_thumbnail.dart";
 
 // Voice message files are served by the backend at this origin.
 const voiceBaseUrl = "http://localhost:3000";
@@ -197,10 +198,25 @@ class _ChatPanelState extends ConsumerState<ChatPanel> {
                     )
                   : ListView.builder(
                       controller: _scroll,
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       itemCount: entries.length,
-                      itemBuilder: (_, i) =>
-                          _EntryView(entry: entries[i], myId: myId, colors: colors),
+                      itemBuilder: (_, i) {
+                        final e = entries[i];
+                        final prev = i > 0 ? entries[i - 1] : null;
+                        // Estilo Discord: mensagens seguidas do mesmo autor em
+                        // até 5 min viram continuação (sem avatar/nome).
+                        final grouped = prev != null &&
+                            prev.kind != ChatEntryKind.notice &&
+                            e.kind != ChatEntryKind.notice &&
+                            prev.fromUserId == e.fromUserId &&
+                            e.at.difference(prev.at).inMinutes < 5;
+                        return _EntryView(
+                          entry: e,
+                          myId: myId,
+                          colors: colors,
+                          grouped: grouped,
+                        );
+                      },
                     ),
             ),
             _TypingIndicator(colors: colors),
@@ -230,39 +246,50 @@ class _ChatPanelState extends ConsumerState<ChatPanel> {
                         ),
                       ],
                     )
-                  : Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _controller,
-                            onChanged: _onTextChanged,
-                            onSubmitted: (_) => _send(),
-                            style: TextStyle(color: colors.textPrimary, fontSize: 13),
-                            decoration: InputDecoration(
-                              hintText: "Mensagem...",
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
+                  // Barra de digitação estilo Discord: bloco arredondado
+                  // preenchido, campo sem borda e ações dentro do bloco.
+                  : Container(
+                      decoration: BoxDecoration(
+                        color: colors.panelMuted,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: TextField(
+                              controller: _controller,
+                              onChanged: _onTextChanged,
+                              onSubmitted: (_) => _send(),
+                              style: TextStyle(
+                                  color: colors.textPrimary, fontSize: 13),
+                              decoration: InputDecoration(
+                                hintText: "Conversar...",
+                                hintStyle: TextStyle(
+                                    color: colors.textMuted, fontSize: 13),
+                                isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 12),
+                                border: InputBorder.none,
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 6),
-                        _hasText
-                            ? IconButton(
-                                icon: const Icon(Icons.send, size: 18),
-                                color: colors.brandPrimary,
-                                onPressed: _send,
-                              )
-                            : IconButton(
-                                icon: const Icon(Icons.mic, size: 20),
-                                color: colors.brandPrimary,
-                                tooltip: "Gravar áudio",
-                                onPressed: _toggleRecord,
-                              ),
-                      ],
+                          _hasText
+                              ? IconButton(
+                                  icon: const Icon(Icons.send, size: 18),
+                                  color: colors.brandPrimary,
+                                  tooltip: "Enviar",
+                                  onPressed: _send,
+                                )
+                              : IconButton(
+                                  icon: const Icon(Icons.mic, size: 20),
+                                  color: colors.textMuted,
+                                  tooltip: "Gravar áudio",
+                                  onPressed: _toggleRecord,
+                                ),
+                        ],
+                      ),
                     ),
             ),
           ],
@@ -309,12 +336,38 @@ class _RecordingPulseState extends State<_RecordingPulse>
   }
 }
 
+// Cores de nome por usuário, estilo Discord (determinístico pelo id).
+const _nameColors = [
+  Color(0xFF7289DA),
+  Color(0xFF43B581),
+  Color(0xFFF04747),
+  Color(0xFFFAA61A),
+  Color(0xFF1ABC9C),
+  Color(0xFFE91E63),
+  Color(0xFF9B59B6),
+  Color(0xFF00B0F4),
+];
+
+Color _nameColorFor(String userId) =>
+    _nameColors[userId.hashCode.abs() % _nameColors.length];
+
+String _fmtTime(DateTime at) =>
+    "${at.hour.toString().padLeft(2, '0')}:${at.minute.toString().padLeft(2, '0')}";
+
 class _EntryView extends ConsumerWidget {
-  const _EntryView({required this.entry, required this.myId, required this.colors});
+  const _EntryView({
+    required this.entry,
+    required this.myId,
+    required this.colors,
+    this.grouped = false,
+  });
 
   final ChatEntry entry;
   final String? myId;
   final AppColors colors;
+
+  /// Continuação de uma sequência do mesmo autor: sem avatar e sem cabeçalho.
+  final bool grouped;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -340,59 +393,84 @@ class _EntryView extends ConsumerWidget {
         : (ref.watch(remoteAvatarsProvider)[entry.fromUserId]?.characterId ??
             "character-01");
 
-    final bubble = Flexible(
-      child: Column(
-        crossAxisAlignment:
-            mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-          if (!mine)
-            Padding(
-              padding: const EdgeInsets.only(left: 2, bottom: 2),
-              child: Text(
-                entry.fromName,
-                style: TextStyle(
-                  color: colors.textSecondary,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          Container(
+    final content = entry.kind == ChatEntryKind.voice
+        ? Container(
+            margin: const EdgeInsets.only(top: 2),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
             decoration: BoxDecoration(
-              color: mine ? colors.brandPrimary : colors.panelMuted,
-              borderRadius: BorderRadius.circular(12),
+              color: colors.panelMuted,
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: entry.kind == ChatEntryKind.voice
-                ? _VoicePlayer(
-                    url: voiceBaseUrl + (entry.audioUrl ?? ""),
-                    durationMs: entry.durationMs ?? 0,
-                    mine: mine,
-                    colors: colors,
-                  )
-                : Text(
-                    entry.text,
-                    style: TextStyle(
-                      color: mine ? colors.textInverse : colors.textPrimary,
-                      fontSize: 13,
-                    ),
-                  ),
-          ),
-        ],
-      ),
-    );
+            child: _VoicePlayer(
+              url: voiceBaseUrl + (entry.audioUrl ?? ""),
+              durationMs: entry.durationMs ?? 0,
+              mine: false,
+              colors: colors,
+            ),
+          )
+        : Text(
+            entry.text,
+            style: TextStyle(color: colors.textPrimary, fontSize: 13, height: 1.35),
+          );
 
-    final avatar = _CharacterAvatar(characterId: characterId, colors: colors);
+    // Layout Discord: tudo alinhado à esquerda; avatar + nome + hora na
+    // primeira mensagem da sequência, só o texto nas continuações.
+    if (grouped) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(14 + 34.0 + 10, 1, 12, 1),
+        child: content,
+      );
+    }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.fromLTRB(14, 8, 12, 1),
       child: Row(
-        mainAxisAlignment:
-            mine ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: mine
-            ? [bubble, const SizedBox(width: 6), avatar]
-            : [avatar, const SizedBox(width: 6), bubble],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: colors.canvas,
+              shape: BoxShape.circle,
+              border: Border.all(color: colors.border),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: AvatarThumbnail(characterId: characterId),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        mine ? "Você" : entry.fromName,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: _nameColorFor(entry.fromUserId),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      _fmtTime(entry.at),
+                      style: TextStyle(color: colors.textMuted, fontSize: 10),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                content,
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -416,13 +494,7 @@ class _CharacterAvatar extends StatelessWidget {
         border: Border.all(color: colors.border),
       ),
       clipBehavior: Clip.antiAlias,
-      child: Image.asset(
-        "assets/sprites/characters/$characterId/preview.png",
-        fit: BoxFit.cover,
-        filterQuality: FilterQuality.none,
-        errorBuilder: (_, __, ___) =>
-            Icon(Icons.person, size: 15, color: colors.textMuted),
-      ),
+      child: AvatarThumbnail(characterId: characterId),
     );
   }
 }
@@ -459,13 +531,7 @@ class _TypingIndicator extends ConsumerWidget {
               border: Border.all(color: colors.border),
             ),
             clipBehavior: Clip.antiAlias,
-            child: Image.asset(
-              "assets/sprites/characters/${avatar.characterId}/preview.png",
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.none,
-              errorBuilder: (_, __, ___) =>
-                  Icon(Icons.person, size: 14, color: colors.textMuted),
-            ),
+            child: AvatarThumbnail(characterId: avatar.characterId),
           ),
           const SizedBox(width: 8),
           Container(

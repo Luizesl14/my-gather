@@ -35,11 +35,48 @@ class AuthService {
     }
   }
 
+  /// Valida um token salvo e devolve o usuário atual (GET /auth/me).
+  Future<AuthUser> me(String token) async {
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        "/auth/me",
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+      );
+      return AuthUser.fromJson(
+          response.data!["user"] as Map<String, dynamic>);
+    } on DioException catch (e) {
+      final code = (e.response?.data as Map?)?["error"]?["code"] as String?;
+      throw AuthException(code ?? "auth.unknown_error");
+    }
+  }
+
   Future<void> updateAvatar(String token, String avatarId) async {
     try {
       await _dio.put<void>(
         "/auth/me/avatar",
         data: {"avatarId": avatarId},
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+      );
+    } on DioException catch (e) {
+      final code = (e.response?.data as Map?)?["error"]?["code"] as String?;
+      throw AuthException(code ?? "auth.unknown_error");
+    }
+  }
+
+  Future<void> updateProfile(
+    String token, {
+    String? displayName,
+    String? role,
+    String? team,
+  }) async {
+    try {
+      await _dio.put<void>(
+        "/auth/me/profile",
+        data: {
+          if (displayName != null) "displayName": displayName,
+          if (role != null) "role": role,
+          if (team != null) "team": team,
+        },
         options: Options(headers: {"Authorization": "Bearer $token"}),
       );
     } on DioException catch (e) {

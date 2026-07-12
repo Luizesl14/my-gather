@@ -161,6 +161,15 @@ class _CharacterSelectionPageState
             "Escolha seu personagem",
             style: TextStyle(color: colors.textMuted, fontSize: 11),
           ),
+          const SizedBox(width: 12),
+          TextButton.icon(
+            onPressed: () => context.goNamed(AppRouteNames.characterSelection),
+            icon: const Icon(Icons.brush, size: 14),
+            label: const Text(
+              "Criar personagem",
+              style: TextStyle(fontSize: 11),
+            ),
+          ),
           const SizedBox(width: 20),
         ],
       ),
