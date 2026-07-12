@@ -153,6 +153,25 @@ export class PrismaIdentityRepositories
     return row?.avatarId ?? "character-01";
   }
 
+  async getProfile(userId: string): Promise<{ avatarId: string; role: string; team: string }> {
+    const row = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { avatarId: true, role: true, team: true },
+    });
+    return {
+      avatarId: row?.avatarId ?? "character-01",
+      role: row?.role ?? "",
+      team: row?.team ?? "",
+    };
+  }
+
+  async updateProfile(
+    userId: string,
+    data: { displayName?: string; role?: string; team?: string },
+  ): Promise<void> {
+    await prisma.user.update({ where: { id: userId }, data });
+  }
+
   private _toUser(row: {
     id: string;
     email: string;

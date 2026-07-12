@@ -1,5 +1,5 @@
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from "fastify";
-import { AccessToken, RoomServiceClient, TrackType } from "livekit-server-sdk";
+import { AccessToken, RoomServiceClient, TrackSource, TrackType } from "livekit-server-sdk";
 
 import { config } from "../../../../shared/infrastructure/config/config";
 import { NodeTokenService } from "../../../identity/infrastructure/crypto/node-token-service";
@@ -81,25 +81,33 @@ export async function registerLivekitRoutes(
       }
 
       const { workspaceId } = request.params;
-      const body = request.body as { identity?: string; muted?: boolean } | undefined;
+      const body = request.body as
+        | { identity?: string; muted?: boolean; kind?: "audio" | "video" }
+        | undefined;
       if (!body?.identity) {
         return reply.status(400).send({
           error: { code: "validation.invalid_payload", message: "validation.invalid_payload" },
         });
       }
       const muted = body.muted ?? true;
+      // kind=video desliga a câmera do participante (screen share fica de fora).
+      const kind = body.kind ?? "audio";
 
       const httpUrl = url.replace(/^wss:/, "https:").replace(/^ws:/, "http:");
       const svc = new RoomServiceClient(httpUrl, apiKey, apiSecret);
       try {
         const participant = await svc.getParticipant(workspaceId, body.identity);
-        const audioTracks = participant.tracks.filter((t) => t.type === TrackType.AUDIO);
+        const targetTracks = participant.tracks.filter((t) =>
+          kind === "audio"
+            ? t.type === TrackType.AUDIO
+            : t.type === TrackType.VIDEO && t.source !== TrackSource.SCREEN_SHARE,
+        );
         await Promise.all(
-          audioTracks.map((t) =>
+          targetTracks.map((t) =>
             svc.mutePublishedTrack(workspaceId, body.identity!, t.sid, muted),
           ),
         );
-        return reply.send({ ok: true, muted });
+        return reply.send({ ok: true, muted, kind });
       } catch (error) {
         request.log.error(error);
         return reply.status(502).send({

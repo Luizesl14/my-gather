@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import WebSocket, { WebSocketServer } from "ws";
 
 import { NodeTokenService } from "../modules/identity/infrastructure/crypto/node-token-service";
+import { prisma } from "../shared/infrastructure/database/prisma-client";
 import { ConnectionRegistry } from "./connection-registry";
 import { pingEventSchema, pongEvent } from "./events/ping";
 import {
@@ -15,6 +16,8 @@ import {
   userLeftPayload,
   avatarMovedPayload,
   presenceStatusChangedPayload,
+  presenceProfileChangeSchema,
+  presenceProfileChangedPayload,
 } from "./events/presence-events";
 import {
   callInviteEventSchema,
@@ -92,11 +95,28 @@ export async function startWebsocketServer(
         direction: "front",
         motionState: "idle",
         presenceStatus: "available",
+        role: "",
+        team: "",
       },
       socket,
     };
 
     registry.add(conn);
+
+    // Perfil fresco do banco: displayName editado + funcao/equipe para o
+    // cracha dos colegas (o JWT so carrega o nome da epoca do login).
+    void prisma.user
+      .findUnique({
+        where: { id: conn.info.userId },
+        select: { displayName: true, role: true, team: true },
+      })
+      .then((u) => {
+        if (!u) return;
+        conn.info.displayName = u.displayName;
+        conn.info.role = u.role;
+        conn.info.team = u.team;
+      })
+      .catch(() => {});
 
     socket.on("message", (data) => {
       const text = typeof data === "string" ? data : data.toString("utf-8");
@@ -129,12 +149,14 @@ export async function startWebsocketServer(
             direction: c.info.direction,
             motionState: c.info.motionState,
             presenceStatus: c.info.presenceStatus,
+            role: c.info.role,
+            team: c.info.team,
           }));
 
         socket.send(rosterPayload(members));
         registry.broadcast(
           workspaceId,
-          userJoinedPayload(conn.info.userId, conn.info.displayName, conn.info.characterId, conn.info.x, conn.info.y, conn.info.direction, conn.info.motionState, conn.info.presenceStatus),
+          userJoinedPayload(conn.info.userId, conn.info.displayName, conn.info.characterId, conn.info.x, conn.info.y, conn.info.direction, conn.info.motionState, conn.info.presenceStatus, conn.info.role, conn.info.team),
           connectionId,
         );
         return;
@@ -161,6 +183,20 @@ export async function startWebsocketServer(
         const { x, y, direction } = ev.data;
         registry.updatePosition(connectionId, x, y, direction, "idle");
         registry.broadcast(conn.info.workspaceId, avatarMovedPayload(conn.info.userId, x, y, direction, "idle"), connectionId);
+        return;
+      }
+
+      if (type === "presence:profile.change") {
+        const ev = presenceProfileChangeSchema.safeParse(parsed);
+        if (!ev.success || !conn.info.workspaceId) return;
+        conn.info.displayName = ev.data.displayName;
+        conn.info.role = ev.data.role;
+        conn.info.team = ev.data.team;
+        registry.broadcast(
+          conn.info.workspaceId,
+          presenceProfileChangedPayload(conn.info.userId, ev.data.displayName, ev.data.role, ev.data.team),
+          connectionId,
+        );
         return;
       }
 

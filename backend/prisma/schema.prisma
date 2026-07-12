@@ -12,6 +12,8 @@ model User {
   email        String       @unique
   passwordHash String
   displayName  String
+  role         String       @default("")
+  team         String       @default("")
   avatarId     String       @default("character-01")
   memberships  Membership[]
   invitations  Invitation[] @relation("InvitationInviter")

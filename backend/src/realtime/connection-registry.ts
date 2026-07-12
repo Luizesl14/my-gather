@@ -4,6 +4,8 @@ export type ConnectionInfo = {
   id: string;
   userId: string;
   displayName: string;
+  role?: string;
+  team?: string;
   characterId: string;
   connectedAt: Date;
   workspaceId: string | null;

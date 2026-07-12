@@ -44,6 +44,24 @@ export type AvatarMoveEvent = z.infer<typeof avatarMoveSchema>;
 export type AvatarStopEvent = z.infer<typeof avatarStopSchema>;
 export type PresenceStatusChangeEvent = z.infer<typeof presenceStatusChangeSchema>;
 
+export const presenceProfileChangeSchema = z.object({
+  type: z.literal("presence:profile.change"),
+  displayName: z.string().min(1).max(60),
+  role: z.string().max(40).default(""),
+  team: z.string().max(40).default(""),
+});
+
+export type PresenceProfileChangeEvent = z.infer<typeof presenceProfileChangeSchema>;
+
+export function presenceProfileChangedPayload(
+  userId: string,
+  displayName: string,
+  role: string,
+  team: string,
+) {
+  return JSON.stringify({ type: "presence:profile.changed", userId, displayName, role, team });
+}
+
 // ─── Server → Client builders ─────────────────────────────────────────────────
 
 export function rosterPayload(members: Array<{
@@ -55,6 +73,8 @@ export function rosterPayload(members: Array<{
   direction: string;
   motionState: string;
   presenceStatus: string;
+  role?: string;
+  team?: string;
 }>) {
   return JSON.stringify({ type: "workspace:roster", users: members });
 }
@@ -68,8 +88,10 @@ export function userJoinedPayload(
   direction: string,
   motionState: string,
   presenceStatus: string,
+  role = "",
+  team = "",
 ) {
-  return JSON.stringify({ type: "workspace:user.joined", userId, displayName, characterId, x, y, direction, motionState, presenceStatus });
+  return JSON.stringify({ type: "workspace:user.joined", userId, displayName, characterId, x, y, direction, motionState, presenceStatus, role, team });
 }
 
 export function userLeftPayload(userId: string) {

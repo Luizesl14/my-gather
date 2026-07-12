@@ -35,6 +35,12 @@ type AuthenticatedRequest = FastifyRequest & { user: User };
 
 const updateAvatarBodySchema = z.object({ avatarId: z.string().min(1) });
 
+const updateProfileBodySchema = z.object({
+  displayName: z.string().trim().min(1).max(60).optional(),
+  role: z.string().trim().max(40).optional(),
+  team: z.string().trim().max(40).optional(),
+});
+
 function sendError(reply: FastifyReply, statusCode: number, code: string) {
   return reply.status(statusCode).send({ error: { code, message: code } });
 }
@@ -51,12 +57,18 @@ function parseParams<T>(schema: ZodSchema<T>, request: FastifyRequest, reply: Fa
   return parsed.data;
 }
 
-function userDto(user: User, avatarId = "character-01") {
+function userDto(
+  user: User,
+  avatarId = "character-01",
+  profile: { role: string; team: string } = { role: "", team: "" },
+) {
   return {
     id: user.id,
     email: user.email.value,
     displayName: user.displayName.value,
     defaultAvatarId: avatarId,
+    role: profile.role,
+    team: profile.team,
   };
 }
 
@@ -95,8 +107,8 @@ export async function registerIdentityRoutes(
     if (!body) return reply;
     const result = await registerUser.execute(body);
     if (Result.isErr(result)) return sendError(reply, 400, result.error);
-    const avatarId = await repositories.getAvatarId(result.value.user.id);
-    return reply.status(201).send({ user: userDto(result.value.user, avatarId) });
+    const profile = await repositories.getProfile(result.value.user.id);
+    return reply.status(201).send({ user: userDto(result.value.user, profile.avatarId, profile) });
   });
 
   app.post("/auth/login", async (request, reply) => {
@@ -104,9 +116,9 @@ export async function registerIdentityRoutes(
     if (!body) return reply;
     const result = await loginUser.execute(body);
     if (Result.isErr(result)) return sendError(reply, 401, result.error);
-    const avatarId = await repositories.getAvatarId(result.value.user.id);
+    const profile = await repositories.getProfile(result.value.user.id);
     return {
-      user: userDto(result.value.user, avatarId),
+      user: userDto(result.value.user, profile.avatarId, profile),
       token: tokenService.sign({
         sub: result.value.user.id,
         email: result.value.user.email.value,
@@ -120,8 +132,8 @@ export async function registerIdentityRoutes(
   app.get("/auth/me", async (request, reply) => {
     const user = await authenticate(request, reply);
     if (!user) return reply;
-    const avatarId = await repositories.getAvatarId(user.id);
-    return { user: userDto(user, avatarId) };
+    const profile = await repositories.getProfile(user.id);
+    return { user: userDto(user, profile.avatarId, profile) };
   });
 
   app.put("/auth/me/avatar", async (request, reply) => {
@@ -131,6 +143,15 @@ export async function registerIdentityRoutes(
     if (!body) return reply;
     await repositories.updateAvatar(user.id, body.avatarId);
     return { ok: true, avatarId: body.avatarId };
+  });
+
+  app.put("/auth/me/profile", async (request, reply) => {
+    const user = await authenticate(request, reply);
+    if (!user) return reply;
+    const body = parseBody(updateProfileBodySchema, request, reply);
+    if (!body) return reply;
+    await repositories.updateProfile(user.id, body);
+    return { ok: true };
   });
 
   app.post("/organizations", async (request, reply) => {

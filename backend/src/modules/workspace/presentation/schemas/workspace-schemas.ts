@@ -70,7 +70,7 @@ export const updateMapBodySchema = z.object({
   tileSize: z.number().int().default(32),
   assetPackId: z.string().default("office-scenary-v1"),
   displayZoom: z.number().min(1).max(4).default(2.5),
-  avatarScale: z.number().min(0.1).max(2).default(0.5),
+  avatarScale: z.number().min(0.1).max(3).default(0.5),
   avatarYOffset: z.number().min(-1).max(1).default(0),
   avatarXOffset: z.number().min(-1).max(1).default(0),
   spawn: spawnSchema.default({ x: 1, y: 1, direction: "front" }),
